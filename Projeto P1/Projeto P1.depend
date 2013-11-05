@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1383001505 source:c:\users\j.carlos\documents\dropbox\pasta de trabalho\arq em exe a\disciplinas\programação\programação i\trabalhos\projeto p1\teste.c
+	<stdio.h>
+	<allegro5/allegro.h>
+
+1383658760 source:c:\users\j.carlos\documents\dropbox\pasta de trabalho\arq em exe a\disciplinas\programação\programação i\trabalhos\projeto p1\main.c
+	<allegro.h>
+
+1383629875 source:c:\users\gabriel\desktop\gabriel\ciência\projeto\projeto p1\main.c
+	<allegro.h>
+
+1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
+	<allegro.h>
+
