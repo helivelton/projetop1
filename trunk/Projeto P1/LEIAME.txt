@@ -2,4 +2,4 @@ O Allegro usa uma cor para transparência dos bitmaps.
 Abra a imagem no paint, e use esses valores para a cor que fica transparente:
 matiz: 200 	vermelho: 255
 Sat: 240	Verde: 0
-Lum: 120	Azul: 255
+Lum: 120	Azul: 255 
