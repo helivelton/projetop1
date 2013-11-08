@@ -1,7 +1,50 @@
+#include <stdio.h>
 #include <allegro.h>
+#include <string.h>
 
 void init(); // criação da janela, instalação do teclado, mouse e timer
 void deinit();// finaliza tudo
+
+// ".." significa uma pasta acima
+#define LINKRELAT "../../Dropbox/"
+/*
+######################### Processo para usar imagens no projeto em desenvolvimento ########################
+
+Questão: O repositório não pode conter os arquivos de imagens (que serão muitas, e o repositório
+tem espaço limitado), e essas imagens deverão estar compartilhadas entre os membros do grupo.
+
+Resolução: Usar o Dropbox para os arquivos de imagens, e se referir a elas através de um caminho relativo.
+
+Nova questão: após o projeto terminar, a pasta com todas as imagens deverão estar na pasta do projeto. Assim,
+todos os links irão mudar, e deverão ser alterados manualmente.
+
+Resolução: Ao invés disso, podemos contornar esse problema usando uma constante que adiciona uma string em
+cada link. Siga esses procedimentos:
+
+1. Em cada arquivo que for trabalhar, tenha a certeza de definir uma contante fora de qualquer função,
+no topo, e uma variável char de tamanho 256 dentro de cada função que referenciar imagens:
+    #define LINKRELAT "../../Dropbox/"
+    char link_imagem[256];
+
+2. Observe que a constante acima está definida com um valor relativo. Mantenha assim durante a execução
+do projeto.
+
+3. Antes de referenciar cada imagem, use a função strcpy (você irá precisar da biblioteca string.h) para
+inserir a constante LINKRELAT na variável link_imagem:
+    strcpy(link_imagem,LINKRELAT);
+
+4. Na referência à imagem, use a função strcat para juntar o conteúdo de link_imagem ao caminho relativo
+desejado. Por exemplo, para carregar um BITMAP do guerreiro, usamos (observe que o primeiro argumento
+de load_bitmap é um caminho relativo, e usamos strcat para concatenar o conteúdo de link_imagem com
+a string restante para a imagem desejada):
+    BITMAP *guerreiro = load_bitmap(strcat(link_imagem,"imagens_p1/guerreiro.bmp"), NULL);
+
+Após a conclusão do projeto, pegue a pasta com as imagens (neste caso, imagens_p1), e coloque na pasta do
+projeto. E simplesmente mude todas as constantes LINKREALT de todos os arquivos para "" (string vazia).
+Não serão necessárias alterações adicionais.
+
+##########################################################################################################
+*/
 
 int main()
 {
@@ -12,12 +55,17 @@ int main()
     float x2 = 330; // posição x goblin
     float y2 = 330; // posição y goblin
     float dir = 1; // direção goblin (1 para direita, 2 para esquerda)
+    char link_imagem[256]; // necessário para os links das imagens
 
     BITMAP *buffer = create_bitmap(640,480); // Cria o buffer;
-    // ".." significa uma pasta acima
-    BITMAP *tela = load_bitmap("../../Dropbox/imagens_p1/tela.bmp",NULL); // imagem cenário
-    BITMAP *guerreiro = load_bitmap("../../Dropbox/imagens_p1/guerreiro.bmp", NULL); // imagem guerreiro
-    BITMAP *goblin1 = load_bitmap("../../Dropbox/imagens_p1/goblin1.bmp",NULL); // imagem goblin
+
+    // a primeira linha a seguir é necessária ao se referenciar cada imagem
+    strcpy(link_imagem,LINKRELAT); // copia a string da constante LINKRELAT para link_imagem
+    BITMAP *tela = load_bitmap(strcat(link_imagem,"imagens_p1/tela.bmp"),NULL); // imagem cenário
+    strcpy(link_imagem,LINKRELAT);
+    BITMAP *guerreiro = load_bitmap(strcat(link_imagem,"imagens_p1/guerreiro.bmp"), NULL); // imagem guerreiro
+    strcpy(link_imagem,LINKRELAT);
+    BITMAP *goblin1 = load_bitmap(strcat(link_imagem,"imagens_p1/goblin1.bmp"),NULL); // imagem goblin
     // fim da declaração das variáveis
 
     while (!key[KEY_ESC]) // Processo de repetição principal
