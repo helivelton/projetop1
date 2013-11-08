@@ -14,9 +14,10 @@ int main()
     float dir = 1; // direção goblin (1 para direita, 2 para esquerda)
 
     BITMAP *buffer = create_bitmap(640,480); // Cria o buffer;
-    BITMAP *tela = load_bitmap("imagens/tela.bmp",NULL); // imagem cenário
-    BITMAP *guerreiro = load_bitmap("imagens/guerreiro.bmp", NULL); // imagem guerreiro
-    BITMAP *goblin1 = load_bitmap("imagens/goblin1.bmp",NULL); // imagem goblin
+    // ".." significa uma pasta acima
+    BITMAP *tela = load_bitmap("../../Dropbox/imagens_p1/tela.bmp",NULL); // imagem cenário
+    BITMAP *guerreiro = load_bitmap("../../Dropbox/imagens_p1/guerreiro.bmp", NULL); // imagem guerreiro
+    BITMAP *goblin1 = load_bitmap("../../Dropbox/imagens_p1/goblin1.bmp",NULL); // imagem goblin
     // fim da declaração das variáveis
 
     while (!key[KEY_ESC]) // Processo de repetição principal
