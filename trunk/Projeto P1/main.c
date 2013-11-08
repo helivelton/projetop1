@@ -72,19 +72,23 @@ int main()
     {
         clear_bitmap(buffer); // Limpa o buffer;
         // movimentação goblin
-        if (x2 > 500)
+        if (x2 > x)
         {
             dir=2;
         }
-        else if (x2 < 50)
+        else if (x2 < x)
         {
             dir=1;
+        }
+        else
+        {
+            dir=0;
         }
         if(dir==1)
         {
             x2=x2+0.25;
         }
-        else
+        else if(dir==2)
         {
             x2=x2-0.25;
         }
