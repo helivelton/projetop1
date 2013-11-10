@@ -12,6 +12,15 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1383695543 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1384105583 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+	<stdio.h>
 	<allegro.h>
+	"basico.h"
+
+1384105666 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384105149 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 
