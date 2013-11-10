@@ -32,4 +32,4 @@ Não serão necessárias alterações adicionais.
 ##########################################################################################################
 */
 
-char *link_imagem(char *caminho);
+char *link_imagem(char caminho[256]);
