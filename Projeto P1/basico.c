@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <allegro.h>
-#include <string.h>
-
-#define LINKRELAT "../../Dropbox/"
+#include "basico.h"
 
 void init()
 {
