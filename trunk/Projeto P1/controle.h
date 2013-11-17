@@ -1,4 +1,4 @@
-#include <allegro.h>
+#include "basico.h"
 
 int teclas_anteriores[KEY_MAX];
 

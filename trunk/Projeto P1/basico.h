@@ -1,10 +1,28 @@
+/*  #############################################################################
+    Todas as bibliotecas básicas usadas no projeto
+
+*/
 #include <stdio.h>
 #include <allegro.h>
 #include <string.h>
+//  #############################################################################
 
+/*  #############################################################################
+    Todos os defines usados no projeto
+
+*/
+// corrige link das imagens
 #define LINKRELAT "../../Dropbox/"
+// Altura dos sprites em cada arquivo (para saber onde toca o chão)
 #define ALTURA_GUERREIRO 42
 #define ALTURA_GOBLIN 42
+// controla velocidade padrão dos sprites
+#define VELOCIDADE 3
+// controla velocidade padrão de mudança dos estados dos sprites
+#define ATUALIZAR_ESTADO 6
+// máximo de texturas usadas do tileset
+#define MAX_TEXTURAS 13
+//  #############################################################################
 
 /*
     Cabeçalhos das funções
@@ -36,8 +54,6 @@ imagens estivesse na pasta do projeto. A função retornará o link corrigido.
 Após a conclusão do projeto, pegue a pasta com as imagens (neste caso, imagens_p1), e coloque na pasta do
 projeto. E simplesmente mude a constante LINKRELAT do arquivo basico.c para "" (string vazia).
 Não serão necessárias alterações adicionais.
-
-##########################################################################################################
 */
 
 char *link_imagem(char caminho[256]);
