@@ -1,3 +1,11 @@
+#include <stdio.h>
+#include <allegro.h>
+#include <string.h>
+
+#define LINKRELAT "../../Dropbox/"
+#define ALTURA_GUERREIRO 42
+#define ALTURA_GOBLIN 42
+
 /*
     Cabeçalhos das funções
 */

@@ -12,15 +12,46 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1384105583 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1384665560 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	<stdio.h>
 	<allegro.h>
 	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
 
-1384105666 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1384657385 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+	"basico.h"
+
+1384670027 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 
-1384119919 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1384656463 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+	"mapa.h"
+
+1384658120 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+	<allegro.h>
+	"basico.h"
+
+1384665075 source:c:\users\j.carlos\documents\p1\projeto p1\guerreiro.c
+	"guerreiro.h"
+
+1384665255 c:\users\j.carlos\documents\p1\projeto p1\guerreiro.h
+	<allegro.h>
+	"basico.h"
+
+1384646715 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
+	"controle.h"
+
+1384646528 c:\users\j.carlos\documents\p1\projeto p1\controle.h
+	<allegro.h>
+
+1384665432 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+	"criaturas.h"
+
+1384665432 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+	<allegro.h>
+	"basico.h"
 
