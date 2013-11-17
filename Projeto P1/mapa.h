@@ -1,7 +1,6 @@
-#include <allegro.h>
 #include "basico.h"
 
-#define MAX_TEXTURAS 13
+
 
 /*
 Prepara as texturas individuais.

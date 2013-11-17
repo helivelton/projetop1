@@ -1,12 +1,14 @@
-#include <stdio.h>
-#include <allegro.h>
-#include "basico.h" // link_imagem(), init(), deinit()
+/*  #################################################################################
+    #includes
+
+    Inclua somente arquivos h do projeto
+    As bibliotecas básicas são incluídas em básico.h
+*/
+#include "basico.h"
 #include "mapa.h"
 #include "criaturas.h"
 #include "controle.h"
-
-#define VELOCIDADE 3
-#define ATUALIZAR_ESTADO 6
+//  #################################################################################
 
 // variável e função de saída
 volatile int exit_program;
@@ -21,115 +23,86 @@ END_OF_FUNCTION(incrementa_timer)
 int main()
 {
     init(); // inicializa
-    // declaração das variáveis
-    int i;
 
-    // guerreiro
-    Tcriatura guerreiro_status;
-    preenche_guerreiro(&guerreiro_status);
+/*  #######################################################################################
+                    declaração das variáveis (e algumas inicializações)
+    #######################################################################################
+*/
+    int i; // controlador de loops
+    int ticks; // controla velocidade do jogo
 
-    float x2 = 330; // posição x goblin
-    float y2 = 12*32+(32-ALTURA_GOBLIN); // posição y goblin
-    float dir = 1; // direção goblin (1 para direita, 2 para esquerda)
+    // variáveis de status
+    Tcriatura guerreiro_status; // declara status guerreiro
+    Tcriatura goblin1_status; // declara status goblin
 
+    // declara BITMAPS
     BITMAP *buffer = create_bitmap(640,480); // Cria o buffer;
     BITMAP *mapa = create_bitmap(640,480); // Cria o mapa
     BITMAP *texturas[MAX_TEXTURAS]; // declara a array de texturas
-    carrega_texturas(texturas); // prepara a textura
-    carrega_mapa(mapa,texturas); // cria mapa
+    BITMAP *im_guerreiro[4]; // array de bitmaps do guerreiro
+    BITMAP *guerreiro = create_bitmap(32,48); // imagem atual guerreiro
+    BITMAP *im_goblin1[3]; // array de bitmaps do goblin tipo 1
+    BITMAP *goblin1 = create_bitmap(32,48); // imagem atual goblin tipo 1
 
-    BITMAP *im_guerreiro[4];
-    imagens_guerreiro(im_guerreiro);
-    BITMAP *guerreiro = create_bitmap(32,48); // imagem guerreiro
-    BITMAP *goblin1 = load_bitmap(link_imagem("imagens_p1/skel.bmp"),NULL); // imagem goblin
-    // fim da declaração das variáveis
+/*  #######################################################################################
+                                fim da declaração das variáveis
+    #######################################################################################
+*/
+    // carregamento inicial
+    preenche_criatura(&guerreiro_status,0,12*32+(32-ALTURA_GUERREIRO),1,0); // preenche status guerreiro
+    imagens_guerreiro(im_guerreiro); // preenche vetor de imagens do guerreiro
+    preenche_criatura(&goblin1_status,SCREEN_W-50,12*32+(32-ALTURA_GOBLIN),2,0); // preenche status goblin
+    imagens_goblin1(im_goblin1); // preenche vetor de imagens do goblin tipo 1
+    carrega_texturas(texturas); // prepara as texturas
+    carrega_mapa(mapa,texturas); // cria mapa com as texturas
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
     LOCK_FUNCTION(fecha_programa);
     LOCK_VARIABLE(exit_program);
-    set_close_button_callback(fecha_programa);
+    set_close_button_callback(fecha_programa); // fecha a qualquer momento com o botão fechar
 
     // timer
     timer=0;
     LOCK_FUNCTION(incrementa_timer);
     LOCK_VARIABLE(timer);
-    install_int_ex(incrementa_timer,BPS_TO_TIMER(60));
+    install_int_ex(incrementa_timer,BPS_TO_TIMER(60)); // para que o jogo execute 60 vezes por segundo
 
-    int ticks = timer;
-    int controle_estados_sprites = timer;
-    while (!exit_program) // Processo de repetição principal
+    // inicializa controles de velocidade
+    ticks = timer; // velocidade do jogo
+    guerreiro_status.controle_estado = timer; // velocidade de modificação do sprite guerreiro
+    goblin1_status.controle_estado = timer; // velocidade de modificação do sprite goblin1
+
+    // Processo de repetição principal
+    while (!exit_program)
     {
+        // termina jogo se pressionar esc
         if(key[KEY_ESC])
             fecha_programa();
+
+        // loop válido
         while(ticks==timer)
         {
+            // limpa bitmaps de armazenamento
             clear_bitmap(buffer); // Limpa o buffer;
-            clear_bitmap(guerreiro);
+            clear_bitmap(guerreiro); // Limpa bitmap guerreiro
+            clear_bitmap(goblin1); // Limpa bitmap goblin tipo 1
+
+            // atualiza estado do teclado
             keyboard_input();
-            // movimentação goblin
-            if (x2 > guerreiro_status.x)
-            {
-                dir=2;
-            }
-            else if (x2 < guerreiro_status.x)
-            {
-                dir=1;
-            }
-            else
-            {
-                dir=0;
-            }
-            if(dir==1)
-            {
-                x2=x2+VELOCIDADE/2;
-            }
-            else if(dir==2)
-            {
-                x2=x2-VELOCIDADE/2;
-            }
-            // fim movimentação goblin
 
-            // movimentação guerreiro
-            if (segurou(KEY_RIGHT) && guerreiro_status.x < SCREEN_W-32)
-            {
-                guerreiro_status.x=guerreiro_status.x+VELOCIDADE;
-                if (timer-controle_estados_sprites>=ATUALIZAR_ESTADO)
-                {
-                    controle_estados_sprites=timer;
-                    guerreiro_status.estado_sprite=(guerreiro_status.estado_sprite+1)%4;
-                }
-                guerreiro_status.direcao =1;
-            }
-            else if (segurou(KEY_LEFT) && guerreiro_status.x > 0)
-            {
-                guerreiro_status.x=guerreiro_status.x-VELOCIDADE;
-                if (timer-controle_estados_sprites>=ATUALIZAR_ESTADO)
-                {
-                    controle_estados_sprites=timer;
-                    guerreiro_status.estado_sprite=(guerreiro_status.estado_sprite+1)%4;
-                }
-                guerreiro_status.direcao = 2;
-            }
-            // fim movimentação guerreiro
+            // cálculos dos movimentos
+            movimento_goblin1(&goblin1_status,guerreiro_status.x,timer);
+            movimento_guerreiro(&guerreiro_status,timer);
 
+            // Desenhar
             draw_sprite(buffer, mapa, 0, 0); // manda mapa para o buffer
-            draw_sprite(buffer, goblin1, x2, y2); // manda goblin para buffer
-            rectfill(guerreiro,0,0,32,48,makecol(255,0,255));
-            if(guerreiro_status.direcao==1)
-            {
-                draw_sprite_ex(guerreiro,im_guerreiro[guerreiro_status.estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
-            }
-            else
-            {
-                draw_sprite_ex(guerreiro,im_guerreiro[guerreiro_status.estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
-            }
-
-            draw_sprite(buffer, guerreiro, guerreiro_status.x, guerreiro_status.y); // manda guerreiro para buffer
+            desenhar_goblin1(buffer,goblin1,&goblin1_status,im_goblin1); // desenha goblin tipo 1 e manda para o buffer
+            desenhar_guerreiro(buffer,guerreiro,&guerreiro_status,im_guerreiro); // desenha guerreiro e manda para buffer
             textout_ex(buffer, font, "Kill Goblins", 250,2, makecol(255,255,255 ),-1 ); // manda texto para buffer
-            textprintf_right_ex(buffer,font,SCREEN_W,0,makecol(255,255,255),-1,"%d",timer/60);
+            textprintf_right_ex(buffer,font,SCREEN_W,0,makecol(255,255,255),-1,"%d",timer/60); // desenha tempo
             draw_sprite(screen, buffer, 0, 0); // Manda o buffer para a tela;
-            ticks++;
+            ticks++; // incrementa controle de velocidade do jogo
         }
     }
 
@@ -146,8 +119,13 @@ int main()
     {
         destroy_bitmap(im_guerreiro[i]);
     }
+    for(i=0;i<3;i++)
+    {
+        destroy_bitmap(im_goblin1[i]);
+    }
     destroy_bitmap(guerreiro);
     destroy_bitmap(goblin1);
+
     return 0 ;
 }
 END_OF_MAIN(); // para finalizar o main no allegro
