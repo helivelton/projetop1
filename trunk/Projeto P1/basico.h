@@ -1,3 +1,6 @@
+#ifndef BASICO_H
+#define BASICO_H
+
 /*  #############################################################################
     Todas as bibliotecas básicas usadas no projeto
 
@@ -13,15 +16,18 @@
 */
 // corrige link das imagens
 #define LINKRELAT "../../Dropbox/"
-// Altura dos sprites em cada arquivo (para saber onde toca o chão)
-#define ALTURA_GUERREIRO 42
-#define ALTURA_GOBLIN 42
+// Altura e largura dos sprites do jogo
+#define ALTURA_SPRITE 34
+#define LARGURA_SPRITE 18
 // controla velocidade padrão dos sprites
 #define VELOCIDADE 3
 // controla velocidade padrão de mudança dos estados dos sprites
 #define ATUALIZAR_ESTADO 6
 // máximo de texturas usadas do tileset
 #define MAX_TEXTURAS 13
+// Altura e largura da tela
+#define ALTURA_TELA 480
+#define LARGURA_TELA 640
 //  #############################################################################
 
 /*
@@ -57,3 +63,5 @@ Não serão necessárias alterações adicionais.
 */
 
 char *link_imagem(char caminho[256]);
+
+#endif // BASICO_H

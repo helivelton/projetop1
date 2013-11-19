@@ -28,16 +28,17 @@ int main()
                     declaração das variáveis (e algumas inicializações)
     #######################################################################################
 */
-    int i; // controlador de loops
+    int i; // controlador de loops e auxiliares
     int ticks; // controla velocidade do jogo
+    int matriz_tela[SCREEN_H/32][SCREEN_W/32]; // matriz da tela
 
     // variáveis de status
     Tcriatura guerreiro_status; // declara status guerreiro
     Tcriatura goblin1_status; // declara status goblin
 
     // declara BITMAPS
-    BITMAP *buffer = create_bitmap(640,480); // Cria o buffer;
-    BITMAP *mapa = create_bitmap(640,480); // Cria o mapa
+    BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
+    BITMAP *mapa = create_bitmap(SCREEN_W,SCREEN_H); // Cria o mapa
     BITMAP *texturas[MAX_TEXTURAS]; // declara a array de texturas
     BITMAP *im_guerreiro[4]; // array de bitmaps do guerreiro
     BITMAP *guerreiro = create_bitmap(32,48); // imagem atual guerreiro
@@ -49,12 +50,13 @@ int main()
     #######################################################################################
 */
     // carregamento inicial
-    preenche_criatura(&guerreiro_status,0,12*32+(32-ALTURA_GUERREIRO),1,0); // preenche status guerreiro
+    preenche_criatura(&guerreiro_status,0,12*32-(48-ALTURA_SPRITE)/2,1,0,2,2,2,1,0); // preenche status guerreiro
     imagens_guerreiro(im_guerreiro); // preenche vetor de imagens do guerreiro
-    preenche_criatura(&goblin1_status,SCREEN_W-50,12*32+(32-ALTURA_GOBLIN),2,0); // preenche status goblin
+    preenche_criatura(&goblin1_status,SCREEN_W-50,12*32-(48-ALTURA_SPRITE)/2,2,0,1,1,1,0,0); // preenche status goblin
     imagens_goblin1(im_goblin1); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
-    carrega_mapa(mapa,texturas); // cria mapa com as texturas
+    prepara_mapa(&matriz_tela); // preenche matriz com os tilesets corretos
+    carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
