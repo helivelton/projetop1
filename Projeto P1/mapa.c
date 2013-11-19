@@ -8,44 +8,45 @@ void carrega_texturas(BITMAP *texturas[MAX_TEXTURAS])
         texturas[i] = create_bitmap(32,32);
     }
     BITMAP *tileset=load_bitmap(link_imagem("imagens_p1/tiles01b.bmp"),NULL);// tileset básico
-    blit(tileset,texturas[ 0], 0*32, 0*32,0,0,32,32); //terra
-    blit(tileset,texturas[ 1], 1*32, 0*32,0,0,32,32); //chão
-    blit(tileset,texturas[ 2], 0*32, 1*32,0,0,32,32); //pedra
-    blit(tileset,texturas[ 3], 8*32, 8*32,0,0,32,32); //arvore morta
-    blit(tileset,texturas[ 4], 6*32,10*32,0,0,32,32); //arvore parte 1
-    blit(tileset,texturas[ 5], 7*32,10*32,0,0,32,32); //arvore parte 2
-    blit(tileset,texturas[ 6], 8*32,10*32,0,0,32,32); //arvore parte 3
-    blit(tileset,texturas[ 7], 6*32,11*32,0,0,32,32); //arvore parte 4
-    blit(tileset,texturas[ 8], 7*32,11*32,0,0,32,32); //arvore parte 5
-    blit(tileset,texturas[ 9], 8*32,11*32,0,0,32,32); //arvore parte 6
-    blit(tileset,texturas[10], 6*32,12*32,0,0,32,32); //arvore parte 7
-    blit(tileset,texturas[11], 7*32,12*32,0,0,32,32); //arvore parte 8
-    blit(tileset,texturas[12], 8*32,12*32,0,0,32,32); //arvore parte 9
+    blit(tileset,texturas[TERRA], 0*32, 0*32,0,0,32,32); //terra
+    blit(tileset,texturas[CHAO], 1*32, 0*32,0,0,32,32); //chão
+    blit(tileset,texturas[PEDRA], 0*32, 1*32,0,0,32,32); //pedra
+    blit(tileset,texturas[ARVORE_MORTA], 8*32, 8*32,0,0,32,32); //arvore morta
+    blit(tileset,texturas[ARVORE_1], 6*32,10*32,0,0,32,32); //arvore parte 1
+    blit(tileset,texturas[ARVORE_2], 7*32,10*32,0,0,32,32); //arvore parte 2
+    blit(tileset,texturas[ARVORE_3], 8*32,10*32,0,0,32,32); //arvore parte 3
+    blit(tileset,texturas[ARVORE_4], 6*32,11*32,0,0,32,32); //arvore parte 4
+    blit(tileset,texturas[ARVORE_5], 7*32,11*32,0,0,32,32); //arvore parte 5
+    blit(tileset,texturas[ARVORE_6], 8*32,11*32,0,0,32,32); //arvore parte 6
+    blit(tileset,texturas[ARVORE_7], 6*32,12*32,0,0,32,32); //arvore parte 7
+    blit(tileset,texturas[ARVORE_8], 7*32,12*32,0,0,32,32); //arvore parte 8
+    blit(tileset,texturas[ARVORE_9], 8*32,12*32,0,0,32,32); //arvore parte 9
     destroy_bitmap(tileset);
 }
 
-void prepara_mapa()
-{
-
-}
-
-void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TEXTURAS])
+void prepara_mapa(int matriz_tela[SCREEN_H/32][SCREEN_W/32])
 {
     int i,j,contador;
-    rectfill(mapa,0,0,640,480,makecol(127,127,127));
+    for(i=0;i<SCREEN_H/32;i++)
+    {
+        for(j=0;j<SCREEN_W/32;j++)
+        {
+            matriz_tela[i][j]=-1;
+        }
+    }
     for(i=0;i<20;i++)
     {
-        draw_sprite(mapa,texturas[1],i*32,13*32);
-        draw_sprite(mapa,texturas[0],i*32,14*32);
+        matriz_tela[13][i]=CHAO;
+        matriz_tela[14][i]=TERRA;
     }
-    draw_sprite(mapa,texturas[2],18*32,12*32);
-    draw_sprite(mapa,texturas[3],5*32,12*32);
+    matriz_tela[12][18]=PEDRA;
+    matriz_tela[12][5]=ARVORE_MORTA;
     contador=4;
     for(i=0;i<3;i++)
     {
         for(j=0;j<3;j++)
         {
-            draw_sprite(mapa,texturas[contador],(12+j)*32,(10+i)*32);
+            matriz_tela[10+i][11+j]=contador;
             contador++;
         }
     }
@@ -54,7 +55,7 @@ void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TEXTURAS])
     {
         for(j=0;j<3;j++)
         {
-            draw_sprite(mapa,texturas[contador],(14+j)*32,(10+i)*32);
+            matriz_tela[10+i][14+j]=contador;
             contador++;
         }
     }
@@ -63,8 +64,24 @@ void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TEXTURAS])
     {
         for(j=0;j<3;j++)
         {
-            draw_sprite(mapa,texturas[contador],(7+j)*32,(10+i)*32);
+            matriz_tela[10+i][7+j]=contador;
             contador++;
+        }
+    }
+}
+
+void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TEXTURAS],int matriz_tela[SCREEN_H/32][SCREEN_W/32])
+{
+    int i,j;
+    rectfill(mapa,0,0,640,480,makecol(127,127,127));
+    for(i=0;i<SCREEN_H/32;i++)
+    {
+        for(j=0;j<SCREEN_W/32;j++)
+        {
+            if(matriz_tela[i][j]!=-1)
+            {
+                draw_sprite(mapa,texturas[matriz_tela[i][j]],j*32,i*32);
+            }
         }
     }
 }

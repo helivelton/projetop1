@@ -1,12 +1,19 @@
 #include "criaturas.h"
 
-void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite)
+void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite,int f,int h,int r,int a,int pdf)
 {
     ser->x=x;
     ser->y=y;
     ser->direcao=direcao;
     ser->direcao_anterior=1;
     ser->estado_sprite=estado_sprite;
+    ser->caracteristicas.forca=f;
+    ser->caracteristicas.habilidade=h;
+    ser->caracteristicas.resistencia=r;
+    ser->caracteristicas.armadura=a;
+    ser->caracteristicas.poder_de_fogo=pdf;
+    ser->caracteristicas.hp=ser->caracteristicas.resistencia*5;
+    ser->caracteristicas.mp=ser->caracteristicas.resistencia*5;
 }
 
 void imagens_guerreiro(BITMAP *im_guerreiro[4])
