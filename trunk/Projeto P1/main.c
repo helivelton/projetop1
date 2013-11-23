@@ -39,7 +39,7 @@ int main()
     // declara BITMAPS
     BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
     BITMAP *mapa = create_bitmap(SCREEN_W,SCREEN_H); // Cria o mapa
-    BITMAP *texturas[MAX_TEXTURAS]; // declara a array de texturas
+    BITMAP *texturas[MAX_TERRENOS]; // declara a array de texturas
     BITMAP *im_guerreiro[4]; // array de bitmaps do guerreiro
     BITMAP *guerreiro = create_bitmap(32,48); // imagem atual guerreiro
     BITMAP *im_goblin1[3]; // array de bitmaps do goblin tipo 1
@@ -113,7 +113,7 @@ int main()
     // destruição de bitmaps
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
-    for(i=0;i<MAX_TEXTURAS;i++)
+    for(i=0;i<MAX_TERRENOS;i++)
     {
         destroy_bitmap(texturas[i]);
     }

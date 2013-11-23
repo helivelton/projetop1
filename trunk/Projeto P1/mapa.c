@@ -1,9 +1,9 @@
 #include "mapa.h"
 
-void carrega_texturas(BITMAP *texturas[MAX_TEXTURAS])
+void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
 {
     int i;
-    for(i=0;i<MAX_TEXTURAS;i++)
+    for(i=0;i<MAX_TERRENOS;i++)
     {
         texturas[i] = create_bitmap(32,32);
     }
@@ -70,7 +70,7 @@ void prepara_mapa(int matriz_tela[SCREEN_H/32][SCREEN_W/32])
     }
 }
 
-void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TEXTURAS],int matriz_tela[SCREEN_H/32][SCREEN_W/32])
+void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[SCREEN_H/32][SCREEN_W/32])
 {
     int i,j;
     rectfill(mapa,0,0,640,480,makecol(127,127,127));
