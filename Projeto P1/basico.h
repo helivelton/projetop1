@@ -23,8 +23,6 @@
 #define VELOCIDADE 3
 // controla velocidade padrão de mudança dos estados dos sprites
 #define ATUALIZAR_ESTADO 6
-// máximo de texturas usadas do tileset
-#define MAX_TEXTURAS 13
 // Altura e largura da tela
 #define ALTURA_TELA 480
 #define LARGURA_TELA 640
