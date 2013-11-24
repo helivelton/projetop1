@@ -6,7 +6,7 @@ void init()
     allegro_init();
 
     set_color_depth(32);
-    res = set_gfx_mode(GFX_AUTODETECT_WINDOWED, LARGURA_TELA , ALTURA_TELA , 0 , 0 ); // cria tela 640x480
+    res = set_gfx_mode(GFX_AUTODETECT_WINDOWED, LARGURA_SCREEN , ALTURA_SCREEN , 0 , 0 ); // cria tela 640x480
 
     if (res != 0 ) // verifica se houve erro na criação da tela
     {

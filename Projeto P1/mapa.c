@@ -24,59 +24,60 @@ void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
     destroy_bitmap(tileset);
 }
 
-void prepara_mapa(int matriz_tela[SCREEN_H/32][SCREEN_W/32])
+void prepara_mapa(int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
 {
-    int i,j,contador;
-    for(i=0;i<SCREEN_H/32;i++)
+    int n_matriz_tela[15][24] =
+    //   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23
     {
-        for(j=0;j<SCREEN_W/32;j++)
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 0
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 1
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 2
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 3
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 4
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 5
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 6
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 7
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 8
+        {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 9
+        {-1,-1,-1,-1,-1,-1,-1, 4, 5, 6,-1,-1, 4, 5, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 10
+        {-1,-1,-1,-1,-1,-1,-1, 7, 8, 9,-1,-1, 7, 8, 9,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // 11
+        {-1,-1,-1,-1,-1, 3,-1,10,11,12,-1,-1,10,11,12,-1,-1,-1, 2,-1,-1,-1,-1,-1}, // 12
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, // 13
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}  // 14
+    };
+    int i,j;
+    for(i=0;i<15;i++)
+    {
+        for(j=0;j<24;j++)
         {
+            matriz_tela[i][j]=n_matriz_tela[i][j];
+        }
+    }
+    for(i=13;i<15;i++)
+    {
+        for(j=24;j<LARGURA_TELA/32;j++)
+        {
+            if(i==13)
+                matriz_tela[i][j]=1;
+            if(i==14)
+                matriz_tela[i][j]=0;
+        }
+    }
+    for(i=0;i<13;i++)
+    {
+        for(j=24;j<LARGURA_TELA/32;j++)
             matriz_tela[i][j]=-1;
-        }
     }
-    for(i=0;i<20;i++)
-    {
-        matriz_tela[13][i]=CHAO;
-        matriz_tela[14][i]=TERRA;
-    }
-    matriz_tela[12][18]=PEDRA;
-    matriz_tela[12][5]=ARVORE_MORTA;
-    contador=4;
-    for(i=0;i<3;i++)
-    {
-        for(j=0;j<3;j++)
-        {
-            matriz_tela[10+i][11+j]=contador;
-            contador++;
-        }
-    }
-    contador=4;
-    for(i=0;i<3;i++)
-    {
-        for(j=0;j<3;j++)
-        {
-            matriz_tela[10+i][14+j]=contador;
-            contador++;
-        }
-    }
-    contador=4;
-    for(i=0;i<3;i++)
-    {
-        for(j=0;j<3;j++)
-        {
-            matriz_tela[10+i][7+j]=contador;
-            contador++;
-        }
-    }
+    matriz_tela[12][LARGURA_TELA/32-3]=3;
 }
 
-void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[SCREEN_H/32][SCREEN_W/32])
+void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
 {
     int i,j;
-    rectfill(mapa,0,0,640,480,makecol(127,127,127));
-    for(i=0;i<SCREEN_H/32;i++)
+    rectfill(mapa,0,0,640*5,480,makecol(127,127,127));
+    for(i=0;i<ALTURA_TELA/32;i++)
     {
-        for(j=0;j<SCREEN_W/32;j++)
+        for(j=0;j<LARGURA_TELA/32;j++)
         {
             if(matriz_tela[i][j]!=-1)
             {
