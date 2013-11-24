@@ -23,9 +23,12 @@
 #define VELOCIDADE 3
 // controla velocidade padrão de mudança dos estados dos sprites
 #define ATUALIZAR_ESTADO 6
-// Altura e largura da tela
+// Altura e largura da tela da screen
+#define ALTURA_SCREEN 480
+#define LARGURA_SCREEN 640
+// Altura e largura das fases
 #define ALTURA_TELA 480
-#define LARGURA_TELA 640
+#define LARGURA_TELA 640*5
 //  #############################################################################
 
 /*

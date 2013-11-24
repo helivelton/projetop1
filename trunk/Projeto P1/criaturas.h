@@ -18,6 +18,7 @@ typedef struct atributo
 typedef struct criatura
 {
     float x;
+    float ajuste_x;
     float y;
     int direcao;
     int direcao_anterior;
@@ -31,7 +32,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_spr
 
 // Funções do guerreiro
 void imagens_guerreiro(BITMAP *im_guerreiro[4]);
-void movimento_guerreiro(Tcriatura *guerreiro_status,int timer);
+void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int *mov_mapa);
 void desenhar_guerreiro(BITMAP *buffer,BITMAP *guerreiro,Tcriatura *guerreiro_status,BITMAP *im_guerreiro[4]);
 
 // Funções do goblin tipo 1

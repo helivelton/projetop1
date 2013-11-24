@@ -30,7 +30,8 @@ int main()
 */
     int i; // controlador de loops e auxiliares
     int ticks; // controla velocidade do jogo
-    int matriz_tela[SCREEN_H/32][SCREEN_W/32]; // matriz da tela
+    int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32]; // matriz da tela
+    int mov_mapa=0; // variável que cuida do movimento do mapa
 
     // variáveis de status
     Tcriatura guerreiro_status; // declara status guerreiro
@@ -38,7 +39,7 @@ int main()
 
     // declara BITMAPS
     BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
-    BITMAP *mapa = create_bitmap(SCREEN_W,SCREEN_H); // Cria o mapa
+    BITMAP *mapa = create_bitmap(LARGURA_TELA,ALTURA_TELA); // Cria o mapa
     BITMAP *texturas[MAX_TERRENOS]; // declara a array de texturas
     BITMAP *im_guerreiro[4]; // array de bitmaps do guerreiro
     BITMAP *guerreiro = create_bitmap(32,48); // imagem atual guerreiro
@@ -94,11 +95,13 @@ int main()
             keyboard_input();
 
             // cálculos dos movimentos
+            movimento_guerreiro(&guerreiro_status,timer,&mov_mapa);
+            goblin1_status.x -= goblin1_status.ajuste_x - mov_mapa; // ajusta posição goblin com mov_mapa
             movimento_goblin1(&goblin1_status,guerreiro_status.x,timer);
-            movimento_guerreiro(&guerreiro_status,timer);
+            goblin1_status.ajuste_x = mov_mapa; // evita acumulação no próximo ajuste mapa (se houver)
 
             // Desenhar
-            draw_sprite(buffer, mapa, 0, 0); // manda mapa para o buffer
+            draw_sprite(buffer, mapa, mov_mapa, 0); // manda mapa para o buffer na posição mov_mapa
             desenhar_goblin1(buffer,goblin1,&goblin1_status,im_goblin1); // desenha goblin tipo 1 e manda para o buffer
             desenhar_guerreiro(buffer,guerreiro,&guerreiro_status,im_guerreiro); // desenha guerreiro e manda para buffer
             textout_ex(buffer, font, "Kill Goblins", 250,2, makecol(255,255,255 ),-1 ); // manda texto para buffer
