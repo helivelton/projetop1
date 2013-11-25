@@ -24,6 +24,8 @@ typedef struct criatura
     int direcao_anterior;
     int estado_sprite;
     int controle_estado;
+    int caindo;
+    int pulando;
     Tatributo caracteristicas;
 }Tcriatura;
 

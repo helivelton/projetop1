@@ -85,3 +85,36 @@
 1385324657 source:c:\users\j.carlos\documents\dropbox\projeto p1\mapa.c
 	"mapa.h"
 
+1385345241 source:c:\users\helivelton\projetop1\projeto p1\basico.c
+	"basico.h"
+
+1385345241 c:\users\helivelton\projetop1\projeto p1\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1385345241 source:c:\users\helivelton\projetop1\projeto p1\controle.c
+	"controle.h"
+
+1385345241 c:\users\helivelton\projetop1\projeto p1\controle.h
+	"basico.h"
+
+1385357889 source:c:\users\helivelton\projetop1\projeto p1\criaturas.c
+	"criaturas.h"
+
+1385357870 c:\users\helivelton\projetop1\projeto p1\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1385345241 source:c:\users\helivelton\projetop1\projeto p1\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1385345241 c:\users\helivelton\projetop1\projeto p1\mapa.h
+	"basico.h"
+
+1385345241 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
+	"mapa.h"
+
