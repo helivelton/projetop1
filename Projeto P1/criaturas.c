@@ -15,6 +15,8 @@ void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_spr
     ser->caracteristicas.poder_de_fogo=pdf;
     ser->caracteristicas.hp=ser->caracteristicas.resistencia*5;
     ser->caracteristicas.mp=ser->caracteristicas.resistencia*5;
+    ser->caindo=0;
+    ser->pulando=0;
 }
 
 void imagens_guerreiro(BITMAP *im_guerreiro[4])
@@ -39,13 +41,13 @@ void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int *mov_mapa)
     {
         if(guerreiro_status->x <= SCREEN_W/2 || *mov_mapa <= ((-32)*((LARGURA_TELA/32-20)-1)))
         {
-            guerreiro_status->x=guerreiro_status->x+VELOCIDADE;
+            guerreiro_status->x+=VELOCIDADE;
         }
         else
         {
             *mov_mapa-=VELOCIDADE;
         }
-        if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO)
+        if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO && (guerreiro_status->y>=12*32-(48-ALTURA_SPRITE)/2))
         {
             guerreiro_status->controle_estado=timer;
             guerreiro_status->estado_sprite=(guerreiro_status->estado_sprite+1)%4;
@@ -56,19 +58,45 @@ void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int *mov_mapa)
     {
         if(guerreiro_status->x >= SCREEN_W/2 || *mov_mapa >= 0)
         {
-            guerreiro_status->x=guerreiro_status->x-VELOCIDADE;
+            guerreiro_status->x-=VELOCIDADE;
         }
         else
         {
             *mov_mapa+=VELOCIDADE;
         }
-        if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO)
+        if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO && (guerreiro_status->y>=12*32-(48-ALTURA_SPRITE)/2))
         {
             guerreiro_status->controle_estado=timer;
             guerreiro_status->estado_sprite=(guerreiro_status->estado_sprite+1)%4;
         }
         guerreiro_status->direcao = 2;
     }
+
+    if(guerreiro_status->y>=12*32-(48-ALTURA_SPRITE)/2)
+    {
+        guerreiro_status->caindo=0;
+    }
+
+    if(guerreiro_status->y<=300)
+    {
+        guerreiro_status->caindo=1;
+    }
+
+
+    if(guerreiro_status->caindo && guerreiro_status->y<12*32-(48-ALTURA_SPRITE)/2)
+    {
+        guerreiro_status->y+=5;
+    }
+
+
+    if  (segurou(KEY_UP) && guerreiro_status->y >300 && !guerreiro_status->caindo)
+    {
+
+            guerreiro_status->y=guerreiro_status->y-VELOCIDADE;
+
+    }
+
+    if(soltou(KEY_UP)) guerreiro_status->caindo=1;
 }
 
 void desenhar_guerreiro(BITMAP *buffer,BITMAP *guerreiro,Tcriatura *guerreiro_status,BITMAP *im_guerreiro[4])
