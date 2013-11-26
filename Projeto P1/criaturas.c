@@ -3,7 +3,6 @@
 void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite,int f,int h,int r,int a,int pdf)
 {
     ser->x=x;
-    ser->ajuste_x = 0;
     ser->y=y;
     ser->direcao=direcao;
     ser->direcao_anterior=1;
@@ -35,17 +34,17 @@ void imagens_guerreiro(BITMAP *im_guerreiro[4])
     destroy_bitmap(tiles);
 }
 
-void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int *mov_mapa)
+void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int mov_mapa[2])
 {
     if (segurou(KEY_RIGHT) && guerreiro_status->x < SCREEN_W-32)
     {
-        if(guerreiro_status->x <= SCREEN_W/2 || *mov_mapa <= ((-32)*((LARGURA_TELA/32-20)-1)))
+        if(guerreiro_status->x <= SCREEN_W/2 || mov_mapa[0] <= ((-32)*((LARGURA_TELA/32-20)-1)))
         {
             guerreiro_status->x+=VELOCIDADE;
         }
         else
         {
-            *mov_mapa-=VELOCIDADE;
+            mov_mapa[0]-=VELOCIDADE;
         }
         if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO && (guerreiro_status->y>=12*32-(48-ALTURA_SPRITE)/2))
         {
@@ -56,13 +55,13 @@ void movimento_guerreiro(Tcriatura *guerreiro_status,int timer,int *mov_mapa)
     }
     else if (segurou(KEY_LEFT) && guerreiro_status->x > 0)
     {
-        if(guerreiro_status->x >= SCREEN_W/2 || *mov_mapa >= 0)
+        if(guerreiro_status->x >= SCREEN_W/2 || mov_mapa[0] >= 0)
         {
             guerreiro_status->x-=VELOCIDADE;
         }
         else
         {
-            *mov_mapa+=VELOCIDADE;
+            mov_mapa[0]+=VELOCIDADE;
         }
         if (timer-guerreiro_status->controle_estado>=ATUALIZAR_ESTADO && (guerreiro_status->y>=12*32-(48-ALTURA_SPRITE)/2))
         {

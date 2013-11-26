@@ -31,7 +31,9 @@ int main()
     int i; // controlador de loops e auxiliares
     int ticks; // controla velocidade do jogo
     int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32]; // matriz da tela
-    int mov_mapa=0; // variável que cuida do movimento do mapa
+    int mov_mapa[2]; // vetor que cuida do movimento do mapa e dos objetos nele
+    mov_mapa[0]=0; // o primeiro índice controla com o segundo os objetos no mapa
+    mov_mapa[1]=0;
 
     // variáveis de status
     Tcriatura guerreiro_status; // declara status guerreiro
@@ -95,13 +97,13 @@ int main()
             keyboard_input();
 
             // cálculos dos movimentos
-            movimento_guerreiro(&guerreiro_status,timer,&mov_mapa);
-            goblin1_status.x -= goblin1_status.ajuste_x - mov_mapa; // ajusta posição goblin com mov_mapa
+            movimento_guerreiro(&guerreiro_status,timer,mov_mapa);
+            goblin1_status.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
             movimento_goblin1(&goblin1_status,guerreiro_status.x,timer);
-            goblin1_status.ajuste_x = mov_mapa; // evita acumulação no próximo ajuste mapa (se houver)
+            mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
 
             // Desenhar
-            draw_sprite(buffer, mapa, mov_mapa, 0); // manda mapa para o buffer na posição mov_mapa
+            draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
             desenhar_goblin1(buffer,goblin1,&goblin1_status,im_goblin1); // desenha goblin tipo 1 e manda para o buffer
             desenhar_guerreiro(buffer,guerreiro,&guerreiro_status,im_guerreiro); // desenha guerreiro e manda para buffer
             textout_ex(buffer, font, "Kill Goblins", 250,2, makecol(255,255,255 ),-1 ); // manda texto para buffer
