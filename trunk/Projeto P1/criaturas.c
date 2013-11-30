@@ -1,6 +1,7 @@
 #include "criaturas.h"
 
-void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite,int f,int h,int r,int a,int pdf)
+void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,
+                       int estado_sprite,int f,int h,int r,int a,int pdf)
 {
     ser->x=x;
     ser->y=y;

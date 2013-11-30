@@ -86,7 +86,7 @@ int main()
             fecha_programa();
 
         // loop válido
-        while(ticks==timer)
+        while(ticks<=timer)
         {
             // limpa bitmaps de armazenamento
             clear_bitmap(buffer); // Limpa o buffer;
