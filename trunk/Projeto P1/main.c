@@ -75,7 +75,7 @@ int main()
     while (!exit_program)
     {
         // loop válido
-        while(ticks<=timer)
+        while(ticks<=timer && !exit_program)
         {
             // termina jogo se pressionar esc
             if(key[KEY_ESC])
