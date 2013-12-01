@@ -74,13 +74,13 @@ int main()
     // Processo de repetição principal
     while (!exit_program)
     {
-        // termina jogo se pressionar esc
-        if(key[KEY_ESC])
-            fecha_programa();
-
         // loop válido
         while(ticks<=timer)
         {
+            // termina jogo se pressionar esc
+            if(key[KEY_ESC])
+                fecha_programa();
+
             // incrementa o tempo de jogo
             tempo_de_jogo++;
             // limpa bitmaps de armazenamento
