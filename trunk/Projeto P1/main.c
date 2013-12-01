@@ -10,16 +10,6 @@
 #include "controle.h"
 //  #################################################################################
 
-// variável e função de saída
-volatile int exit_program;
-void fecha_programa(){exit_program = TRUE;}
-END_OF_FUNCTION(fecha_programa)
-
-// variavel e função tempo
-volatile int timer;
-void incrementa_timer(){timer++;}
-END_OF_FUNCTION(incrementa_timer)
-
 int main()
 {
     init(); // inicializa
@@ -30,33 +20,36 @@ int main()
 */
     int i; // controlador de loops e auxiliares
     int ticks; // controla velocidade do jogo
-    int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32]; // matriz da tela
+    int tempo_de_jogo=0; // controla o tempo de jogo
+    int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]; // matriz da tela
     int mov_mapa[2]; // vetor que cuida do movimento do mapa e dos objetos nele
     mov_mapa[0]=0; // o primeiro índice controla com o segundo os objetos no mapa
     mov_mapa[1]=0;
+    int controle_janela[2]; // controla tempo da janela atual, com tempo inicio e fim
+    int janela_atual = 0; // controla janela atual
 
-    // variáveis de status
-    Tcriatura guerreiro_status; // declara status guerreiro
-    Tcriatura goblin1_status; // declara status goblin
+    // variáveis de objetos
+    Tcriatura guerreiro; // declara objeto guerreiro
+    Tcriatura goblin1; // declara objeto goblin
 
     // declara BITMAPS
     BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
-    BITMAP *mapa = create_bitmap(LARGURA_TELA,ALTURA_TELA); // Cria o mapa
+    BITMAP *mapa = create_bitmap(LARGURA_MAPA,ALTURA_MAPA); // Cria o mapa
     BITMAP *texturas[MAX_TERRENOS]; // declara a array de texturas
-    BITMAP *im_guerreiro[4]; // array de bitmaps do guerreiro
-    BITMAP *guerreiro = create_bitmap(32,48); // imagem atual guerreiro
-    BITMAP *im_goblin1[3]; // array de bitmaps do goblin tipo 1
-    BITMAP *goblin1 = create_bitmap(32,48); // imagem atual goblin tipo 1
+
+    // Declara fontes
+    FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
+    FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
 
 /*  #######################################################################################
                                 fim da declaração das variáveis
     #######################################################################################
 */
     // carregamento inicial
-    preenche_criatura(&guerreiro_status,0,12*32-(48-ALTURA_SPRITE)/2,1,0,2,2,2,1,0); // preenche status guerreiro
-    imagens_guerreiro(im_guerreiro); // preenche vetor de imagens do guerreiro
-    preenche_criatura(&goblin1_status,SCREEN_W-50,12*32-(48-ALTURA_SPRITE)/2,2,0,1,1,1,0,0); // preenche status goblin
-    imagens_goblin1(im_goblin1); // preenche vetor de imagens do goblin tipo 1
+    preenche_criatura(&guerreiro,22,12*32-(64-ALTURA_SPRITE)/2,1,0,2,2,2,1,0); // preenche status guerreiro
+    imagens_guerreiro(guerreiro.vetor_sprite); // preenche vetor de imagens do guerreiro
+    preenche_criatura(&goblin1,SCREEN_W-50,12*32-(64-ALTURA_SPRITE)/2,2,0,1,1,1,0,0); // preenche status goblin
+    imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
     prepara_mapa(&matriz_tela); // preenche matriz com os tilesets corretos
     carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
@@ -75,8 +68,8 @@ int main()
 
     // inicializa controles de velocidade
     ticks = timer; // velocidade do jogo
-    guerreiro_status.controle_estado = timer; // velocidade de modificação do sprite guerreiro
-    goblin1_status.controle_estado = timer; // velocidade de modificação do sprite goblin1
+    guerreiro.controle_estado = timer; // velocidade de modificação do sprite guerreiro
+    goblin1.controle_estado = timer; // velocidade de modificação do sprite goblin1
 
     // Processo de repetição principal
     while (!exit_program)
@@ -88,26 +81,53 @@ int main()
         // loop válido
         while(ticks<=timer)
         {
+            // incrementa o tempo de jogo
+            tempo_de_jogo++;
             // limpa bitmaps de armazenamento
             clear_bitmap(buffer); // Limpa o buffer;
-            clear_bitmap(guerreiro); // Limpa bitmap guerreiro
-            clear_bitmap(goblin1); // Limpa bitmap goblin tipo 1
+            clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
+            clear_bitmap(goblin1.sprite); // Limpa bitmap goblin tipo 1
 
             // atualiza estado do teclado
             keyboard_input();
 
-            // cálculos dos movimentos
-            movimento_guerreiro(&guerreiro_status,timer,mov_mapa);
-            goblin1_status.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
-            movimento_goblin1(&goblin1_status,guerreiro_status.x,timer);
+            // Lógica do jogo
+            movimento_guerreiro(&guerreiro,mov_mapa);
+            goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
+            movimento_goblin1(&goblin1,guerreiro.x);
             mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
+
+            if(apertou(KEY_W)) // W controla caixa de texto. teste.
+            {
+                if(janela_atual==0)
+                {
+                    janela_atual=1;
+                    controle_janela[0]=tempo_de_jogo;
+                    controle_janela[1]=-1;
+                }
+                else
+                    controle_janela[1]=tempo_de_jogo+20;
+            }
 
             // Desenhar
             draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
-            desenhar_goblin1(buffer,goblin1,&goblin1_status,im_goblin1); // desenha goblin tipo 1 e manda para o buffer
-            desenhar_guerreiro(buffer,guerreiro,&guerreiro_status,im_guerreiro); // desenha guerreiro e manda para buffer
-            textout_ex(buffer, font, "Kill Goblins", 250,2, makecol(255,255,255 ),-1 ); // manda texto para buffer
-            textprintf_right_ex(buffer,font,SCREEN_W,0,makecol(255,255,255),-1,"%d",timer/60); // desenha tempo
+            desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
+            desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
+
+            janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
+                         titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
+            janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
+
+
+            if(janela_atual==1) // teste de janela
+            {
+                janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
+                         titulo_texto,corpo_texto,150,controle_janela[0],
+                         controle_janela[1],tempo_de_jogo); // exemplo caixa texto
+                if(tempo_de_jogo==controle_janela[1])
+                    janela_atual=0;
+            }
+
             draw_sprite(screen, buffer, 0, 0); // Manda o buffer para a tela;
             ticks++; // incrementa controle de velocidade do jogo
         }
@@ -124,14 +144,16 @@ int main()
     }
     for(i=0;i<4;i++)
     {
-        destroy_bitmap(im_guerreiro[i]);
+        destroy_bitmap(guerreiro.vetor_sprite[i]);
     }
     for(i=0;i<3;i++)
     {
-        destroy_bitmap(im_goblin1[i]);
+        destroy_bitmap(goblin1.vetor_sprite[i]);
     }
-    destroy_bitmap(guerreiro);
-    destroy_bitmap(goblin1);
+    destroy_bitmap(guerreiro.sprite);
+    destroy_bitmap(goblin1.sprite);
+    destroy_font(corpo_texto);
+    destroy_font(titulo_texto);
 
     return 0 ;
 }

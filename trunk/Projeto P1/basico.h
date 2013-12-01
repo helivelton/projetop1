@@ -22,47 +22,41 @@
 // controla velocidade padrão dos sprites
 #define VELOCIDADE 3
 // controla velocidade padrão de mudança dos estados dos sprites
-#define ATUALIZAR_ESTADO 6
+#define ATUALIZAR_ESTADO 10
 // Altura e largura da tela da screen
 #define ALTURA_SCREEN 480
 #define LARGURA_SCREEN 640
 // Altura e largura das fases
-#define ALTURA_TELA 480
-#define LARGURA_TELA 640*5
+#define ALTURA_MAPA 480
+#define LARGURA_MAPA 640*5
 //  #############################################################################
+
+volatile int exit_program; // variável de saída
+volatile int timer; // variável de tempo
 
 /*
     Cabeçalhos das funções
 */
 
-void init(); // criação da janela, instalação do teclado, mouse e timer
+// criação da janela, instalação do teclado, mouse e timer
+void init();
 
-void deinit();// finaliza tudo
+// finaliza tudo
+void deinit();
 
-/*
-######################### Processo para usar imagens no projeto em desenvolvimento ########################
-
-Questão: O repositório não pode conter os arquivos de imagens (que serão muitas, e o repositório
-tem espaço limitado), e essas imagens deverão estar compartilhadas entre os membros do grupo.
-
-Resolução: Usar o Dropbox para os arquivos de imagens, e se referir a elas através de um caminho relativo.
-
-Nova questão: após o projeto terminar, a pasta com todas as imagens deverão estar na pasta do projeto. Assim,
-todos os links irão mudar, e deverão ser alterados manualmente.
-
-Resolução: Ao invés disso, podemos contornar esse problema usando uma constante que adiciona uma string em
-cada link. Siga esses procedimentos:
-
-1. Em cada arquivo que for trabalhar, se for referenciar uma imagem, use o arquivo header "basico.h".
-
-2. Ao definir um link, use a função link_imagem(link), e no parênteses defina o link como se a pasta de
-imagens estivesse na pasta do projeto. A função retornará o link corrigido.
-
-Após a conclusão do projeto, pegue a pasta com as imagens (neste caso, imagens_p1), e coloque na pasta do
-projeto. E simplesmente mude a constante LINKRELAT do arquivo basico.c para "" (string vazia).
-Não serão necessárias alterações adicionais.
-*/
-
+// Use para corrigir os links das imagens
 char *link_imagem(char caminho[256]);
+
+// funções de janela ____________________________________________________________________________________________
+void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
+void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
+                  char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
+                  int inicio,int fim,int tempo_jogo);
+void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia);
+//_______________________________________________________________________________________________________________
+
+// funções que controlam as variáveis globais timer e exit_program
+void fecha_programa();
+void incrementa_timer();
 
 #endif // BASICO_H

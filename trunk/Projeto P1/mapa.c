@@ -24,7 +24,7 @@ void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
     destroy_bitmap(tileset);
 }
 
-void prepara_mapa(int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
+void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
 {
     int n_matriz_tela[15][24] =
     //   0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23
@@ -55,7 +55,7 @@ void prepara_mapa(int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
     }
     for(i=13;i<15;i++)
     {
-        for(j=24;j<LARGURA_TELA/32;j++)
+        for(j=24;j<LARGURA_MAPA/32;j++)
         {
             if(i==13)
                 matriz_tela[i][j]=1;
@@ -65,19 +65,19 @@ void prepara_mapa(int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
     }
     for(i=0;i<13;i++)
     {
-        for(j=24;j<LARGURA_TELA/32;j++)
+        for(j=24;j<LARGURA_MAPA/32;j++)
             matriz_tela[i][j]=-1;
     }
-    matriz_tela[12][LARGURA_TELA/32-3]=3;
+    matriz_tela[12][LARGURA_MAPA/32-3]=3;
 }
 
-void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[ALTURA_TELA/32][LARGURA_TELA/32])
+void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
 {
     int i,j;
     rectfill(mapa,0,0,640*5,480,makecol(127,127,127));
-    for(i=0;i<ALTURA_TELA/32;i++)
+    for(i=0;i<ALTURA_MAPA/32;i++)
     {
-        for(j=0;j<LARGURA_TELA/32;j++)
+        for(j=0;j<LARGURA_MAPA/32;j++)
         {
             if(matriz_tela[i][j]!=-1)
             {
