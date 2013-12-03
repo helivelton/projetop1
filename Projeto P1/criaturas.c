@@ -1,6 +1,6 @@
 #include "criaturas.h"
 
-void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite,int f,int h,int r,int a,int pdf)
+void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf)
 {
     ser->x=x;
     ser->y=y;
@@ -8,7 +8,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_spr
     ser->largura = 20;
     ser->direcao=direcao;
     ser->direcao_anterior=1;
-    ser->estado_sprite=estado_sprite;
+    ser->estado_sprite=0;
     ser->caracteristicas.forca=f;
     ser->caracteristicas.habilidade=h;
     ser->caracteristicas.resistencia=r;
@@ -39,7 +39,7 @@ void imagens_guerreiro(BITMAP *im_guerreiro[4])
 
 void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
 {
-    if (segurou(KEY_RIGHT) && guerreiro->x+(64-guerreiro->largura)/2+guerreiro->largura < SCREEN_W)
+    if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W)
     {
         if(guerreiro->x <= SCREEN_W/2 || mov_mapa[0] <= ((-32)*((LARGURA_MAPA/32-20)-1)))
         {
@@ -49,14 +49,14 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
         {
             mov_mapa[0]-=VELOCIDADE;
         }
-        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y>=12*32-(64-ALTURA_SPRITE)/2))
+        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y>=12*32))
         {
             guerreiro->controle_estado=timer;
             guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
         }
         guerreiro->direcao =1;
     }
-    else if (segurou(KEY_LEFT) && guerreiro->x+(64-guerreiro->largura)/2 > 0)
+    else if (segurou(KEY_LEFT) && guerreiro->x> 0)
     {
         if(guerreiro->x >= SCREEN_W/2 || mov_mapa[0] >= 0)
         {
@@ -66,7 +66,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
         {
             mov_mapa[0]+=VELOCIDADE;
         }
-        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y>=12*32-(64-ALTURA_SPRITE)/2))
+        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y>=12*32))
         {
             guerreiro->controle_estado=timer;
             guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
@@ -74,7 +74,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
         guerreiro->direcao = 2;
     }
 
-    if(guerreiro->y>=12*32-(64-ALTURA_SPRITE)/2)
+    if(guerreiro->y >=12*32)
     {
         guerreiro->caindo=0;
     }
@@ -85,7 +85,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
     }
 
 
-    if(guerreiro->caindo && guerreiro->y<12*32-(64-ALTURA_SPRITE)/2)
+    if(guerreiro->caindo && guerreiro->y<12*32)
     {
         guerreiro->y+=5;
     }
@@ -108,7 +108,7 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro)
     {
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
     }
-    draw_sprite(buffer, guerreiro->sprite, guerreiro->x, guerreiro->y); // manda guerreiro para buffer
+    draw_sprite(buffer, guerreiro->sprite, guerreiro->x-(64 - guerreiro->largura)/2, guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 }
 
 void imagens_goblin1(BITMAP *im_goblin1[4])
@@ -128,11 +128,11 @@ void imagens_goblin1(BITMAP *im_goblin1[4])
 
 void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro)
 {
-    if (goblin1->x+(64-goblin1->largura)/2 > x_guerreiro+20)
+    if (goblin1->x > x_guerreiro)
     {
         goblin1->direcao=2;
     }
-    else if (goblin1->x+(64-goblin1->largura)/2 < x_guerreiro+20)
+    else if (goblin1->x < x_guerreiro)
     {
         goblin1->direcao=1;
     }
@@ -186,5 +186,5 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    draw_sprite(buffer, goblin1->sprite, goblin1->x, goblin1->y);
+    draw_sprite(buffer, goblin1->sprite, goblin1->x-(64-goblin1->largura)/2, goblin1->y-(64-goblin1->altura)/2);
 }

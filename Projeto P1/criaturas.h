@@ -33,7 +33,7 @@ typedef struct criatura
 }Tcriatura;
 
 // Funções para todas as criaturas
-void preenche_criatura(Tcriatura *ser,float x,float y,int direcao,int estado_sprite,int f,int h,int r,int a,int pdf);
+void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf);
 
 // Funções do guerreiro
 void imagens_guerreiro(BITMAP *im_guerreiro[4]);
