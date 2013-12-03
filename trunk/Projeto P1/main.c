@@ -46,9 +46,9 @@ int main()
     #######################################################################################
 */
     // carregamento inicial
-    preenche_criatura(&guerreiro,22,12*32-(64-ALTURA_SPRITE)/2,1,0,2,2,2,1,0); // preenche status guerreiro
+    preenche_criatura(&guerreiro,0,12*32,20,34,1,2,2,2,1,0); // preenche status guerreiro
     imagens_guerreiro(guerreiro.vetor_sprite); // preenche vetor de imagens do guerreiro
-    preenche_criatura(&goblin1,SCREEN_W-50,12*32-(64-ALTURA_SPRITE)/2,2,0,1,1,1,0,0); // preenche status goblin
+    preenche_criatura(&goblin1,SCREEN_W-50,12*32,18,36,2,1,1,1,0,0); // preenche status goblin
     imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
     prepara_mapa(&matriz_tela); // preenche matriz com os tilesets corretos
@@ -83,6 +83,7 @@ int main()
 
             // incrementa o tempo de jogo
             tempo_de_jogo++;
+
             // limpa bitmaps de armazenamento
             clear_bitmap(buffer); // Limpa o buffer;
             clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
@@ -113,7 +114,6 @@ int main()
             draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
             desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
             desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
-
             janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
                          titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
             janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
@@ -128,7 +128,7 @@ int main()
                     janela_atual=0;
             }
 
-            draw_sprite(screen, buffer, 0, 0); // Manda o buffer para a tela;
+            blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
             ticks++; // incrementa controle de velocidade do jogo
         }
     }
