@@ -29,6 +29,10 @@
 // Altura e largura das fases
 #define ALTURA_MAPA 480
 #define LARGURA_MAPA 640*5
+// Nível do chão
+#define NIVEL_CHAO 13*32
+// Altura máxima do pulo
+#define ALTURA_PULO 9*32+16
 //  #############################################################################
 
 volatile int exit_program; // variável de saída

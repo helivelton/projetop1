@@ -18,10 +18,10 @@
 	"criaturas.h"
 	"controle.h"
 
-1386086208 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1385571413 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 
-1386085971 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1385862331 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -45,17 +45,17 @@
 1384899117 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1386107153 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1385868337 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1386106805 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1385868337 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 
 1386086208 source:c:\users\j.carlos\documents\dropbox\projeto p1\basico.c
 	"basico.h"
 
-1386085971 c:\users\j.carlos\documents\dropbox\projeto p1\basico.h
+1386109530 c:\users\j.carlos\documents\dropbox\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -66,14 +66,14 @@
 1384899117 c:\users\j.carlos\documents\dropbox\projeto p1\controle.h
 	"basico.h"
 
-1386107153 source:c:\users\j.carlos\documents\dropbox\projeto p1\criaturas.c
+1386109966 source:c:\users\j.carlos\documents\dropbox\projeto p1\criaturas.c
 	"criaturas.h"
 
 1386106805 c:\users\j.carlos\documents\dropbox\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 
-1386107017 source:c:\users\j.carlos\documents\dropbox\projeto p1\main.c
+1386109810 source:c:\users\j.carlos\documents\dropbox\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
