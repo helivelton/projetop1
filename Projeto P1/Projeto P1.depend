@@ -118,3 +118,162 @@
 1385345241 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
 	"mapa.h"
 
+1386086208 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia\basico.c
+	"basico.h"
+
+1386109530 c:\users\j.carlos\documents\dropbox\projeto p1 - copia\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646715 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia\controle.c
+	"controle.h"
+
+1384899117 c:\users\j.carlos\documents\dropbox\projeto p1 - copia\controle.h
+	"basico.h"
+
+1386109966 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia\criaturas.c
+	"criaturas.h"
+
+1386106805 c:\users\j.carlos\documents\dropbox\projeto p1 - copia\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1385862331 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia\mapa.c
+	"mapa.h"
+
+1385215169 c:\users\j.carlos\documents\dropbox\projeto p1 - copia\mapa.h
+	"basico.h"
+
+1386086210 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\basico.c
+	"basico.h"
+
+1386109532 c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646716 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\controle.c
+	"controle.h"
+
+1384899118 c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\controle.h
+	"basico.h"
+
+1386351521 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\criaturas.c
+	"criaturas.h"
+
+1386351519 c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1385862332 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\mapa.c
+	"mapa.h"
+
+1385215170 c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\mapa.h
+	"basico.h"
+
+1386352055 source:c:\users\j.carlos\documents\dropbox\projeto p1 - copia o certo\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1386086210 source:c:\users\j.carlos\documents\dropbox\projeto p1 - manu\basico.c
+	"basico.h"
+
+1386109532 c:\users\j.carlos\documents\dropbox\projeto p1 - manu\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646716 source:c:\users\j.carlos\documents\dropbox\projeto p1 - manu\controle.c
+	"controle.h"
+
+1384899118 c:\users\j.carlos\documents\dropbox\projeto p1 - manu\controle.h
+	"basico.h"
+
+1385862332 source:c:\users\j.carlos\documents\dropbox\projeto p1 - manu\mapa.c
+	"mapa.h"
+
+1385215170 c:\users\j.carlos\documents\dropbox\projeto p1 - manu\mapa.h
+	"basico.h"
+
+1386352678 source:c:\users\j.carlos\documents\dropbox\projeto p1 - manu\criaturas.c
+	"criaturas.h"
+
+1386352673 c:\users\j.carlos\documents\dropbox\projeto p1 - manu\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1386352693 source:c:\users\j.carlos\documents\dropbox\projeto p1 - manu\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1386086210 source:c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\basico.c
+	"basico.h"
+
+1386357402 c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646716 source:c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\controle.c
+	"controle.h"
+
+1384899118 c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\controle.h
+	"basico.h"
+
+1386352678 source:c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\criaturas.c
+	"criaturas.h"
+
+1386352673 c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1386352693 source:c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1385215170 c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\mapa.h
+	"basico.h"
+
+1386357377 source:c:\users\j.carlos\documents\dropbox\projeto p1 - gabriel\mapa.c
+	"mapa.h"
+
+1386086210 source:c:\users\gabriel\projetop1\projeto p1\basico.c
+	"basico.h"
+
+1386357404 c:\users\gabriel\projetop1\projeto p1\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646716 source:c:\users\gabriel\projetop1\projeto p1\controle.c
+	"controle.h"
+
+1384899118 c:\users\gabriel\projetop1\projeto p1\controle.h
+	"basico.h"
+
+1386352680 source:c:\users\gabriel\projetop1\projeto p1\criaturas.c
+	"criaturas.h"
+
+1386352674 c:\users\gabriel\projetop1\projeto p1\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1386352694 source:c:\users\gabriel\projetop1\projeto p1\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1385215170 c:\users\gabriel\projetop1\projeto p1\mapa.h
+	"basico.h"
+
+1386388260 source:c:\users\gabriel\projetop1\projeto p1\mapa.c
+	"mapa.h"
+
