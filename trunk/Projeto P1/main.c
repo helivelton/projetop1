@@ -137,6 +137,7 @@ int main()
     // destruição de bitmaps
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
+
     for(i=0;i<MAX_TERRENOS;i++)
     {
         destroy_bitmap(texturas[i]);
