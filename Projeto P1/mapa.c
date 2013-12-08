@@ -32,7 +32,7 @@ void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
     while((carac = getc(f)) != EOF)
     {
         // carrega tiles
-        if(j<100)
+        if(j<LARGURA_MAPA/32)
         {
             switch(carac)
             {
