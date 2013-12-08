@@ -91,9 +91,6 @@ int main()
             if(key[KEY_ESC])
                 fecha_programa();
 
-            // incrementa o tempo de jogo
-            tempo_de_jogo++;
-
              if(tela==0)
             {
                 clear_bitmap(buffer);
@@ -149,52 +146,56 @@ int main()
 
             else if(tela==1)
             {
+                // incrementa o tempo de jogo
+                tempo_de_jogo++;
+
                 // limpa bitmaps de armazenamento
-            clear_bitmap(buffer); // Limpa o buffer;
-            clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
-            clear_bitmap(goblin1.sprite); // Limpa bitmap goblin tipo 1
+                clear_bitmap(buffer); // Limpa o buffer;
+                clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
+                clear_bitmap(goblin1.sprite); // Limpa bitmap goblin tipo 1
 
-            // atualiza estado do teclado
-            keyboard_input();
+                // atualiza estado do teclado
+                keyboard_input();
 
-            // Lógica do jogo
-            movimento_guerreiro(&guerreiro,mov_mapa);
-            goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
-            movimento_goblin1(&goblin1,guerreiro.x);
-            mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
+                // Lógica do jogo
+                movimento_guerreiro(&guerreiro,mov_mapa);
+                goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
+                movimento_goblin1(&goblin1,guerreiro.x);
+                mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
 
-            if(apertou(KEY_W)) // W controla caixa de texto. teste.
-            {
-                if(janela_atual==0)
+                if(apertou(KEY_W)) // W controla caixa de texto. teste.
                 {
-                    janela_atual=1;
-                    controle_janela[0]=tempo_de_jogo;
-                    controle_janela[1]=-1;
+                    if(janela_atual==0)
+                    {
+                        janela_atual=1;
+                        controle_janela[0]=tempo_de_jogo;
+                        controle_janela[1]=-1;
+                    }
+                    else
+                        controle_janela[1]=tempo_de_jogo+20;
                 }
-                else
-                    controle_janela[1]=tempo_de_jogo+20;
+
+                // Desenhar
+                draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
+                desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
+                desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
+                janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
+                             titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
+                janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
+
+                if(janela_atual==1) // teste de janela
+                {
+                    janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
+                             titulo_texto,corpo_texto,150,controle_janela[0],
+                             controle_janela[1],tempo_de_jogo); // exemplo caixa texto
+                    if(tempo_de_jogo==controle_janela[1])
+                        janela_atual=0;
+                }
+
+                blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
+
             }
-
-            // Desenhar
-            draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
-            desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
-            desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
-            janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
-                         titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
-            janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
-
-            if(janela_atual==1) // teste de janela
-            {
-                janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
-                         titulo_texto,corpo_texto,150,controle_janela[0],
-                         controle_janela[1],tempo_de_jogo); // exemplo caixa texto
-                if(tempo_de_jogo==controle_janela[1])
-                    janela_atual=0;
-            }
-
-            blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
             ticks++; // incrementa controle de velocidade do jogo
-        }
         }
     }
 
