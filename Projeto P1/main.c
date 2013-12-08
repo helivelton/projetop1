@@ -27,6 +27,16 @@ int main()
     mov_mapa[1]=0;
     int controle_janela[2]; // controla tempo da janela atual, com tempo inicio e fim
     int janela_atual = 0; // controla janela atual
+    int tela = 0, selecionar = 0; //controla o carregamento de cada tela
+
+    //BITMAPs do Menu
+    BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
+    BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/play.bmp"), NULL);//menu iniciar
+    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/options.bmp"), NULL);//menu opções
+    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/exit.bmp"), NULL);//menu saída
+    BITMAP *menu_iniciar_selecionado = load_bitmap (link_imagem("imagens_p1/play1.bmp"), NULL);//menu iniciar
+    BITMAP *menu_options_selecionado = load_bitmap (link_imagem("imagens_p1/options1.bmp"), NULL);//menu opções
+    BITMAP *menu_exit_selecionado = load_bitmap (link_imagem("imagens_p1/exit1.bmp"), NULL);
 
     // variáveis de objetos
     Tcriatura guerreiro; // declara objeto guerreiro
@@ -84,7 +94,62 @@ int main()
             // incrementa o tempo de jogo
             tempo_de_jogo++;
 
-            // limpa bitmaps de armazenamento
+             if(tela==0)
+            {
+                clear_bitmap(buffer);
+                keyboard_input();
+                draw_sprite(buffer, bg, 0, 0);
+
+                if(apertou(KEY_DOWN))
+                {
+                    selecionar = (selecionar+1)%3;
+                }
+
+                else if(apertou (KEY_UP))
+                {
+                    if (selecionar != 0)
+                    selecionar = (selecionar-1)%3;
+
+                    else if (selecionar == 0)
+                    selecionar = 2;
+
+                }
+
+                if (selecionar == 0)
+                {
+
+                    draw_sprite (buffer, menu_iniciar_selecionado, 196, 166);
+                    draw_sprite (buffer, menu_options, 196, 221);
+                    draw_sprite (buffer, menu_exit, 196, 272);
+
+                }
+
+                else if (selecionar == 1)
+                {
+                    draw_sprite (buffer, menu_iniciar, 196, 166);
+                    draw_sprite (buffer, menu_options_selecionado, 196, 221);
+                    draw_sprite (buffer, menu_exit, 196, 272);
+                }
+
+                else if (selecionar == 2)
+                {
+                    draw_sprite (buffer, menu_iniciar, 196, 166);
+                    draw_sprite (buffer, menu_options, 196, 221);
+                    draw_sprite (buffer, menu_exit_selecionado, 196, 272);
+                }
+                draw_sprite (screen, buffer,0, 0);
+
+                if (selecionar == 2 && apertou(KEY_ENTER))
+                fecha_programa();
+
+                else if (selecionar == 0 && apertou(KEY_ENTER))
+                tela = 1;
+
+            }
+
+            else if(tela==1)
+            {
+                // limpa bitmaps de armazenamento
             clear_bitmap(buffer); // Limpa o buffer;
             clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
             clear_bitmap(goblin1.sprite); // Limpa bitmap goblin tipo 1
@@ -130,6 +195,7 @@ int main()
             blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
             ticks++; // incrementa controle de velocidade do jogo
         }
+        }
     }
 
     deinit(); // finaliza
@@ -137,6 +203,13 @@ int main()
     // destruição de bitmaps
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
+    destroy_bitmap(bg);
+    destroy_bitmap(menu_iniciar);
+    destroy_bitmap(menu_iniciar_selecionado);
+    destroy_bitmap(menu_options);
+    destroy_bitmap(menu_options_selecionado);
+    destroy_bitmap(menu_exit);
+    destroy_bitmap(menu_exit_selecionado);
 
     for(i=0;i<MAX_TERRENOS;i++)
     {
