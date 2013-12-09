@@ -36,49 +36,47 @@ void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
         {
             switch(carac)
             {
-                case ';':
-                m=-1;
-                break;
                 case '0':
-                m=0;
-                break;
+                    m=0;
+                    break;
                 case '1':
-                m=1;
-                break;
+                    m=1;
+                    break;
                 case '2':
-                m=2;
-                break;
+                    m=2;
+                    break;
                 case '3':
-                m=3;
-                break;
+                    m=3;
+                    break;
                 case '4':
-                m=4;
-                break;
+                    m=4;
+                    break;
                 case '5':
-                m=5;
-                break;
+                    m=5;
+                    break;
                 case '6':
-                m=6;
-                break;
+                    m=6;
+                    break;
                 case '7':
-                m=7;
-                break;
+                    m=7;
+                    break;
                 case '8':
-                m=8;
-                break;
+                    m=8;
+                    break;
                 case '9':
-                m=9;
-                break;
+                    m=9;
+                    break;
                 case 'a':
-                m=10;
-                break;
+                    m=10;
+                    break;
                 case 'b':
-                m=11;
-                break;
+                    m=11;
+                    break;
                 case 'c':
-                m=12;
-                break;
-
+                    m=12;
+                    break;
+                default:
+                    m=-1;
             }
             matriz_tela[i][j]=m;
             j++;
