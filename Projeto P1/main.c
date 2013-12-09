@@ -191,6 +191,8 @@ int main()
                     if(tempo_de_jogo==controle_janela[1])
                         janela_atual=0;
                 }
+                if(colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, goblin1.x, goblin1.y,goblin1.altura,goblin1.largura))
+                rectfill(buffer,50,50,100,100,makecol(0,0,160));
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 

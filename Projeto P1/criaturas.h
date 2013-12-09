@@ -45,4 +45,6 @@ void imagens_goblin1(BITMAP *im_goblin1[4]);
 void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro);
 void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1);
 
+int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
+
 #endif // CRIATURAS_H
