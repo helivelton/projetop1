@@ -277,3 +277,36 @@
 1386388260 source:c:\users\gabriel\projetop1\projeto p1\mapa.c
 	"mapa.h"
 
+1386086208 source:c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\basico.c
+	"basico.h"
+
+1386868325 c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+
+1384646715 source:c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\controle.c
+	"controle.h"
+
+1384899117 c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\controle.h
+	"basico.h"
+
+1386548663 source:c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\criaturas.c
+	"criaturas.h"
+
+1386548663 c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1386870113 source:c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+
+1386868360 c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\mapa.h
+	"basico.h"
+
+1386868325 source:c:\users\j.carlos\documents\dropbox\projeto p1 gabriel\mapa.c
+	"mapa.h"
+

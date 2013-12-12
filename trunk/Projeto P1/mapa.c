@@ -24,11 +24,11 @@ void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
     destroy_bitmap(tileset);
 }
 
-void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
+void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],char nome_mapa[10])
 {
     int i=0,j=0,m;
     char carac;
-    FILE* f = fopen("mapa.txt", "r");
+    FILE* f = fopen(nome_mapa, "r");
     while((carac = getc(f)) != EOF)
     {
         // carrega tiles
