@@ -34,6 +34,8 @@
 #define NIVEL_CHAO 13*32
 // Altura máxima do pulo
 #define ALTURA_PULO 9*32+16
+// Quantidade de fases
+#define N_FASES 3
 //  #############################################################################
 
 volatile int exit_program; // variável de saída

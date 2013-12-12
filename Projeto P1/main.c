@@ -28,6 +28,9 @@ int main()
     int controle_janela[2]; // controla tempo da janela atual, com tempo inicio e fim
     int janela_atual = 0; // controla janela atual
     int tela = 0, selecionar = 0; //controla o carregamento de cada tela
+    int fase=1;
+    int carrega_fase=1;
+    char nome_fase[N_FASES][10]={"mapa1.txt","mapa2.txt","mapa3.txt"};
 
     //BITMAPs do Menu
     BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
@@ -51,6 +54,8 @@ int main()
     FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
     FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
 
+
+
 /*  #######################################################################################
                                 fim da declaração das variáveis
     #######################################################################################
@@ -61,8 +66,7 @@ int main()
     preenche_criatura(&goblin1,SCREEN_W-50,NIVEL_CHAO-36,18,36,2,1,1,1,0,0); // preenche status goblin
     imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
-    prepara_mapa(&matriz_tela); // preenche matriz com os tilesets corretos
-    carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
+
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
@@ -146,6 +150,13 @@ int main()
 
             else if(tela==1)
             {
+                if(carrega_fase)
+                {
+                    prepara_mapa(&matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
+                    carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
+                    carrega_fase=0;
+                }
+
                 // incrementa o tempo de jogo
                 tempo_de_jogo++;
 
@@ -195,6 +206,17 @@ int main()
                 rectfill(buffer,50,50,100,100,makecol(0,0,160));
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
+
+                // nova fase
+                if(guerreiro.x +guerreiro.largura -mov_mapa[0] >= LARGURA_MAPA-50 && fase<N_FASES)
+                {
+                    carrega_fase=1;
+                    guerreiro.x = 10;
+                    goblin1.x = 300;
+                    mov_mapa[0]=0;
+                    mov_mapa[1]=0;
+                    fase++;
+                }
 
             }
             ticks++; // incrementa controle de velocidade do jogo
