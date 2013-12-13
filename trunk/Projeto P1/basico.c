@@ -72,3 +72,23 @@ void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,i
     desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,transparencia);
     textprintf_ex(buffer,fonte,pos_x+15,pos_y+10,makecol(0,0,150),-1,"%d",variavel);
 }
+
+void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,
+                    int inicio, int fim, int tempo_jogo,char texto_titulo[50],char texto_corpo[256])
+{
+
+    janela_texto(buffer,pos_x,pos_y,106,106,"","",titulo,corpo,150,inicio,fim, tempo_jogo);
+    janela_texto(buffer,pos_x+107,pos_y,300,106,texto_titulo,texto_corpo,titulo,corpo,150,inicio,fim, tempo_jogo);
+    if(fim==-1 && tempo_jogo>inicio+20)
+    {
+        draw_sprite(buffer,personagem->face,pos_x+5,pos_y+5);
+        if((tempo_jogo/16)%2==0)
+        {
+            rectfill(buffer,pos_x+380,pos_y+80,pos_x+380+10,pos_y+80+10,makecol(200,0,0));
+        }
+        else
+        {
+            rectfill(buffer,pos_x+380,pos_y+70,pos_x+380+10,pos_y+70+10,makecol(200,0,0));
+        }
+    }
+}
