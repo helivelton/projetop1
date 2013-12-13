@@ -213,12 +213,3 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
     draw_sprite(buffer, goblin1->sprite, goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
 }
-
-int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)
-{
-    if((ax+al)<bx || ax>(bx+bl) || ay>(by+bh) || (ay+ah)<by)
-    {
-       return 0;
-    }
-    return 1;
-}
