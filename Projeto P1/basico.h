@@ -41,6 +41,37 @@
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 
+// tipos atributo e criatura
+typedef struct atributo
+{
+    int forca;
+    int habilidade;
+    int resistencia;
+    int armadura;
+    int poder_de_fogo;
+    int hp;
+    int mp;
+}Tatributo;
+
+typedef struct criatura
+{
+    float x;
+    float y;
+    float largura;
+    float altura;
+    int direcao;
+    int direcao_anterior;
+    int estado_sprite; // estado atual
+    int controle_estado; // verifica certos intervalos de tempo
+    int caindo;
+    int pulando;
+    int permitir_pulo;
+    BITMAP *sprite;
+    BITMAP *vetor_sprite[4];
+    BITMAP *face;
+    Tatributo caracteristicas;
+}Tcriatura;
+
 /*
     Cabeçalhos das funções
 */
@@ -60,6 +91,8 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
                   char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
                   int inicio,int fim,int tempo_jogo);
 void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia);
+void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,int inicio,
+                    int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256]);
 //_______________________________________________________________________________________________________________
 
 // funções que controlam as variáveis globais timer e exit_program

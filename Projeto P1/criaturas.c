@@ -18,21 +18,24 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->caracteristicas.mp=ser->caracteristicas.resistencia*5;
     ser->caindo=0;
     ser->pulando=0;
+    ser->permitir_pulo = 1;
     ser->sprite = create_bitmap(64,64);
 }
 
-void imagens_guerreiro(BITMAP *im_guerreiro[4])
+void imagens_guerreiro(Tcriatura *guerreiro)
 {
     int i;
     for(i=0;i<4;i++)
     {
-        im_guerreiro[i]=create_bitmap(32,48);
+        guerreiro->vetor_sprite[i]=create_bitmap(32,48);
     }
     BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/hero.bmp"),NULL);
-    blit(tiles,im_guerreiro[0],0,0,0,0,32,48);
-    blit(tiles,im_guerreiro[1],32,0,0,0,32,48);
-    blit(tiles,im_guerreiro[2],2*32,0,0,0,32,48);
-    blit(tiles,im_guerreiro[3],3*32,0,0,0,32,48);
+    blit(tiles,guerreiro->vetor_sprite[0],0,0,0,0,32,48);
+    blit(tiles,guerreiro->vetor_sprite[1],32,0,0,0,32,48);
+    blit(tiles,guerreiro->vetor_sprite[2],2*32,0,0,0,32,48);
+    blit(tiles,guerreiro->vetor_sprite[3],3*32,0,0,0,32,48);
+
+    guerreiro->face = load_bitmap(link_imagem("imagens_p1/hero_face.bmp"),NULL);
 
     destroy_bitmap(tiles);
 }
@@ -74,14 +77,19 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
         guerreiro->direcao = 2;
     }
 
-    if(guerreiro->y + guerreiro->altura >= NIVEL_CHAO)
+    if(guerreiro->y + guerreiro->altura == NIVEL_CHAO)
     {
         guerreiro->caindo=0;
+    }
+    if(guerreiro->y + guerreiro->altura > NIVEL_CHAO)
+    {
+        guerreiro->y=NIVEL_CHAO-guerreiro->altura;
     }
 
     if(guerreiro->y <= ALTURA_PULO)
     {
         guerreiro->caindo=1;
+        guerreiro->permitir_pulo = 0;
     }
 
 
@@ -90,11 +98,15 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
         guerreiro->y+=5;
     }
 
-    if(segurou(KEY_UP) && guerreiro->y >ALTURA_PULO && !guerreiro->caindo)
+    if(segurou(KEY_UP) && guerreiro->y >ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo)
     {
-            guerreiro->y=guerreiro->y-VELOCIDADE;
+        guerreiro->y=guerreiro->y-VELOCIDADE;
     }
-    if(soltou(KEY_UP)) guerreiro->caindo=1;
+    if(soltou(KEY_UP))
+    {
+        guerreiro->caindo=1;
+        guerreiro->permitir_pulo=1;
+    }
 }
 
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro)

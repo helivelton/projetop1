@@ -62,7 +62,7 @@ int main()
 */
     // carregamento inicial
     preenche_criatura(&guerreiro,0,NIVEL_CHAO-34,20,34,1,2,2,2,1,0); // preenche status guerreiro
-    imagens_guerreiro(guerreiro.vetor_sprite); // preenche vetor de imagens do guerreiro
+    imagens_guerreiro(&guerreiro); // preenche vetor de imagens do guerreiro
     preenche_criatura(&goblin1,SCREEN_W-50,NIVEL_CHAO-36,18,36,2,1,1,1,0,0); // preenche status goblin
     imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
@@ -196,12 +196,15 @@ int main()
 
                 if(janela_atual==1) // teste de janela
                 {
-                    janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
+                    /*janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
                              titulo_texto,corpo_texto,150,controle_janela[0],
-                             controle_janela[1],tempo_de_jogo); // exemplo caixa texto
+                             controle_janela[1],tempo_de_jogo); // exemplo caixa texto*/
+                    janela_dialogo(buffer,&guerreiro,70,300,titulo_texto,corpo_texto,controle_janela[0],
+                                   controle_janela[1],tempo_de_jogo,"Joao","Ola, meu nome e Joao.");
                     if(tempo_de_jogo==controle_janela[1])
                         janela_atual=0;
                 }
+
                 if(colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, goblin1.x, goblin1.y,goblin1.altura,goblin1.largura))
                 rectfill(buffer,50,50,100,100,makecol(0,0,160));
 
@@ -249,6 +252,7 @@ int main()
         destroy_bitmap(goblin1.vetor_sprite[i]);
     }
     destroy_bitmap(guerreiro.sprite);
+    destroy_bitmap(guerreiro.face);
     destroy_bitmap(goblin1.sprite);
     destroy_font(corpo_texto);
     destroy_font(titulo_texto);
