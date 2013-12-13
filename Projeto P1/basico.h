@@ -74,6 +74,15 @@ typedef struct criatura
     Tatributo caracteristicas;
 }Tcriatura;
 
+typedef struct item
+{
+    float x;
+    float y;
+    int largura;
+    int altura;
+    BITMAP *imagem;
+}Titem;
+
 /*
     Cabeçalhos das funções
 */
