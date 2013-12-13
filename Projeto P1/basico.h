@@ -110,4 +110,7 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
 void fecha_programa();
 void incrementa_timer();
 
+// Funções gerais que afetam diversos tipos de objetos
+int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
+
 #endif // BASICO_H

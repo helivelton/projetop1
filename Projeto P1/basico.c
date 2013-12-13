@@ -92,3 +92,12 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
         }
     }
 }
+
+int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)
+{
+    if((ax+al)<bx || ax>(bx+bl) || ay>(by+bh) || (ay+ah)<by)
+    {
+       return 0;
+    }
+    return 1;
+}
