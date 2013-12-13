@@ -194,6 +194,27 @@ int main()
                              titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
                 janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
 
+                if(DEBUG)
+                {
+                    rectfill(buffer,guerreiro.x,guerreiro.y,guerreiro.x+1,guerreiro.y+1,makecol(0,0,160));
+                    rectfill(buffer,guerreiro.x+guerreiro.largura,guerreiro.y,guerreiro.x+guerreiro.largura+1,guerreiro.y+1,makecol(0,0,160));
+                    rectfill(buffer,LARGURA_SCREEN/2,guerreiro.y-5,LARGURA_SCREEN/2+1,guerreiro.y-4,makecol(0,255,0));
+                    rectfill(buffer,0,guerreiro.y-5,1,guerreiro.y-4,makecol(0,255,0));
+                    rectfill(buffer,LARGURA_SCREEN-1,guerreiro.y-5,LARGURA_SCREEN,guerreiro.y-4,makecol(0,255,0));
+                    janela_texto(buffer,20,200,50,50,"x","",
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                    janela_texto(buffer,20,230,50,50,"x+l","",
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                    janela_texto(buffer,20,260,50,50,"y","",
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                    janela_texto(buffer,20,290,50,50,"y+a","",
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                    janela_variavel(buffer,50,200,50,50,guerreiro.x,corpo_texto,0);
+                    janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
+                    janela_variavel(buffer,50,260,50,50,guerreiro.y,corpo_texto,0);
+                    janela_variavel(buffer,50,290,50,50,guerreiro.y+guerreiro.altura,corpo_texto,0);
+                }
+
                 if(janela_atual==1) // teste de janela
                 {
                     /*janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
@@ -206,7 +227,7 @@ int main()
                 }
 
                 if(colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, goblin1.x, goblin1.y,goblin1.altura,goblin1.largura))
-                rectfill(buffer,50,50,100,100,makecol(0,0,160));
+                    rectfill(buffer,50,50,100,100,makecol(0,0,160));
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 

@@ -4,8 +4,8 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
 {
     ser->x=x;
     ser->y=y;
-    ser->altura = 36;
-    ser->largura = 20;
+    ser->altura = altura;
+    ser->largura = largura;
     ser->direcao=direcao;
     ser->direcao_anterior=1;
     ser->estado_sprite=0;
@@ -42,37 +42,44 @@ void imagens_guerreiro(Tcriatura *guerreiro)
 
 void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
 {
+    int i;
     if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W)
     {
-        if(guerreiro->x <= SCREEN_W/2 || mov_mapa[0] <= ((-32)*((LARGURA_MAPA/32-20)-1)))
+        for(i=0;i<VELOCIDADE && guerreiro->x+guerreiro->largura < SCREEN_W;i++)
         {
-            guerreiro->x+=VELOCIDADE;
-        }
-        else
-        {
-            mov_mapa[0]-=VELOCIDADE;
-        }
-        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
-        {
-            guerreiro->controle_estado=timer;
-            guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+            if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*((LARGURA_MAPA/32-20)-1)))
+            {
+                guerreiro->x+=1;
+            }
+            else
+            {
+                mov_mapa[0]-=1;
+            }
+            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
+            {
+                guerreiro->controle_estado=timer;
+                guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+            }
         }
         guerreiro->direcao =1;
     }
-    else if (segurou(KEY_LEFT) && guerreiro->x> 0)
+    else if (segurou(KEY_LEFT) && guerreiro->x > 0)
     {
-        if(guerreiro->x >= SCREEN_W/2 || mov_mapa[0] >= 0)
+        for(i=0;i<VELOCIDADE && guerreiro->x > 0;i++)
         {
-            guerreiro->x-=VELOCIDADE;
-        }
-        else
-        {
-            mov_mapa[0]+=VELOCIDADE;
-        }
-        if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
-        {
-            guerreiro->controle_estado=timer;
-            guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+            if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
+            {
+                guerreiro->x-=1;
+            }
+            else
+            {
+                mov_mapa[0]+=1;
+            }
+            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
+            {
+                guerreiro->controle_estado=timer;
+                guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+            }
         }
         guerreiro->direcao = 2;
     }
@@ -80,10 +87,6 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
     if(guerreiro->y + guerreiro->altura == NIVEL_CHAO)
     {
         guerreiro->caindo=0;
-    }
-    if(guerreiro->y + guerreiro->altura > NIVEL_CHAO)
-    {
-        guerreiro->y=NIVEL_CHAO-guerreiro->altura;
     }
 
     if(guerreiro->y <= ALTURA_PULO)
@@ -95,12 +98,20 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
 
     if(guerreiro->caindo && guerreiro->y + guerreiro->altura < NIVEL_CHAO)
     {
-        guerreiro->y+=5;
+        for(i=0;i<5 && guerreiro->y + guerreiro->altura < NIVEL_CHAO;i++)
+        {
+            guerreiro->y+=1;
+        }
+
     }
 
-    if(segurou(KEY_UP) && guerreiro->y >ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo)
+    if(segurou(KEY_UP) && guerreiro->y > ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo)
     {
-        guerreiro->y=guerreiro->y-VELOCIDADE;
+        for(i=0;i<VELOCIDADE && guerreiro->y > ALTURA_PULO;i++)
+        {
+            guerreiro->y = guerreiro->y - 1;
+        }
+
     }
     if(soltou(KEY_UP))
     {
