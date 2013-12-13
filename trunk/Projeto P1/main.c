@@ -31,6 +31,7 @@ int main()
     int fase=1;
     int carrega_fase=1;
     char nome_fase[N_FASES][10]={"mapa1.txt","mapa2.txt","mapa3.txt"};
+    int loading_time = 0;
 
     //BITMAPs do Menu
     BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
@@ -40,6 +41,13 @@ int main()
     BITMAP *menu_iniciar_selecionado = load_bitmap (link_imagem("imagens_p1/play1.bmp"), NULL);//menu iniciar
     BITMAP *menu_options_selecionado = load_bitmap (link_imagem("imagens_p1/options1.bmp"), NULL);//menu opções
     BITMAP *menu_exit_selecionado = load_bitmap (link_imagem("imagens_p1/exit1.bmp"), NULL);
+
+    // BITMAPS da tela de carregamento
+    BITMAP *tela_loading[4];
+    tela_loading[0] = load_bitmap (link_imagem("imagens_p1/carregar1.bmp"), NULL);
+    tela_loading[1] = load_bitmap (link_imagem("imagens_p1/carregar2.bmp"), NULL);
+    tela_loading[2] = load_bitmap (link_imagem("imagens_p1/carregar3.bmp"), NULL);
+    tela_loading[3] = load_bitmap (link_imagem("imagens_p1/carregar4.bmp"), NULL);
 
     // variáveis de objetos
     Tcriatura guerreiro; // declara objeto guerreiro
@@ -144,7 +152,32 @@ int main()
                 fecha_programa();
 
                 else if (selecionar == 0 && apertou(KEY_ENTER))
-                tela = 1;
+                {
+                    tela = 9;
+                    loading_time = timer;
+                }
+            }
+
+            else if (tela == 9)
+            {
+                clear_bitmap(buffer);
+                if((timer/16)%4 == 0)
+                    draw_sprite(buffer, tela_loading[0], 0, 0);
+                else if((timer/16)%4 == 1)
+                    draw_sprite(buffer, tela_loading[1], 0, 0);
+                else if((timer/16)%4 == 2)
+                    draw_sprite(buffer, tela_loading[2], 0, 0);
+                else if((timer/16)%4 == 3)
+                    draw_sprite(buffer, tela_loading[3], 0, 0);
+
+                rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
+                rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+((timer*1.0/(loading_time+5*60))*140),355+15, makecol(0,0,160));
+
+
+                draw_sprite (screen, buffer,0, 0);
+
+                if(loading_time+5*60 <= timer)
+                    tela = 1;
 
             }
 
@@ -259,6 +292,10 @@ int main()
     destroy_bitmap(menu_options_selecionado);
     destroy_bitmap(menu_exit);
     destroy_bitmap(menu_exit_selecionado);
+    for (i = 0; i < 4; i++)
+    {
+        destroy_bitmap(tela_loading[i]);
+    }
 
     for(i=0;i<MAX_TERRENOS;i++)
     {
