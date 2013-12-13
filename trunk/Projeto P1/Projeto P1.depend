@@ -12,16 +12,17 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1386956143 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1386961483 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
 	"controle.h"
+	"item.h"
 
 1386902987 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 
-1386943838 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1386958665 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -117,4 +118,10 @@
 
 1385345241 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
 	"mapa.h"
+
+1386960425 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+	"item.h"
+
+1386960422 c:\users\j.carlos\documents\p1\projeto p1\item.h
+	"basico.h"
 
