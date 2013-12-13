@@ -36,6 +36,8 @@
 #define ALTURA_PULO 9*32+16
 // Quantidade de fases
 #define N_FASES 3
+// DEBUG
+#define DEBUG 0
 //  #############################################################################
 
 volatile int exit_program; // variável de saída
