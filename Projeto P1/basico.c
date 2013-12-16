@@ -52,6 +52,42 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
                   char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
                   int inicio,int fim,int tempo_jogo)
 {
+    char texto1[31],texto2[31],texto3[31];
+    int menor, menor_anterior=0,i;
+
+    menor=strlen(texto_corpo);
+    if(menor>30)
+        menor=30;
+    while(texto_corpo[menor]!=' ' && menor>=0)
+        menor-=1;
+    if(menor==0)
+        menor=30;
+    for(i=0;i<menor;i++)
+        texto1[i]=texto_corpo[i];
+    texto1[i]=0;
+    menor_anterior+=menor+1;
+
+    if(strlen(texto_corpo)>menor_anterior)
+        menor=strlen(texto_corpo)-menor_anterior;
+    if(menor>30)
+        menor=30;
+    while(texto_corpo[menor+menor_anterior]!=' ' && menor>=0)
+        menor-=1;
+    if(menor==0)
+        menor=30;
+    for(i=0;i<menor;i++)
+        texto2[i]=texto_corpo[i+menor_anterior];
+    texto2[i]=0;
+    menor_anterior+=menor+1;
+
+    if(strlen(texto_corpo)>menor_anterior)
+        menor=strlen(texto_corpo)-menor_anterior;
+    if(menor>30)
+        menor=30;
+    for(i=0;i<menor;i++)
+        texto3[i]=texto_corpo[i+menor_anterior];
+    texto3[i]=0;
+
     if(tempo_jogo>=inicio)
     {
         if (tempo_jogo<inicio+20)
@@ -62,7 +98,9 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
         {
             desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,transparencia);
             textprintf_ex(buffer,titulo,pos_x+10,pos_y+10,makecol(0,0,150),-1,"%s",texto_titulo);
-            textprintf_ex(buffer,corpo,pos_x+10,pos_y+30,makecol(250,250,250),-1,"%s",texto_corpo);
+            textprintf_ex(buffer,corpo,pos_x+10,pos_y+30,makecol(250,250,250),-1,"%s",texto1);
+            textprintf_ex(buffer,corpo,pos_x+10,pos_y+50,makecol(250,250,250),-1,"%s",texto2);
+            textprintf_ex(buffer,corpo,pos_x+10,pos_y+70,makecol(250,250,250),-1,"%s",texto3);
         }
     }
 }

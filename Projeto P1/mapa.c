@@ -106,4 +106,3 @@ void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[AL
         }
     }
 }
-

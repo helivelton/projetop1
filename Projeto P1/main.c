@@ -239,6 +239,8 @@ int main()
                     rectfill(buffer,LARGURA_SCREEN/2,guerreiro.y-5,LARGURA_SCREEN/2+1,guerreiro.y-4,makecol(0,255,0));
                     rectfill(buffer,0,guerreiro.y-5,1,guerreiro.y-4,makecol(0,255,0));
                     rectfill(buffer,LARGURA_SCREEN-1,guerreiro.y-5,LARGURA_SCREEN,guerreiro.y-4,makecol(0,255,0));
+                    janela_texto(buffer,20,170,50,50,"x/32","",
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
                     janela_texto(buffer,20,200,50,50,"x","",
                                  corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
                     janela_texto(buffer,20,230,50,50,"x+l","",
@@ -247,7 +249,8 @@ int main()
                                  corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
                     janela_texto(buffer,20,290,50,50,"y+a","",
                                  corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
-                    janela_variavel(buffer,50,200,50,50,guerreiro.x,corpo_texto,0);
+                    janela_variavel(buffer,110,170,50,50,(guerreiro.x-mov_mapa[0])/32,corpo_texto,0);
+                    janela_variavel(buffer,50,200,50,50,guerreiro.x-mov_mapa[0],corpo_texto,0);
                     janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
                     janela_variavel(buffer,50,260,50,50,guerreiro.y,corpo_texto,0);
                     janela_variavel(buffer,50,290,50,50,guerreiro.y+guerreiro.altura,corpo_texto,0);
@@ -259,7 +262,8 @@ int main()
                              titulo_texto,corpo_texto,150,controle_janela[0],
                              controle_janela[1],tempo_de_jogo); // exemplo caixa texto*/
                     janela_dialogo(buffer,&guerreiro,70,300,titulo_texto,corpo_texto,controle_janela[0],
-                                   controle_janela[1],tempo_de_jogo,"Joao","Ola, meu nome e Joao.");
+                                   controle_janela[1],tempo_de_jogo,"Joao",
+                                   "Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
                     if(tempo_de_jogo==controle_janela[1])
                         janela_atual=0;
                 }
