@@ -47,7 +47,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2])
     {
         for(i=0;i<VELOCIDADE && guerreiro->x+guerreiro->largura < SCREEN_W;i++)
         {
-            if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*((LARGURA_MAPA/32-20)-1)))
+            if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
             {
                 guerreiro->x+=1;
             }
