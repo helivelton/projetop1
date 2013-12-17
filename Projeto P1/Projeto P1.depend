@@ -12,17 +12,17 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1387155769 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1387303177 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
 	"controle.h"
 	"item.h"
 
-1387155950 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1387296697 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 
-1387156306 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1387302730 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -30,7 +30,7 @@
 1387073401 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
-1387073401 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1387302730 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
 1384665075 source:c:\users\j.carlos\documents\p1\projeto p1\guerreiro.c
@@ -46,12 +46,13 @@
 1386902987 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1387114574 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1387304700 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1386968030 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1387302730 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
+	"mapa.h"
 
 1386336802 source:c:\users\j.carlos\documents\dropbox\projeto p1\basico.c
 	"basico.h"

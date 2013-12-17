@@ -20,6 +20,9 @@ ARVORE_9,
 MAX_TERRENOS
 };
 
+//int bloqueios[3] = {TERRA, PEDRA, CHAO};
+
+
 /*
 Prepara as texturas individuais.
 Só é chamada uma vez no jogo.
