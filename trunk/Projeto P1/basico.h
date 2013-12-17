@@ -38,6 +38,7 @@
 #define N_FASES 3
 // DEBUG
 #define DEBUG 0
+
 //  #############################################################################
 
 volatile int exit_program; // variável de saída
@@ -83,6 +84,19 @@ typedef struct item
     BITMAP *imagem;
 }Titem;
 
+typedef struct janela
+{
+    float x;
+    float y;
+    int altura;
+    int largura;
+    int controle;
+    int tempo_inicio;
+    int tempo_fim;
+    char titulo[30];
+    char conteudo[256];
+}Tjanela;
+
 /*
     Cabeçalhos das funções
 */
@@ -104,6 +118,8 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
 void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia);
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,int inicio,
                     int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256]);
+void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
+                      int tempo_fim, char titulo[30],char conteudo[256]);
 //_______________________________________________________________________________________________________________
 
 // funções que controlam as variáveis globais timer e exit_program

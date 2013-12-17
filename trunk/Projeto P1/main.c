@@ -26,8 +26,8 @@ int main()
     int mov_mapa[2]; // vetor que cuida do movimento do mapa e dos objetos nele
     mov_mapa[0]=0; // o primeiro índice controla com o segundo os objetos no mapa
     mov_mapa[1]=0;
-    int controle_janela[2]; // controla tempo da janela atual, com tempo inicio e fim
     int janela_atual = 0; // controla janela atual
+    Tjanela totalJanelas[15];
     int tela = 0, selecionar = 0; //controla o carregamento de cada tela
     int fase=1;
     int carrega_fase=1;
@@ -78,6 +78,7 @@ int main()
     preenche_criatura(&goblin1,SCREEN_W-50,NIVEL_CHAO-36,18,36,2,1,1,1,0,0); // preenche status goblin
     imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
+    preencher_janela(&totalJanelas[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
 
 
     // configura saída com o botão x no alto da tela
@@ -107,7 +108,8 @@ int main()
             if(key[KEY_ESC])
                 fecha_programa();
 
-             if(tela==0)
+            // tela de menu
+            if(tela==0)
             {
                 clear_bitmap(buffer);
                 keyboard_input();
@@ -153,7 +155,7 @@ int main()
                 draw_sprite (screen, buffer,0, 0);
 
                 if (selecionar == 2 && apertou(KEY_ENTER))
-                fecha_programa();
+                    fecha_programa();
 
                 else if (selecionar == 0 && apertou(KEY_ENTER))
                 {
@@ -162,6 +164,7 @@ int main()
                 }
             }
 
+            // tela de loading
             else if (tela == 9)
             {
                 clear_bitmap(buffer);
@@ -185,6 +188,7 @@ int main()
 
             }
 
+            // tela de jogo
             else if(tela==1)
             {
                 if(carrega_fase)
@@ -206,7 +210,7 @@ int main()
                 keyboard_input();
 
                 // Lógica do jogo
-                movimento_guerreiro(&guerreiro,mov_mapa);
+                movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela);
                 goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
                 movimento_goblin1(&goblin1,guerreiro.x);
                 mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
@@ -216,11 +220,11 @@ int main()
                     if(janela_atual==0)
                     {
                         janela_atual=1;
-                        controle_janela[0]=tempo_de_jogo;
-                        controle_janela[1]=-1;
+                        totalJanelas[0].tempo_inicio=tempo_de_jogo;
+                        totalJanelas[0].tempo_fim=-1;
                     }
                     else
-                        controle_janela[1]=tempo_de_jogo+20;
+                        totalJanelas[0].tempo_fim=tempo_de_jogo+20;
                 }
 
                 // Desenhar
@@ -261,10 +265,10 @@ int main()
                     /*janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
                              titulo_texto,corpo_texto,150,controle_janela[0],
                              controle_janela[1],tempo_de_jogo); // exemplo caixa texto*/
-                    janela_dialogo(buffer,&guerreiro,70,300,titulo_texto,corpo_texto,controle_janela[0],
-                                   controle_janela[1],tempo_de_jogo,"Joao",
-                                   "Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-                    if(tempo_de_jogo==controle_janela[1])
+                    janela_dialogo(buffer,&guerreiro,totalJanelas[0].x,totalJanelas[0].y,titulo_texto,corpo_texto,
+                                   totalJanelas[0].tempo_inicio,totalJanelas[0].tempo_fim,tempo_de_jogo,totalJanelas[0].titulo,
+                                   totalJanelas[0].conteudo);
+                    if(tempo_de_jogo==totalJanelas[0].tempo_fim)
                         janela_atual=0;
                 }
 

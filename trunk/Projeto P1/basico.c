@@ -139,3 +139,17 @@ int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh,
     }
     return 1;
 }
+
+void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
+                      int tempo_fim, char titulo[30],char conteudo[256])
+{
+    janela_atual->x = x;
+    janela_atual->y = y;
+    janela_atual->altura = altura;
+    janela_atual->largura = largura;
+    janela_atual->controle = controle;
+    janela_atual->tempo_inicio = tempo_inicio;
+    janela_atual->tempo_fim = tempo_fim;
+    strcpy(janela_atual->titulo,titulo);
+    strcpy(janela_atual->conteudo,conteudo);
+}
