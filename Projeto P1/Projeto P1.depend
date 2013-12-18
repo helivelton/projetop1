@@ -87,42 +87,50 @@
 1385862331 source:c:\users\j.carlos\documents\dropbox\projeto p1\mapa.c
 	"mapa.h"
 
-1385345241 source:c:\users\helivelton\projetop1\projeto p1\basico.c
+1387340895 source:c:\users\helivelton\projetop1\projeto p1\basico.c
 	"basico.h"
 
-1385345241 c:\users\helivelton\projetop1\projeto p1\basico.h
+1387340895 c:\users\helivelton\projetop1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 
-1385345241 source:c:\users\helivelton\projetop1\projeto p1\controle.c
+1387340895 source:c:\users\helivelton\projetop1\projeto p1\controle.c
 	"controle.h"
 
-1385345241 c:\users\helivelton\projetop1\projeto p1\controle.h
+1387340896 c:\users\helivelton\projetop1\projeto p1\controle.h
 	"basico.h"
 
-1385357889 source:c:\users\helivelton\projetop1\projeto p1\criaturas.c
+1387346978 source:c:\users\helivelton\projetop1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1385357870 c:\users\helivelton\projetop1\projeto p1\criaturas.h
+1387343083 c:\users\helivelton\projetop1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
+	"mapa.h"
 
-1385345241 source:c:\users\helivelton\projetop1\projeto p1\main.c
+1387341184 source:c:\users\helivelton\projetop1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
 	"controle.h"
+	"item.h"
 
-1385345241 c:\users\helivelton\projetop1\projeto p1\mapa.h
+1387340895 c:\users\helivelton\projetop1\projeto p1\mapa.h
 	"basico.h"
 
-1385345241 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
+1387340895 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
 	"mapa.h"
 
 1386960425 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
 1387073018 c:\users\j.carlos\documents\p1\projeto p1\item.h
+	"basico.h"
+
+1387340895 source:c:\users\helivelton\projetop1\projeto p1\item.c
+	"item.h"
+
+1387340895 c:\users\helivelton\projetop1\projeto p1\item.h
 	"basico.h"
 

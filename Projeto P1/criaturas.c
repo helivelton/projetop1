@@ -40,10 +40,10 @@ void imagens_guerreiro(Tcriatura *guerreiro)
     destroy_bitmap(tiles);
 }
 
-void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
+void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     int i;
-    if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W  && !colisao_direita(guerreiro->x - mov_mapa[0] + guerreiro->largura +1, guerreiro->y, guerreiro->altura, matriz_tela))
+    if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W  && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
         for(i=0;i<VELOCIDADE && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
         {
@@ -55,7 +55,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
             {
                 mov_mapa[0]-=1;
             }
-            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
+            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
             {
                 guerreiro->controle_estado=timer;
                 guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
@@ -63,7 +63,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
         }
         guerreiro->direcao =1;
     }
-    else if (segurou(KEY_LEFT) && guerreiro->x > 0)
+    else if (segurou(KEY_LEFT) && guerreiro->x > 0 && !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
         for(i=0;i<VELOCIDADE && guerreiro->x > 0;i++)
         {
@@ -75,7 +75,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
             {
                 mov_mapa[0]+=1;
             }
-            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && (guerreiro->y + guerreiro->altura >= NIVEL_CHAO))
+            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
             {
                 guerreiro->controle_estado=timer;
                 guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
@@ -84,21 +84,24 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
         guerreiro->direcao = 2;
     }
 
-    if(guerreiro->y + guerreiro->altura == NIVEL_CHAO)
+    if(colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
         guerreiro->caindo=0;
+        guerreiro->permitir_pulo=1;
+
     }
 
-    if(guerreiro->y <= ALTURA_PULO)
+    if(guerreiro->y <= ALTURA_PULO || (!colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios) && !guerreiro->pulando))
     {
+
         guerreiro->caindo=1;
         guerreiro->permitir_pulo = 0;
     }
 
 
-    if(guerreiro->caindo && guerreiro->y + guerreiro->altura < NIVEL_CHAO)
+    if(guerreiro->caindo && !colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
-        for(i=0;i<5 && guerreiro->y + guerreiro->altura < NIVEL_CHAO;i++)
+        for(i=0;i<5 && !colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios);i++)
         {
             guerreiro->y+=1;
         }
@@ -107,6 +110,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
 
     if(segurou(KEY_UP) && guerreiro->y > ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo)
     {
+        guerreiro->pulando=1;
         for(i=0;i<VELOCIDADE && guerreiro->y > ALTURA_PULO;i++)
         {
             guerreiro->y = guerreiro->y - 1;
@@ -115,6 +119,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
     if(soltou(KEY_UP))
     {
+        guerreiro->pulando=0;
         guerreiro->caindo=1;
         guerreiro->permitir_pulo=1;
     }
@@ -214,11 +219,12 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
-int colisao_direita(float x,float y, int altura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
+int colisao_direita(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-    int bloqueios[3] = {TERRA, PEDRA, CHAO};
+
     y=y+1;
     altura=altura-2;
+    x= x + largura + 1;
     int xMatrix = x/32;
     int yMatrix = y/32;
 
@@ -271,6 +277,148 @@ int colisao_direita(float x,float y, int altura, int matriz_tela[ALTURA_MAPA/32]
     {
         int intermediario = altura/2;
         yMatrix = (y+intermediario)/32;
+        for(i=0;i<3;i++)
+        {
+            if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+            {
+                ehBloqueio=1;
+            }
+        }
+    }
+
+
+    return ehBloqueio;
+}
+
+int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+
+    y=y+1;
+    altura=altura-2;
+    x = x - 1;
+    int xMatrix = x/32;
+    int yMatrix = y/32;
+
+    int i, ehBloqueio=0;
+    //int j;
+    //int intervalo;
+
+    for(i=0;i<3;i++)
+    {
+        if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+        {
+            ehBloqueio=1;
+        }
+    }
+
+    if(!ehBloqueio)
+    {
+        yMatrix = (y+altura)/32;
+        for(i=0;i<3;i++)
+        {
+            if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+            {
+                ehBloqueio=1;
+            }
+        }
+    }
+/*
+    if(!ehBloqueio)
+    {
+
+        i=(altura*1.0)/6;
+
+        if(i<1)i=1;
+        intervalo=i;
+        for(i=i;i<(y+altura);i+=intervalo)
+        {
+            yMatrix= (y + i)/32;
+
+            for(j=0;j<3;j++)
+            {
+                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
+                {
+                    ehBloqueio=1;
+                }
+            }
+        }
+    }
+*/
+    if(!ehBloqueio)
+    {
+        int intermediario = altura/2;
+        yMatrix = (y+intermediario)/32;
+        for(i=0;i<3;i++)
+        {
+            if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+            {
+                ehBloqueio=1;
+            }
+        }
+    }
+
+
+    return ehBloqueio;
+}
+
+int colisao_abaixo(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+
+    y+=1;
+
+
+    int xMatrix = (x+2)/32;
+    int yMatrix = (y + altura + 1)/32;
+
+    int i, ehBloqueio=0;
+    //int j;
+    //int intervalo;
+
+    for(i=0;i<3;i++)
+    {
+        if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+        {
+            ehBloqueio=1;
+        }
+    }
+
+    if(!ehBloqueio)
+    {
+        xMatrix = (x+largura-2)/32;
+        for(i=0;i<3;i++)
+        {
+            if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
+            {
+                ehBloqueio=1;
+            }
+        }
+    }
+/*
+    if(!ehBloqueio)
+    {
+
+        i=(altura*1.0)/6;
+
+        if(i<1)i=1;
+        intervalo=i;
+        for(i=i;i<(y+altura);i+=intervalo)
+        {
+            yMatrix= (y + i)/32;
+
+            for(j=0;j<3;j++)
+            {
+                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
+                {
+                    ehBloqueio=1;
+                }
+            }
+        }
+    }
+*/
+    if(!ehBloqueio)
+    {
+        int intermediario = largura/2;
+        xMatrix = (x+intermediario)/32;
         for(i=0;i<3;i++)
         {
             if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
