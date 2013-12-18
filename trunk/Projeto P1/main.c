@@ -210,7 +210,8 @@ int main()
                 keyboard_input();
 
                 // Lógica do jogo
-                movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela);
+                int bloqueios[3] = {TERRA, PEDRA, CHAO};
+                movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
                 goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
                 movimento_goblin1(&goblin1,guerreiro.x);
                 mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)

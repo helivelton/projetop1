@@ -7,11 +7,12 @@
 
 // Funções para todas as criaturas
 void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf);
-int colisao_direita(float x,float y, int altura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]);
-
+int colisao_direita(float x,float y, int altura, int latguta, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
+int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
+int colisao_abaixo(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 // Funções do guerreiro
 void imagens_guerreiro(Tcriatura *guerreiro);
-void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]);
+void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro);
 
 // Funções do goblin tipo 1
