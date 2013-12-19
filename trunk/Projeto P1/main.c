@@ -36,12 +36,9 @@ int main()
 
     //BITMAPs do Menu
     BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
-    BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/play.bmp"), NULL);//menu iniciar
-    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/options.bmp"), NULL);//menu opções
-    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/exit.bmp"), NULL);//menu saída
-    BITMAP *menu_iniciar_selecionado = load_bitmap (link_imagem("imagens_p1/play1.bmp"), NULL);//menu iniciar
-    BITMAP *menu_options_selecionado = load_bitmap (link_imagem("imagens_p1/options1.bmp"), NULL);//menu opções
-    BITMAP *menu_exit_selecionado = load_bitmap (link_imagem("imagens_p1/exit1.bmp"), NULL);
+    BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
+    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
+    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu3.bmp"), NULL);//menu saída
 
     // BITMAPS da tela de carregamento
     BITMAP *tela_loading[4];
@@ -133,24 +130,18 @@ int main()
                 if (selecionar == 0)
                 {
 
-                    draw_sprite (buffer, menu_iniciar_selecionado, 196, 166);
-                    draw_sprite (buffer, menu_options, 196, 221);
-                    draw_sprite (buffer, menu_exit, 196, 272);
+                    draw_sprite (buffer, menu_iniciar, 0, 0);
 
                 }
 
                 else if (selecionar == 1)
                 {
-                    draw_sprite (buffer, menu_iniciar, 196, 166);
-                    draw_sprite (buffer, menu_options_selecionado, 196, 221);
-                    draw_sprite (buffer, menu_exit, 196, 272);
+                    draw_sprite (buffer, menu_options, 0, 0);
                 }
 
                 else if (selecionar == 2)
                 {
-                    draw_sprite (buffer, menu_iniciar, 196, 166);
-                    draw_sprite (buffer, menu_options, 196, 221);
-                    draw_sprite (buffer, menu_exit_selecionado, 196, 272);
+                    draw_sprite (buffer, menu_exit, 0, 0);
                 }
                 draw_sprite (screen, buffer,0, 0);
 
@@ -301,11 +292,8 @@ int main()
     destroy_bitmap(mapa);
     destroy_bitmap(bg);
     destroy_bitmap(menu_iniciar);
-    destroy_bitmap(menu_iniciar_selecionado);
     destroy_bitmap(menu_options);
-    destroy_bitmap(menu_options_selecionado);
     destroy_bitmap(menu_exit);
-    destroy_bitmap(menu_exit_selecionado);
     for (i = 0; i < 4; i++)
     {
         destroy_bitmap(tela_loading[i]);
