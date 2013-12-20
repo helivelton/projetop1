@@ -50,36 +50,52 @@ void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altur
 
 void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
                   char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
-                  int inicio,int fim,int tempo_jogo)
+                  int inicio,int fim,int tempo_jogo,int efeito)
 {
     char texto1[31],texto2[31],texto3[31];
     int menor, menor_anterior=0,i;
 
+    // tratamento de texto linha 1
     menor=strlen(texto_corpo);
     if(menor>30)
         menor=30;
-    while(texto_corpo[menor]!=' ' && menor>=0)
-        menor-=1;
-    if(menor==0)
-        menor=30;
+    if(texto_corpo[menor]!=0)
+    {
+        while(texto_corpo[menor]!=' ' && menor>=0)
+            menor-=1;
+        if(menor==0)
+            menor=strlen(texto_corpo);
+        if(menor>30)
+            menor=30;
+    }
     for(i=0;i<menor;i++)
         texto1[i]=texto_corpo[i];
     texto1[i]=0;
     menor_anterior+=menor+1;
 
+    // tratamento de texto linha 2
     if(strlen(texto_corpo)>menor_anterior)
         menor=strlen(texto_corpo)-menor_anterior;
     if(menor>30)
         menor=30;
-    while(texto_corpo[menor+menor_anterior]!=' ' && menor>=0)
-        menor-=1;
-    if(menor==0)
-        menor=30;
+    if(texto_corpo[menor+menor_anterior]!=0)
+    {
+        while(texto_corpo[menor+menor_anterior]!=' ' && menor>=0)
+            menor-=1;
+        if(menor==0)
+        {
+            if(strlen(texto_corpo)>menor_anterior)
+                menor=strlen(texto_corpo)-menor_anterior;
+        }
+        if(menor>30)
+            menor=30;
+    }
     for(i=0;i<menor;i++)
         texto2[i]=texto_corpo[i+menor_anterior];
     texto2[i]=0;
     menor_anterior+=menor+1;
 
+    // tratamento de texto linha 3
     if(strlen(texto_corpo)>menor_anterior)
         menor=strlen(texto_corpo)-menor_anterior;
     if(menor>30)
@@ -90,7 +106,7 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
 
     if(tempo_jogo>=inicio)
     {
-        if (tempo_jogo<inicio+20)
+        if (tempo_jogo<inicio+20 && efeito)
             desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(tempo_jogo-inicio),(altura/20)*(tempo_jogo-inicio),transparencia);
         else if((tempo_jogo > (fim-60)+40)&&(fim!=-1))
             desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(fim-tempo_jogo),(altura/20)*(fim-tempo_jogo),transparencia);
@@ -112,23 +128,42 @@ void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,i
 }
 
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,
-                    int inicio, int fim, int tempo_jogo,char texto_titulo[50],char texto_corpo[256])
+                    int inicio, int fim, int tempo_jogo,char texto_titulo[50],char texto_corpo[256],int efeito)
 {
 
-    janela_texto(buffer,pos_x,pos_y,106,106,"","",titulo,corpo,150,inicio,fim, tempo_jogo);
-    janela_texto(buffer,pos_x+107,pos_y,300,106,texto_titulo,texto_corpo,titulo,corpo,150,inicio,fim, tempo_jogo);
-    if(fim==-1 && tempo_jogo>inicio+20)
+    janela_texto(buffer,pos_x,pos_y,106,106,"","",titulo,corpo,150,inicio,fim, tempo_jogo,efeito);
+    janela_texto(buffer,pos_x+107,pos_y,300,106,texto_titulo,texto_corpo,titulo,corpo,150,inicio,fim, tempo_jogo,efeito);
+    if(efeito)
     {
-        draw_sprite(buffer,personagem->face,pos_x+5,pos_y+5);
-        if((tempo_jogo/16)%2==0)
+        if(fim==-1 && tempo_jogo>inicio+20)
         {
-            rectfill(buffer,pos_x+380,pos_y+80,pos_x+380+10,pos_y+80+10,makecol(200,0,0));
-        }
-        else
-        {
-            rectfill(buffer,pos_x+380,pos_y+70,pos_x+380+10,pos_y+70+10,makecol(200,0,0));
+            draw_sprite(buffer,personagem->face,pos_x+5,pos_y+5);
+            if((tempo_jogo/16)%2==0)
+            {
+                rectfill(buffer,pos_x+380,pos_y+80,pos_x+380+10,pos_y+80+10,makecol(200,0,0));
+            }
+            else
+            {
+                rectfill(buffer,pos_x+380,pos_y+70,pos_x+380+10,pos_y+70+10,makecol(200,0,0));
+            }
         }
     }
+    else
+    {
+        if(fim==-1)
+        {
+            draw_sprite(buffer,personagem->face,pos_x+5,pos_y+5);
+            if((tempo_jogo/16)%2==0)
+            {
+                rectfill(buffer,pos_x+380,pos_y+80,pos_x+380+10,pos_y+80+10,makecol(200,0,0));
+            }
+            else
+            {
+                rectfill(buffer,pos_x+380,pos_y+70,pos_x+380+10,pos_y+70+10,makecol(200,0,0));
+            }
+        }
+    }
+
 }
 
 int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)

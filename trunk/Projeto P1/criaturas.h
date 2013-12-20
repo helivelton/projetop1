@@ -3,7 +3,7 @@
 
 #include "basico.h"
 #include "controle.h"
-#include "mapa.h"
+//#include "mapa.h"
 
 // Funções para todas as criaturas
 void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf);
