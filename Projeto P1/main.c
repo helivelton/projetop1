@@ -169,12 +169,12 @@ int main()
                     draw_sprite(buffer, tela_loading[3], 0, 0);
 
                 rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
-                rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-loading_time)*1.0/(5*60))*140),355+15, makecol(0,0,160));
+                rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-loading_time)*1.0/(3*60))*140),355+15, makecol(0,0,160));
 
 
                 draw_sprite (screen, buffer,0, 0);
 
-                if(loading_time+5*60 <= timer)
+                if(loading_time+3*60 <= timer)
                     tela = 1;
 
             }
