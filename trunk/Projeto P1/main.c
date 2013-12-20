@@ -50,8 +50,8 @@ int main()
     // variáveis de objetos
     Tcriatura guerreiro; // declara objeto guerreiro
     Tcriatura goblin1; // declara objeto goblin
-    Titem et;
-    preencher_item(&et,SCREEN_W/2,50,187,205,"imagens_p1/ET.bmp");
+    Titem pocao;
+    preencher_item(&pocao,450,NIVEL_CHAO,20,15,"imagens_p1/Itens1.bmp",6,12);
 
 
     // declara BITMAPS
@@ -229,7 +229,9 @@ int main()
                 draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
                 desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
                 desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
-                draw_sprite(buffer,et.imagem,et.x,et.y);
+
+                desenhar_item(buffer,&pocao,mov_mapa);
+
                 janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
                              titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
                 janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
@@ -330,7 +332,7 @@ int main()
     destroy_bitmap(goblin1.sprite);
     destroy_font(corpo_texto);
     destroy_font(titulo_texto);
-    destroy_bitmap(et.imagem);
+    destroy_bitmap(pocao.imagem);
 
     return 0 ;
 }
