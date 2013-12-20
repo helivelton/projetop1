@@ -115,10 +115,10 @@ char *link_imagem(char caminho[256]);
 void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
 void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
                   char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
-                  int inicio,int fim,int tempo_jogo);
+                  int inicio,int fim,int tempo_jogo,int efeito);
 void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia);
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,int inicio,
-                    int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256]);
+                    int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256],int efeito);
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256]);
 //_______________________________________________________________________________________________________________

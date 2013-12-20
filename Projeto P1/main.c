@@ -76,7 +76,7 @@ int main()
     imagens_goblin1(goblin1.vetor_sprite); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
     preencher_janela(&totalJanelas[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-
+    preencher_janela(&totalJanelas[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
@@ -215,8 +215,14 @@ int main()
                         totalJanelas[0].tempo_inicio=tempo_de_jogo;
                         totalJanelas[0].tempo_fim=-1;
                     }
+                    else if(janela_atual==1)
+                    {
+                        janela_atual=2;
+                        totalJanelas[1].tempo_inicio=tempo_de_jogo;
+                        totalJanelas[1].tempo_fim=-1;
+                    }
                     else
-                        totalJanelas[0].tempo_fim=tempo_de_jogo+20;
+                        totalJanelas[1].tempo_fim=tempo_de_jogo+20;
                 }
 
                 // Desenhar
@@ -225,7 +231,7 @@ int main()
                 desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
                 draw_sprite(buffer,et.imagem,et.x,et.y);
                 janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
-                             titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo); // desenha titulo
+                             titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
                 janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
 
                 if(DEBUG)
@@ -236,15 +242,15 @@ int main()
                     rectfill(buffer,0,guerreiro.y-5,1,guerreiro.y-4,makecol(0,255,0));
                     rectfill(buffer,LARGURA_SCREEN-1,guerreiro.y-5,LARGURA_SCREEN,guerreiro.y-4,makecol(0,255,0));
                     janela_texto(buffer,20,170,50,50,"x/32","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_texto(buffer,20,200,50,50,"x","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_texto(buffer,20,230,50,50,"x+l","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_texto(buffer,20,260,50,50,"y","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_texto(buffer,20,290,50,50,"y+a","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo);
+                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_variavel(buffer,110,170,50,50,(guerreiro.x-mov_mapa[0])/32,corpo_texto,0);
                     janela_variavel(buffer,50,200,50,50,guerreiro.x-mov_mapa[0],corpo_texto,0);
                     janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
@@ -259,8 +265,16 @@ int main()
                              controle_janela[1],tempo_de_jogo); // exemplo caixa texto*/
                     janela_dialogo(buffer,&guerreiro,totalJanelas[0].x,totalJanelas[0].y,titulo_texto,corpo_texto,
                                    totalJanelas[0].tempo_inicio,totalJanelas[0].tempo_fim,tempo_de_jogo,totalJanelas[0].titulo,
-                                   totalJanelas[0].conteudo);
+                                   totalJanelas[0].conteudo,1);
                     if(tempo_de_jogo==totalJanelas[0].tempo_fim)
+                        janela_atual=0;
+                }
+                else if(janela_atual==2)
+                {
+                    janela_dialogo(buffer,&guerreiro,totalJanelas[1].x,totalJanelas[1].y,titulo_texto,corpo_texto,
+                                   totalJanelas[1].tempo_inicio,totalJanelas[1].tempo_fim,tempo_de_jogo,totalJanelas[1].titulo,
+                                   totalJanelas[1].conteudo,0);
+                    if(tempo_de_jogo==totalJanelas[1].tempo_fim)
                         janela_atual=0;
                 }
 

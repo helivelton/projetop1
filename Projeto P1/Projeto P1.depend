@@ -12,25 +12,25 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1387506331 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1387550425 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
 	"controle.h"
 	"item.h"
 
-1387418231 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1387551102 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 
-1387506567 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1387549361 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 
-1387418232 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+1387509420 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
-1387418232 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1387509420 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
 1384665075 source:c:\users\j.carlos\documents\p1\projeto p1\guerreiro.c
@@ -40,19 +40,18 @@
 	<allegro.h>
 	"basico.h"
 
-1387418232 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
+1387509420 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1387418231 c:\users\j.carlos\documents\p1\projeto p1\controle.h
+1387509420 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1387507264 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1387509420 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1387507283 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1387548099 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
-	"mapa.h"
 
 1386336802 source:c:\users\j.carlos\documents\dropbox\projeto p1\basico.c
 	"basico.h"
@@ -122,10 +121,10 @@
 1387340895 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
 	"mapa.h"
 
-1387418231 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1387509420 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1387418231 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1387509420 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
 1387340895 source:c:\users\helivelton\projetop1\projeto p1\item.c
