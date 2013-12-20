@@ -1,4 +1,5 @@
 #include "basico.h"
+#include "mapa.h"
 
 // função de saída
 void fecha_programa(){exit_program = TRUE;}
@@ -187,4 +188,74 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
     janela_atual->tempo_fim = tempo_fim;
     strcpy(janela_atual->titulo,titulo);
     strcpy(janela_atual->conteudo,conteudo);
+}
+
+void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
+                    int *tela)
+{
+    if(apertou(KEY_DOWN))
+    {
+        *selecionar = (*selecionar+1)%3;
+    }
+
+    else if(apertou(KEY_UP))
+    {
+        if (*selecionar != 0)
+            *selecionar = (*selecionar-1)%3;
+
+        else if (*selecionar == 0)
+            *selecionar = 2;
+
+    }
+
+    if (*selecionar == 0)
+    {
+
+        draw_sprite (buffer, menu_iniciar, 0, 0);
+
+    }
+
+    else if (*selecionar == 1)
+    {
+        draw_sprite (buffer, menu_options, 0, 0);
+    }
+
+    else if (*selecionar == 2)
+    {
+        draw_sprite (buffer, menu_exit, 0, 0);
+    }
+    draw_sprite (screen, buffer,0, 0);
+
+    if (*selecionar == 2 && apertou(KEY_ENTER))
+        fecha_programa();
+
+    else if (*selecionar == 0 && apertou(KEY_ENTER))
+    {
+        *tela = 9;
+        *loading_time = timer;
+    }
+}
+
+void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela)
+{
+    if((timer/16)%4 == 0)
+        draw_sprite(buffer, tela_loading[0], 0, 0);
+    else if((timer/16)%4 == 1)
+        draw_sprite(buffer, tela_loading[1], 0, 0);
+    else if((timer/16)%4 == 2)
+        draw_sprite(buffer, tela_loading[2], 0, 0);
+    else if((timer/16)%4 == 3)
+        draw_sprite(buffer, tela_loading[3], 0, 0);
+
+    rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
+    rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(3*60))*140),355+15, makecol(0,0,160));
+
+
+    draw_sprite (screen, buffer,0, 0);
+
+
+
+    if(*loading_time+3*60 <= timer)
+        *tela = 1;
+
 }

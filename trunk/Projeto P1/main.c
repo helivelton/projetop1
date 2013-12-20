@@ -110,72 +110,15 @@ int main()
             {
                 clear_bitmap(buffer);
                 keyboard_input();
-                draw_sprite(buffer, bg, 0, 0);
 
-                if(apertou(KEY_DOWN))
-                {
-                    selecionar = (selecionar+1)%3;
-                }
-
-                else if(apertou (KEY_UP))
-                {
-                    if (selecionar != 0)
-                    selecionar = (selecionar-1)%3;
-
-                    else if (selecionar == 0)
-                    selecionar = 2;
-
-                }
-
-                if (selecionar == 0)
-                {
-
-                    draw_sprite (buffer, menu_iniciar, 0, 0);
-
-                }
-
-                else if (selecionar == 1)
-                {
-                    draw_sprite (buffer, menu_options, 0, 0);
-                }
-
-                else if (selecionar == 2)
-                {
-                    draw_sprite (buffer, menu_exit, 0, 0);
-                }
-                draw_sprite (screen, buffer,0, 0);
-
-                if (selecionar == 2 && apertou(KEY_ENTER))
-                    fecha_programa();
-
-                else if (selecionar == 0 && apertou(KEY_ENTER))
-                {
-                    tela = 9;
-                    loading_time = timer;
-                }
+                menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit, &loading_time, &tela);
             }
 
             // tela de loading
             else if (tela == 9)
             {
                 clear_bitmap(buffer);
-                if((timer/16)%4 == 0)
-                    draw_sprite(buffer, tela_loading[0], 0, 0);
-                else if((timer/16)%4 == 1)
-                    draw_sprite(buffer, tela_loading[1], 0, 0);
-                else if((timer/16)%4 == 2)
-                    draw_sprite(buffer, tela_loading[2], 0, 0);
-                else if((timer/16)%4 == 3)
-                    draw_sprite(buffer, tela_loading[3], 0, 0);
-
-                rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
-                rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-loading_time)*1.0/(3*60))*140),355+15, makecol(0,0,160));
-
-
-                draw_sprite (screen, buffer,0, 0);
-
-                if(loading_time+3*60 <= timer)
-                    tela = 1;
+                tela_carregamento(buffer, tela_loading, &loading_time, &tela);
 
             }
 
@@ -184,7 +127,7 @@ int main()
             {
                 if(carrega_fase)
                 {
-                    prepara_mapa(&matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
+                    prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
                     carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
                     carrega_fase=0;
                 }
@@ -294,6 +237,8 @@ int main()
                     mov_mapa[0]=0;
                     mov_mapa[1]=0;
                     fase++;
+                    tela=9;
+                    loading_time = timer;
                 }
 
             }
