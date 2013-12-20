@@ -3,26 +3,6 @@
 
 #include "basico.h"
 
-enum{
-TERRA,
-CHAO,
-PEDRA,
-ARVORE_MORTA,
-ARVORE_1,
-ARVORE_2,
-ARVORE_3,
-ARVORE_4,
-ARVORE_5,
-ARVORE_6,
-ARVORE_7,
-ARVORE_8,
-ARVORE_9,
-MAX_TERRENOS
-};
-
-//int bloqueios[3] = {TERRA, PEDRA, CHAO};
-
-
 /*
 Prepara as texturas individuais.
 Só é chamada uma vez no jogo.

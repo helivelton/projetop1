@@ -44,6 +44,23 @@
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 
+enum{
+TERRA,
+CHAO,
+PEDRA,
+ARVORE_MORTA,
+ARVORE_1,
+ARVORE_2,
+ARVORE_3,
+ARVORE_4,
+ARVORE_5,
+ARVORE_6,
+ARVORE_7,
+ARVORE_8,
+ARVORE_9,
+MAX_TERRENOS
+};
+
 // tipos atributo e criatura
 typedef struct atributo
 {
@@ -121,6 +138,9 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
                     int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256],int efeito);
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256]);
+void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
+                    int *tela);
+void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela);
 //_______________________________________________________________________________________________________________
 
 // funções que controlam as variáveis globais timer e exit_program
