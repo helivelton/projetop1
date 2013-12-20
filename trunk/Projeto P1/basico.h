@@ -33,7 +33,7 @@
 // Nível do chão
 #define NIVEL_CHAO 13*32
 // Altura máxima do pulo
-#define ALTURA_PULO 9*32+16
+#define ALTURA_PULO 130
 // Quantidade de fases
 #define N_FASES 3
 // DEBUG
@@ -69,6 +69,7 @@ typedef struct criatura
     int caindo;
     int pulando;
     int permitir_pulo;
+    int nivel_plataforma;
     BITMAP *sprite;
     BITMAP *vetor_sprite[4];
     BITMAP *face;
