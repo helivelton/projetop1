@@ -11,6 +11,7 @@ END_OF_FUNCTION(incrementa_timer)
 
 void init()
 {
+    srand(time(NULL));
     int res;
     allegro_init();
 
