@@ -43,6 +43,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="criaturas.h" />
+		<Unit filename="eventos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="eventos.h" />
 		<Unit filename="item.c">
 			<Option compilerVar="CC" />
 		</Unit>
