@@ -9,6 +9,7 @@
 #include "criaturas.h"
 #include "controle.h"
 #include "item.h"
+#include "eventos.h"
 //  #################################################################################
 
 int main()
@@ -33,6 +34,7 @@ int main()
     int carrega_fase=1;
     char nome_fase[N_FASES][10]={"mapa1.txt","mapa2.txt","mapa3.txt"};
     int loading_time = 0;
+    int bloqueios[3] = {TERRA, PEDRA, CHAO};
 
     //BITMAPs do Menu
     BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
@@ -144,29 +146,12 @@ int main()
                 keyboard_input();
 
                 // Lógica do jogo
-                int bloqueios[3] = {TERRA, PEDRA, CHAO};
                 movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
                 goblin1.x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
                 movimento_goblin1(&goblin1,guerreiro.x);
                 mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
 
-                if(apertou(KEY_W)) // W controla caixa de texto. teste.
-                {
-                    if(janela_atual==0)
-                    {
-                        janela_atual=1;
-                        totalJanelas[0].tempo_inicio=tempo_de_jogo;
-                        totalJanelas[0].tempo_fim=-1;
-                    }
-                    else if(janela_atual==1)
-                    {
-                        janela_atual=2;
-                        totalJanelas[1].tempo_inicio=tempo_de_jogo;
-                        totalJanelas[1].tempo_fim=-1;
-                    }
-                    else
-                        totalJanelas[1].tempo_fim=tempo_de_jogo+20;
-                }
+                botao_w(&janela_atual,totalJanelas,tempo_de_jogo);
 
                 // Desenhar
                 draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
