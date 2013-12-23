@@ -53,7 +53,7 @@ int main()
     Tcriatura guerreiro; // declara objeto guerreiro
     Tcriatura goblin1; // declara objeto goblin
     Titem pocao;
-    preencher_item(&pocao,450,NIVEL_CHAO,20,15,"imagens_p1/Itens1.bmp",6,12);
+    preencher_item(&pocao,450,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1);
 
 
     // declara BITMAPS
@@ -153,12 +153,26 @@ int main()
 
                 botao_w(&janela_atual,totalJanelas,tempo_de_jogo);
 
+                if(apertou(KEY_Q))
+                {
+                    calcular_dano(&guerreiro,&goblin1,0);
+                }
+
+                if (colisao(guerreiro.x - mov_mapa[0],guerreiro.y,guerreiro.altura,guerreiro.largura,pocao.x,pocao.y,pocao.altura,pocao.largura))
+                {
+                    if (pocao.ativo)
+                    {
+                        guerreiro.caracteristicas.hp+=5;
+                        pocao.ativo=0;
+                    }
+                }
                 // Desenhar
+
                 draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
                 desenhar_goblin1(buffer,&goblin1); // desenha goblin tipo 1 e manda para o buffer
                 desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
 
-                desenhar_item(buffer,&pocao,mov_mapa);
+                if (pocao.ativo)desenhar_item(buffer,&pocao,mov_mapa);
 
                 janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
                              titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
@@ -186,6 +200,10 @@ int main()
                     janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
                     janela_variavel(buffer,50,260,50,50,guerreiro.y,corpo_texto,0);
                     janela_variavel(buffer,50,290,50,50,guerreiro.y+guerreiro.altura,corpo_texto,0);
+                    janela_variavel(buffer,100,50,50,50,guerreiro.caracteristicas.hp,titulo_texto,0);
+                    janela_variavel(buffer,210,170,50,50,pocao.x,corpo_texto,0);
+                    janela_variavel(buffer,210,200,50,50,pocao.y,corpo_texto,0);
+                    janela_variavel(buffer,310,200,50,50,goblin1.caracteristicas.hp,corpo_texto,0);
                 }
 
                 if(janela_atual==1) // teste de janela
@@ -210,6 +228,7 @@ int main()
 
                 if(colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, goblin1.x, goblin1.y,goblin1.altura,goblin1.largura))
                     rectfill(buffer,50,50,100,100,makecol(0,0,160));
+
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
