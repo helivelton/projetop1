@@ -144,3 +144,54 @@
 1387769976 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 
+1387768578 source:e:\dropbox\projeto p1 manu\basico.c
+	"basico.h"
+	"mapa.h"
+
+1387821576 e:\dropbox\projeto p1 manu\basico.h
+	<stdio.h>
+	<allegro.h>
+	<string.h>
+	<time.h>
+	<stdlib.h>
+
+1387767658 e:\dropbox\projeto p1 manu\mapa.h
+	"basico.h"
+
+1387767658 source:e:\dropbox\projeto p1 manu\controle.c
+	"controle.h"
+
+1387767658 e:\dropbox\projeto p1 manu\controle.h
+	"basico.h"
+
+1387821148 source:e:\dropbox\projeto p1 manu\criaturas.c
+	"criaturas.h"
+
+1387821100 e:\dropbox\projeto p1 manu\criaturas.h
+	"basico.h"
+	"controle.h"
+
+1387769978 source:e:\dropbox\projeto p1 manu\eventos.c
+	"eventos.h"
+	"controle.h"
+
+1387769978 e:\dropbox\projeto p1 manu\eventos.h
+	"basico.h"
+
+1387767658 source:e:\dropbox\projeto p1 manu\mapa.c
+	"mapa.h"
+
+1387818794 source:e:\dropbox\projeto p1 manu\item.c
+	"item.h"
+
+1387817158 e:\dropbox\projeto p1 manu\item.h
+	"basico.h"
+
+1387821101 source:e:\dropbox\projeto p1 manu\main.c
+	"basico.h"
+	"mapa.h"
+	"criaturas.h"
+	"controle.h"
+	"item.h"
+	"eventos.h"
+

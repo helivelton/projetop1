@@ -513,19 +513,27 @@ int colisao_cima(float x,float y, int altura, int largura, int matriz_tela[ALTUR
     return ehBloqueio;
 }
 
-int dano_ataque(Tcriatura* atacante)
+int dano_ataque(Tcriatura* atacante, int tipo_ataque)
 {
-    int ataque=atacante->caracteristicas.forca;
-
+    int ataque;
+    if(tipo_ataque==0)
+    {
+        ataque=atacante->caracteristicas.forca;
+    }
+    else
+    {
+        ataque=atacante->caracteristicas.poder_de_fogo;
+    }
+    ataque+=atacante->caracteristicas.habilidade;
     float a = (rand()%100)/100.0;
     ataque= ataque*(0.8 + a*0.4);
     return ataque;
 }
 
 
-void calcular_dano(Tcriatura* atacante, Tcriatura* alvo)
+void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque)
 {
-    int ataque = dano_ataque(atacante);
+    int ataque = dano_ataque(atacante,tipo_ataque);
     //int forca=atacante->caracteristicas.forca;
     int defesa= alvo->caracteristicas.resistencia + alvo->caracteristicas.armadura;
     int hp= alvo->caracteristicas.hp;
@@ -538,7 +546,4 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo)
     dano= dano > 0? dano : 0;
 
     alvo->caracteristicas.hp-=dano;
-
-    return dano;
-
 }
