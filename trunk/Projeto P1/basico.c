@@ -41,6 +41,15 @@ char *link_imagem(char caminho[256])
     return adicao;
 }
 
+int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)
+{
+    if((ax+al)<bx || ax>(bx+bl) || ay>(by+bh) || (ay+ah)<by)
+    {
+       return 0;
+    }
+    return 1;
+}
+
 void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia)
 {
     drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
@@ -168,14 +177,7 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
 
 }
 
-int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)
-{
-    if((ax+al)<bx || ax>(bx+bl) || ay>(by+bh) || (ay+ah)<by)
-    {
-       return 0;
-    }
-    return 1;
-}
+
 
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256])
@@ -250,13 +252,7 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
 
     rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
     rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(3*60))*140),355+15, makecol(0,0,160));
-
-
     draw_sprite (screen, buffer,0, 0);
-
-
-
     if(*loading_time+3*60 <= timer)
         *tela = 1;
-
 }

@@ -121,6 +121,10 @@ typedef struct janela
     Cabeçalhos das funções
 */
 
+// funções que controlam as variáveis globais timer e exit_program
+void fecha_programa();
+void incrementa_timer();
+
 // criação da janela, instalação do teclado, mouse e timer
 void init();
 
@@ -129,6 +133,9 @@ void deinit();
 
 // Use para corrigir os links das imagens
 char *link_imagem(char caminho[256]);
+
+// Funções gerais que afetam diversos tipos de objetos
+int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
 
 // funções de janela ____________________________________________________________________________________________
 void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
@@ -144,12 +151,5 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
                     int *tela);
 void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela);
 //_______________________________________________________________________________________________________________
-
-// funções que controlam as variáveis globais timer e exit_program
-void fecha_programa();
-void incrementa_timer();
-
-// Funções gerais que afetam diversos tipos de objetos
-int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
 
 #endif // BASICO_H
