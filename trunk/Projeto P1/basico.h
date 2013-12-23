@@ -46,6 +46,8 @@
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 
+//  ##############  ENUMERADORES   #####################
+
 enum{
 TERRA,
 CHAO,
@@ -63,6 +65,8 @@ ARVORE_9,
 MAX_TERRENOS
 };
 
+//  ######## TYPEDEFS #########################
+
 // tipos atributo e criatura
 typedef struct atributo
 {
@@ -77,6 +81,7 @@ typedef struct atributo
 
 typedef struct criatura
 {
+    char nome[30];
     float x;
     float y;
     float largura;
@@ -95,14 +100,46 @@ typedef struct criatura
     Tatributo caracteristicas;
 }Tcriatura;
 
+typedef struct goblinsA
+{
+    Tcriatura goblins[10];
+    int n_goblins;
+}TgoblinsA;
+
+typedef struct goblinsB
+{
+    Tcriatura goblins[6];
+    int n_goblins;
+}TgoblinsB;
+
+typedef struct chefes
+{
+    Tcriatura chefe[3];
+    int chefe_atual;
+}Tchefes;
+
+typedef struct oponentes
+{
+    TgoblinsA goblins_guerreiros;
+    TgoblinsB goblins_arqueiros;
+    Tchefes chefes;
+}Toponentes;
+
 typedef struct item
 {
     float x;
     float y;
     int largura;
     int altura;
+    int tipo;
+    int ativo;
     BITMAP *imagem;
 }Titem;
+
+typedef struct itens
+{
+    Titem todosItens[2];
+}Titens;
 
 typedef struct janela
 {
@@ -116,6 +153,11 @@ typedef struct janela
     char titulo[30];
     char conteudo[256];
 }Tjanela;
+
+typedef struct janelas
+{
+    Tjanela total[15];
+}Tjanelas;
 
 /*
     Cabeçalhos das funções

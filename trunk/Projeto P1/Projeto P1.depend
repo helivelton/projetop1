@@ -24,7 +24,7 @@
 	"basico.h"
 	"mapa.h"
 
-1387768576 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1387809097 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -137,7 +137,7 @@
 1387340895 c:\users\helivelton\projetop1\projeto p1\item.h
 	"basico.h"
 
-1387769170 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1387769976 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 	"controle.h"
 
