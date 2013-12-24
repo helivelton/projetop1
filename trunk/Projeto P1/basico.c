@@ -1,5 +1,5 @@
 #include "basico.h"
-#include "mapa.h"
+#include "controle.h"
 
 // função de saída
 void fecha_programa(){exit_program = TRUE;}
