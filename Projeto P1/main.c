@@ -162,6 +162,24 @@ int main()
                 keyboard_input();
 
                 // Lógica do jogo
+                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
+                {
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,
+                        guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x,
+                        inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,
+                        inimigos.goblins_guerreiros.goblins[i].largura) && !guerreiro.levando_dano)
+                    {
+                        guerreiro.levando_dano=1;
+                        guerreiro.tempo_dano=tempo_de_jogo;
+                        guerreiro.caracteristicas.hp-=1;
+                        if(guerreiro.x+guerreiro.largura<inimigos.goblins_guerreiros.goblins[i].x+inimigos.goblins_guerreiros.goblins[i].largura)
+                            guerreiro.direcao=1;
+                        else
+                            guerreiro.direcao=2;
+                    }
+                }
+                if(guerreiro.tempo_dano+20<=tempo_de_jogo)
+                    guerreiro.levando_dano=0;
                 movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
                 ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos,mov_mapa);
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
@@ -265,14 +283,7 @@ int main()
                     if(tempo_de_jogo==janelas.total[1].tempo_fim)
                         janela_atual=0;
                 }
-                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
-                {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,
-                        guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x,
-                        inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,
-                        inimigos.goblins_guerreiros.goblins[i].largura))
-                            rectfill(buffer,50,50,100,100,makecol(0,0,160));
-                }
+
 
 
 
