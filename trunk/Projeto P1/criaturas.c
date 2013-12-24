@@ -48,50 +48,88 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
 {
     int i;
 
-    if(guerreiro->estado_sprite > 3 && !guerreiro->atacando)
-        guerreiro->estado_sprite = 0;
+    if(!guerreiro->levando_dano)
+    {
+        if(guerreiro->estado_sprite > 3 && !guerreiro->atacando)
+            guerreiro->estado_sprite = 0;
 
-    if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W
-        && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-    {
-        for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
+        if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W
+            && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
-            if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
+            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
             {
-                guerreiro->x+=1;
+                if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
+                {
+                    guerreiro->x+=1;
+                }
+                else
+                {
+                    mov_mapa[0]-=1;
+                }
+                if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
+                {
+                    guerreiro->controle_estado=timer;
+                    guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+                }
             }
-            else
-            {
-                mov_mapa[0]-=1;
-            }
-            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
-            {
-                guerreiro->controle_estado=timer;
-                guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
-            }
+            guerreiro->direcao =1;
         }
-        guerreiro->direcao =1;
+        else if (segurou(KEY_LEFT) && guerreiro->x > 0 &&
+                 !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+        {
+            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x > 0;i++)
+            {
+                if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
+                {
+                    guerreiro->x-=1;
+                }
+                else
+                {
+                    mov_mapa[0]+=1;
+                }
+                if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
+                {
+                    guerreiro->controle_estado=timer;
+                    guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+                }
+            }
+            guerreiro->direcao = 2;
+        }
     }
-    else if (segurou(KEY_LEFT) && guerreiro->x > 0 &&
-             !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+    else
     {
-        for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x > 0;i++)
+        guerreiro->estado_sprite=0;
+
+        if (guerreiro->direcao==2 && guerreiro->x+guerreiro->largura < SCREEN_W
+            && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
-            if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
+            for(i=0;i<6 && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
             {
-                guerreiro->x-=1;
-            }
-            else
-            {
-                mov_mapa[0]+=1;
-            }
-            if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
-            {
-                guerreiro->controle_estado=timer;
-                guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
+                if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
+                {
+                    guerreiro->x+=1;
+                }
+                else
+                {
+                    mov_mapa[0]-=1;
+                }
             }
         }
-        guerreiro->direcao = 2;
+        else if (guerreiro->direcao==1 && guerreiro->x > 0 &&
+                 !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+        {
+            for(i=0;i<6 && guerreiro->x > 0;i++)
+            {
+                if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
+                {
+                    guerreiro->x-=1;
+                }
+                else
+                {
+                    mov_mapa[0]+=1;
+                }
+            }
+        }
     }
 
     if(colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))

@@ -39,7 +39,7 @@
 // Quantidade de fases
 #define N_FASES 3
 // DEBUG
-#define DEBUG 0
+#define DEBUG 1
 
 //  #############################################################################
 
