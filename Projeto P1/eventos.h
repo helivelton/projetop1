@@ -3,6 +3,6 @@
 
 #include "basico.h"
 
-void botao_w(int *janela_atual, Tjanela *totalJanelas,int tempo_de_jogo);
+void botao_w(int *janela_atual, Tjanelas *janelas,int tempo_de_jogo);
 
 #endif // EVENTOS_H

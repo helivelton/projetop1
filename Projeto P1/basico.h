@@ -65,7 +65,7 @@ ARVORE_9,
 MAX_TERRENOS
 };
 
-//  ######## TYPEDEFS #########################
+//  ##############    TYPEDEFS    #########################
 
 // tipos atributo e criatura
 typedef struct atributo
@@ -94,8 +94,10 @@ typedef struct criatura
     int pulando;
     int permitir_pulo;
     int nivel_plataforma;
+    int atacando;
+    int tempo_ataque;
     BITMAP *sprite;
-    BITMAP *vetor_sprite[4];
+    BITMAP *vetor_sprite[8];
     BITMAP *face;
     Tatributo caracteristicas;
 }Tcriatura;
@@ -136,9 +138,10 @@ typedef struct item
     BITMAP *imagem;
 }Titem;
 
-typedef struct itens
+typedef struct _itens
 {
-    Titem todosItens[2];
+    Titem todosItens[15];
+    int n_itens;
 }Titens;
 
 typedef struct janela
@@ -154,9 +157,10 @@ typedef struct janela
     char conteudo[256];
 }Tjanela;
 
-typedef struct janelas
+typedef struct _janelas
 {
     Tjanela total[15];
+    int n_janelas;
 }Tjanelas;
 
 /*
