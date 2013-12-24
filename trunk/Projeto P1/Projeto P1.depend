@@ -12,7 +12,7 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1387769707 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1387851653 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
@@ -20,21 +20,21 @@
 	"item.h"
 	"eventos.h"
 
-1387768576 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1387840311 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"mapa.h"
 
-1387809097 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1387854787 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 	<time.h>
 	<stdlib.h>
 
-1387767657 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+1387767658 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
-1387767657 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1387767658 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
 1384665075 source:c:\users\j.carlos\documents\p1\projeto p1\guerreiro.c
@@ -44,16 +44,16 @@
 	<allegro.h>
 	"basico.h"
 
-1387767657 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
+1387767658 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1387767657 c:\users\j.carlos\documents\p1\projeto p1\controle.h
+1387767658 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1387767914 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1387853387 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1387767914 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1387849508 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 
@@ -125,10 +125,10 @@
 1387340895 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
 	"mapa.h"
 
-1387767657 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1387838523 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1387767657 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1387817158 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
 1387340895 source:c:\users\helivelton\projetop1\projeto p1\item.c
@@ -137,11 +137,11 @@
 1387340895 c:\users\helivelton\projetop1\projeto p1\item.h
 	"basico.h"
 
-1387769976 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1387855409 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 	"controle.h"
 
-1387769976 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1387855374 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 
 1387768578 source:e:\dropbox\projeto p1 manu\basico.c

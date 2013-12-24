@@ -17,5 +17,6 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura, ch
 
 void desenhar_item(BITMAP *buffer,Titem *objeto,int mov_mapa[2])
 {
-    draw_sprite(buffer, objeto->imagem, objeto->x + mov_mapa[0],objeto->y); // manda objeto para buffer
+    draw_sprite(buffer, objeto->imagem, objeto->x + mov_mapa[0] -(32-objeto->largura)/2,
+                objeto->y - (32-objeto->altura)/2); // manda objeto para buffer
 }

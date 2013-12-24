@@ -241,6 +241,7 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
 
 void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela)
 {
+    int tempo=1*60+30;
     if((timer/16)%4 == 0)
         draw_sprite(buffer, tela_loading[0], 0, 0);
     else if((timer/16)%4 == 1)
@@ -251,8 +252,8 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
         draw_sprite(buffer, tela_loading[3], 0, 0);
 
     rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
-    rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(3*60))*140),355+15, makecol(0,0,160));
+    rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(tempo))*140),355+15, makecol(0,0,160));
     draw_sprite (screen, buffer,0, 0);
-    if(*loading_time+3*60 <= timer)
+    if(*loading_time+tempo <= timer)
         *tela = 1;
 }

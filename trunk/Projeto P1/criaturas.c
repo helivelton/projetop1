@@ -24,16 +24,18 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
 
 void imagens_guerreiro(Tcriatura *guerreiro)
 {
-    int i;
-    for(i=0;i<4;i++)
+    int i,j;
+    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/guerreiro_.bmp"),NULL);
+
+    for(i=0;i<2;i++)
     {
-        guerreiro->vetor_sprite[i]=create_bitmap(32,48);
+        for(j=0;j<4;j++)
+        {
+            guerreiro->vetor_sprite[j+4*i]=create_bitmap(64,64);
+            blit(tiles,guerreiro->vetor_sprite[j+4*i],j*64,i*64,0,0,64,64);
+        }
+
     }
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/hero.bmp"),NULL);
-    blit(tiles,guerreiro->vetor_sprite[0],0,0,0,0,32,48);
-    blit(tiles,guerreiro->vetor_sprite[1],32,0,0,0,32,48);
-    blit(tiles,guerreiro->vetor_sprite[2],2*32,0,0,0,32,48);
-    blit(tiles,guerreiro->vetor_sprite[3],3*32,0,0,0,32,48);
 
     guerreiro->face = load_bitmap(link_imagem("imagens_p1/hero_face.bmp"),NULL);
 
@@ -43,10 +45,14 @@ void imagens_guerreiro(Tcriatura *guerreiro)
 void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     int i;
+
+    if(guerreiro->estado_sprite > 3 && !guerreiro->atacando)
+        guerreiro->estado_sprite = 0;
+
     if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W
         && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
-        for(i=0;i<VELOCIDADE && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
+        for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
         {
             if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
             {
@@ -67,7 +73,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     else if (segurou(KEY_LEFT) && guerreiro->x > 0 &&
              !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
-        for(i=0;i<VELOCIDADE && guerreiro->x > 0;i++)
+        for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x > 0;i++)
         {
             if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
             {
@@ -134,38 +140,58 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
 }
 
+void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo)
+{
+    if(apertou(KEY_SPACE) && !guerreiro->atacando)
+    {
+        guerreiro->atacando = 1;
+        guerreiro->tempo_ataque = tempo_jogo;
+    }
+    if(guerreiro->tempo_ataque + 19 <= tempo_jogo)
+    {
+        guerreiro->atacando = 0;
+    }
+    if(guerreiro->atacando)
+    {
+        guerreiro->estado_sprite = ((tempo_jogo-guerreiro->tempo_ataque)/5)%4;
+        guerreiro->estado_sprite = guerreiro->estado_sprite + 4;
+    }
+}
+
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
     if(guerreiro->direcao==1)
     {
-        draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
+        draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
     }
     else
     {
-        draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+        draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
     }
     draw_sprite(buffer, guerreiro->sprite, guerreiro->x-(64 - guerreiro->largura)/2,
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 }
 
-void imagens_goblin1(BITMAP *im_goblin1[4])
+void imagens_goblin1(Tcriatura *goblin)
 {
     int i;
-    for(i=0;i<3;i++)
+    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinG.bmp"),NULL);
+
+    for(i=0;i<8;i++)
     {
-        im_goblin1[i]=create_bitmap(32,48);
+        goblin->vetor_sprite[i]=create_bitmap(64,64);
+        blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
     }
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/skel.bmp"),NULL);
-    blit(tiles,im_goblin1[0],0*0,0,0,0,32,48);
-    blit(tiles,im_goblin1[1],1*32,0,0,0,32,48);
-    blit(tiles,im_goblin1[2],2*32,0,0,0,32,48);
 
     destroy_bitmap(tiles);
 }
 
 void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro)
 {
+    if(goblin1->estado_sprite < 5 && !goblin1->atacando)
+        goblin1->estado_sprite = 5;
+
     if (goblin1->x > x_guerreiro)
     {
         goblin1->direcao=2;
@@ -181,20 +207,31 @@ void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro)
 
     if(goblin1->direcao==1)
     {
-        goblin1->x=goblin1->x+VELOCIDADE/2;
+        goblin1->x=goblin1->x+goblin1->caracteristicas.habilidade;
         if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
         {
             goblin1->controle_estado = timer;
-            goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+            if(goblin1->estado_sprite > 4)
+            {
+                goblin1->estado_sprite=goblin1->estado_sprite-5;
+                goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+                goblin1->estado_sprite = goblin1->estado_sprite + 5;
+            }
+
         }
     }
     else if(goblin1->direcao==2)
     {
-        goblin1->x=goblin1->x-VELOCIDADE/2;
+        goblin1->x=goblin1->x-goblin1->caracteristicas.habilidade;
         if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
         {
             goblin1->controle_estado = timer;
-            goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+            if(goblin1->estado_sprite > 4)
+            {
+                goblin1->estado_sprite=goblin1->estado_sprite-5;
+                goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+                goblin1->estado_sprite = goblin1->estado_sprite + 5;
+            }
         }
     }
 }
@@ -204,12 +241,12 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
     {
-        draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
+        draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
         goblin1->direcao_anterior=1;
     }
     else if(goblin1->direcao==2)
     {
-        draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+        draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         goblin1->direcao_anterior=2;
 
     }
@@ -217,11 +254,11 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
     {
         if(goblin1->direcao_anterior==1)
         {
-            draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
+            draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
         }
         else
         {
-            draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],16,8,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+            draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
     draw_sprite(buffer, goblin1->sprite, goblin1->x-(64-goblin1->largura)/2,
@@ -536,7 +573,7 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque)
     int ataque = dano_ataque(atacante,tipo_ataque);
     //int forca=atacante->caracteristicas.forca;
     int defesa= alvo->caracteristicas.resistencia + alvo->caracteristicas.armadura;
-    int hp= alvo->caracteristicas.hp;
+    //int hp= alvo->caracteristicas.hp;
     float chance_critico=0.1;
     float a = (rand()%100)/100.0;
     int critico = chance_critico > a? 2 : 1;
