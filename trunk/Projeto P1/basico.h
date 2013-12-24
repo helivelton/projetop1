@@ -86,7 +86,7 @@ typedef struct criatura
     float y;
     float largura;
     float altura;
-    int direcao;
+    int direcao; // direita 1 e esquerda 2
     int direcao_anterior;
     int estado_sprite; // estado atual
     int controle_estado; // verifica certos intervalos de tempo
@@ -96,6 +96,8 @@ typedef struct criatura
     int nivel_plataforma;
     int atacando;
     int tempo_ataque;
+    int levando_dano;
+    int tempo_dano;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
@@ -117,7 +119,7 @@ typedef struct goblinsB
 typedef struct chefes
 {
     Tcriatura chefe[3];
-    int chefe_atual;
+    int chefe_atual;// se 0, então nenhum
 }Tchefes;
 
 typedef struct oponentes

@@ -19,6 +19,8 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->caindo=0;
     ser->pulando=0;
     ser->permitir_pulo = 1;
+    ser->atacando=0;
+    ser->levando_dano=0;
     ser->sprite = create_bitmap(64,64);
 }
 
@@ -140,9 +142,10 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
 }
 
-void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo)
+void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos, int mov_mapa[2])
 {
-    if(apertou(KEY_SPACE) && !guerreiro->atacando)
+    int i;
+    if(apertou(KEY_Z) && !guerreiro->atacando)
     {
         guerreiro->atacando = 1;
         guerreiro->tempo_ataque = tempo_jogo;
@@ -155,6 +158,33 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo)
     {
         guerreiro->estado_sprite = ((tempo_jogo-guerreiro->tempo_ataque)/5)%4;
         guerreiro->estado_sprite = guerreiro->estado_sprite + 4;
+    }
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
+    {
+        if(guerreiro->direcao==2)//esquerda
+        {
+            if(colisao(guerreiro->x - 16,guerreiro->y-4,25,20,
+                       inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
+                       inimigos->goblins_guerreiros.goblins[i].altura,
+                       inimigos->goblins_guerreiros.goblins[i].largura ))
+               {
+                   inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
+                   inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
+                   calcular_dano(guerreiro,&inimigos->goblins_guerreiros.goblins[i],0);
+               }
+        }
+        if(guerreiro->direcao==1)//direita
+        {
+            if(colisao(guerreiro->x + guerreiro->largura - 4,guerreiro->y-4,25,20,
+                       inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
+                       inimigos->goblins_guerreiros.goblins[i].altura,
+                       inimigos->goblins_guerreiros.goblins[i].largura ))
+               {
+                   inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
+                   inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
+                   calcular_dano(guerreiro,&inimigos->goblins_guerreiros.goblins[i],0);
+               }
+        }
     }
 }
 
@@ -187,53 +217,78 @@ void imagens_goblin1(Tcriatura *goblin)
     destroy_bitmap(tiles);
 }
 
-void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro)
+void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
 {
-    if(goblin1->estado_sprite < 5 && !goblin1->atacando)
-        goblin1->estado_sprite = 5;
 
-    if (goblin1->x > x_guerreiro)
+
+    if(!goblin1->levando_dano)
     {
-        goblin1->direcao=2;
-    }
-    else if (goblin1->x < x_guerreiro)
-    {
-        goblin1->direcao=1;
+        if(goblin1->estado_sprite < 5 && !goblin1->atacando)
+            goblin1->estado_sprite = 5;
+
+        if (goblin1->x > x_guerreiro)
+        {
+            goblin1->direcao=2;
+        }
+        else if (goblin1->x < x_guerreiro)
+        {
+            goblin1->direcao=1;
+        }
+        else
+        {
+            goblin1->direcao=0;
+        }
+
+        if(goblin1->direcao==1)
+        {
+            goblin1->x=goblin1->x+goblin1->caracteristicas.habilidade;
+            if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
+            {
+                goblin1->controle_estado = timer;
+                if(goblin1->estado_sprite > 4)
+                {
+                    goblin1->estado_sprite=goblin1->estado_sprite-5;
+                    goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+                    goblin1->estado_sprite = goblin1->estado_sprite + 5;
+                }
+
+            }
+        }
+        else if(goblin1->direcao==2)
+        {
+            goblin1->x=goblin1->x-goblin1->caracteristicas.habilidade;
+            if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
+            {
+                goblin1->controle_estado = timer;
+                if(goblin1->estado_sprite > 4)
+                {
+                    goblin1->estado_sprite=goblin1->estado_sprite-5;
+                    goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
+                    goblin1->estado_sprite = goblin1->estado_sprite + 5;
+                }
+            }
+        }
     }
     else
     {
-        goblin1->direcao=0;
-    }
-
-    if(goblin1->direcao==1)
-    {
-        goblin1->x=goblin1->x+goblin1->caracteristicas.habilidade;
-        if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
+        goblin1->estado_sprite = 1;
+        if(goblin1->tempo_dano+10>=tempo_jogo)
         {
-            goblin1->controle_estado = timer;
-            if(goblin1->estado_sprite > 4)
+            if(goblin1->direcao==1)//direita
             {
-                goblin1->estado_sprite=goblin1->estado_sprite-5;
-                goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
-                goblin1->estado_sprite = goblin1->estado_sprite + 5;
+                goblin1->x = goblin1->x - 6;
             }
-
-        }
-    }
-    else if(goblin1->direcao==2)
-    {
-        goblin1->x=goblin1->x-goblin1->caracteristicas.habilidade;
-        if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
-        {
-            goblin1->controle_estado = timer;
-            if(goblin1->estado_sprite > 4)
+            else
             {
-                goblin1->estado_sprite=goblin1->estado_sprite-5;
-                goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
-                goblin1->estado_sprite = goblin1->estado_sprite + 5;
+                goblin1->x = goblin1->x + 6;
             }
         }
+        else
+        {
+            goblin1->levando_dano=0;
+        }
     }
+
 }
 
 void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
@@ -580,7 +635,7 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque)
     int dano;
 
     dano= (ataque-defesa)*critico;
-    dano= dano > 0? dano : 0;
+    dano= dano > 0? dano : 1;
 
     alvo->caracteristicas.hp-=dano;
 }

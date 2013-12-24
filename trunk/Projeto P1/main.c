@@ -75,19 +75,17 @@ int main()
     itens.n_itens+=1;
 
     preenche_criatura(&guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0); // preenche status guerreiro
-    guerreiro.atacando = 0;
     imagens_guerreiro(&guerreiro); // preenche vetor de imagens do guerreiro
 
     inimigos.goblins_guerreiros.n_goblins=0;
-    preenche_criatura(&inimigos.goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,1,0,0); // preenche status goblin
+    inimigos.goblins_arqueiros.n_goblins=0;
+    inimigos.chefes.chefe_atual=0;
+    preenche_criatura(&inimigos.goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0); // preenche status goblin
     inimigos.goblins_guerreiros.n_goblins+=1;
-    inimigos.goblins_guerreiros.goblins[0].atacando = 0;
     imagens_goblin1(&inimigos.goblins_guerreiros.goblins[0]); // preenche vetor de imagens do goblin tipo 1
     preenche_criatura(&inimigos.goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0); // preenche status goblin
     inimigos.goblins_guerreiros.n_goblins+=1;
-    inimigos.goblins_guerreiros.goblins[1].atacando = 0;
     imagens_goblin1(&inimigos.goblins_guerreiros.goblins[1]); // preenche vetor de imagens do goblin tipo 1
-
     carrega_texturas(texturas); // prepara as texturas
 
     janelas.n_janelas=0;
@@ -165,13 +163,13 @@ int main()
 
                 // Lógica do jogo
                 movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
-                ataque_guerreiro(&guerreiro,tempo_de_jogo);
+                ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos,mov_mapa);
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
                     inimigos.goblins_guerreiros.goblins[i].x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
                     if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
                     {
-                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x);
+                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x,tempo_de_jogo);
                     }
                 }
 
@@ -244,6 +242,8 @@ int main()
                     janela_variavel(buffer,210,170,50,50,itens.todosItens[0].x,corpo_texto,0);
                     janela_variavel(buffer,210,200,50,50,itens.todosItens[0].y,corpo_texto,0);
                     janela_variavel(buffer,390,200,50,50,inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp,corpo_texto,0);
+                    janela_variavel(buffer,390,230,50,50,inimigos.goblins_guerreiros.goblins[1].caracteristicas.hp,corpo_texto,0);
+                    janela_variavel(buffer,450,230,50,50,guerreiro.atacando,corpo_texto,0);
                 }
 
                 if(janela_atual==1) // teste de janela
@@ -267,8 +267,11 @@ int main()
                 }
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x, inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,inimigos.goblins_guerreiros.goblins[i].largura))
-                        rectfill(buffer,50,50,100,100,makecol(0,0,160));
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,
+                        guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x,
+                        inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,
+                        inimigos.goblins_guerreiros.goblins[i].largura))
+                            rectfill(buffer,50,50,100,100,makecol(0,0,160));
                 }
 
 
