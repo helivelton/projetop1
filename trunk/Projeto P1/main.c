@@ -74,7 +74,7 @@ int main()
     preencher_item(&itens.todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1);
     itens.n_itens+=1;
 
-    preenche_criatura(&guerreiro,0,NIVEL_CHAO-34,20,34,1,2,2,2,1,0); // preenche status guerreiro
+    preenche_criatura(&guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0); // preenche status guerreiro
     guerreiro.atacando = 0;
     imagens_guerreiro(&guerreiro); // preenche vetor de imagens do guerreiro
 
@@ -83,6 +83,10 @@ int main()
     inimigos.goblins_guerreiros.n_goblins+=1;
     inimigos.goblins_guerreiros.goblins[0].atacando = 0;
     imagens_goblin1(&inimigos.goblins_guerreiros.goblins[0]); // preenche vetor de imagens do goblin tipo 1
+    preenche_criatura(&inimigos.goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0); // preenche status goblin
+    inimigos.goblins_guerreiros.n_goblins+=1;
+    inimigos.goblins_guerreiros.goblins[1].atacando = 0;
+    imagens_goblin1(&inimigos.goblins_guerreiros.goblins[1]); // preenche vetor de imagens do goblin tipo 1
 
     carrega_texturas(texturas); // prepara as texturas
 
@@ -107,7 +111,8 @@ int main()
     // inicializa controles de velocidade
     ticks = timer; // velocidade do jogo
     guerreiro.controle_estado = timer; // velocidade de modificação do sprite guerreiro
-    inimigos.goblins_guerreiros.goblins[0].controle_estado = timer; // velocidade de modificação do sprite goblin1
+    inimigos.goblins_guerreiros.goblins[0].controle_estado = timer;// velocidade de modificação do sprite goblin1
+    inimigos.goblins_guerreiros.goblins[1].controle_estado = timer;// velocidade de modificação do sprite goblin1
 
     // Processo de repetição principal
     while (!exit_program)
@@ -153,6 +158,7 @@ int main()
                 clear_bitmap(buffer); // Limpa o buffer;
                 clear_bitmap(guerreiro.sprite); // Limpa bitmap guerreiro
                 clear_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite); // Limpa bitmap goblin tipo 1
+                clear_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite); // Limpa bitmap goblin tipo 1
 
                 // atualiza estado do teclado
                 keyboard_input();
@@ -160,11 +166,15 @@ int main()
                 // Lógica do jogo
                 movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
                 ataque_guerreiro(&guerreiro,tempo_de_jogo);
-                inimigos.goblins_guerreiros.goblins[0].x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
-                if(inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp>0)
+                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
-                    movimento_goblin1(&inimigos.goblins_guerreiros.goblins[0],guerreiro.x);
+                    inimigos.goblins_guerreiros.goblins[i].x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
+                    {
+                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x);
+                    }
                 }
+
                 mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
 
                 botao_w(&janela_atual,&janelas,tempo_de_jogo);
@@ -185,8 +195,13 @@ int main()
                 // Desenhar
 
                 draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
-                if(inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp>0)
-                    desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[0]); // desenha goblin tipo 1 e manda para o buffer
+
+                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
+                {
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
+                        desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i]); // desenha goblin tipo 1 e manda para o buffer
+                }
+
                 desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
 
                 if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],mov_mapa);
@@ -250,9 +265,12 @@ int main()
                     if(tempo_de_jogo==janelas.total[1].tempo_fim)
                         janela_atual=0;
                 }
+                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
+                {
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x, inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,inimigos.goblins_guerreiros.goblins[i].largura))
+                        rectfill(buffer,50,50,100,100,makecol(0,0,160));
+                }
 
-                if(inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[0].x, inimigos.goblins_guerreiros.goblins[0].y,inimigos.goblins_guerreiros.goblins[0].altura,inimigos.goblins_guerreiros.goblins[0].largura))
-                    rectfill(buffer,50,50,100,100,makecol(0,0,160));
 
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
@@ -300,10 +318,12 @@ int main()
     for(i=0;i<7;i++)
     {
         destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].vetor_sprite[i]);
+        destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].vetor_sprite[i]);
     }
     destroy_bitmap(guerreiro.sprite);
     destroy_bitmap(guerreiro.face);
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite);
+    destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite);
     destroy_font(corpo_texto);
     destroy_font(titulo_texto);
     destroy_bitmap(itens.todosItens[0].imagem);

@@ -12,7 +12,7 @@
 1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
 	<allegro.h>
 
-1387856144 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1387887857 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
@@ -20,9 +20,9 @@
 	"item.h"
 	"eventos.h"
 
-1387840311 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1387856260 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
-	"mapa.h"
+	"controle.h"
 
 1387856143 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
