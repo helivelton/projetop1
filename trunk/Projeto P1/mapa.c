@@ -107,19 +107,14 @@ void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[AL
     }
 }
 
-int colisao_direita(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+int colisao_direita_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-
     y=y+2;
     altura=altura-4;
     x= x + largura + 1;
     int xMatrix = x/32;
     int yMatrix = y/32;
-
     int i, ehBloqueio=0;
-    //int j;
-    //int intervalo;
-
     for(i=0;i<3;i++)
     {
         if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
@@ -127,7 +122,6 @@ int colisao_direita(float x,float y, int altura, int largura, int matriz_tela[AL
             ehBloqueio=1;
         }
     }
-
     if(!ehBloqueio)
     {
         yMatrix = (y+altura)/32;
@@ -139,28 +133,6 @@ int colisao_direita(float x,float y, int altura, int largura, int matriz_tela[AL
             }
         }
     }
-/*
-    if(!ehBloqueio)
-    {
-
-        i=(altura*1.0)/6;
-
-        if(i<1)i=1;
-        intervalo=i;
-        for(i=i;i<(y+altura);i+=intervalo)
-        {
-            yMatrix= (y + i)/32;
-
-            for(j=0;j<3;j++)
-            {
-                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
-                {
-                    ehBloqueio=1;
-                }
-            }
-        }
-    }
-*/
     if(!ehBloqueio)
     {
         int intermediario = altura/2;
@@ -173,24 +145,17 @@ int colisao_direita(float x,float y, int altura, int largura, int matriz_tela[AL
             }
         }
     }
-
-
     return ehBloqueio;
 }
 
-int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+int colisao_esquerda_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-
     y=y+2;
     altura=altura-4;
     x = x - 1;
     int xMatrix = x/32;
     int yMatrix = y/32;
-
     int i, ehBloqueio=0;
-    //int j;
-    //int intervalo;
-
     for(i=0;i<3;i++)
     {
         if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
@@ -198,7 +163,6 @@ int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[A
             ehBloqueio=1;
         }
     }
-
     if(!ehBloqueio)
     {
         yMatrix = (y+altura)/32;
@@ -210,28 +174,6 @@ int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[A
             }
         }
     }
-/*
-    if(!ehBloqueio)
-    {
-
-        i=(altura*1.0)/6;
-
-        if(i<1)i=1;
-        intervalo=i;
-        for(i=i;i<(y+altura);i+=intervalo)
-        {
-            yMatrix= (y + i)/32;
-
-            for(j=0;j<3;j++)
-            {
-                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
-                {
-                    ehBloqueio=1;
-                }
-            }
-        }
-    }
-*/
     if(!ehBloqueio)
     {
         int intermediario = altura/2;
@@ -244,25 +186,17 @@ int colisao_esquerda(float x,float y, int altura, int largura, int matriz_tela[A
             }
         }
     }
-
-
     return ehBloqueio;
 }
 
-int colisao_abaixo(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+int colisao_abaixo_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-
     x+=2;
     largura=largura-4;
     y=y+1;
-
     int xMatrix = x/32;
     int yMatrix = (y + altura)/32;
-
     int i, ehBloqueio=0;
-    //int j;
-    //int intervalo;
-
     for(i=0;i<3;i++)
     {
         if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
@@ -282,28 +216,6 @@ int colisao_abaixo(float x,float y, int altura, int largura, int matriz_tela[ALT
             }
         }
     }
-/*
-    if(!ehBloqueio)
-    {
-
-        i=(altura*1.0)/6;
-
-        if(i<1)i=1;
-        intervalo=i;
-        for(i=i;i<(y+altura);i+=intervalo)
-        {
-            yMatrix= (y + i)/32;
-
-            for(j=0;j<3;j++)
-            {
-                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
-                {
-                    ehBloqueio=1;
-                }
-            }
-        }
-    }
-*/
     if(!ehBloqueio)
     {
         int intermediario = largura/2;
@@ -316,23 +228,17 @@ int colisao_abaixo(float x,float y, int altura, int largura, int matriz_tela[ALT
             }
         }
     }
-
-
     return ehBloqueio;
 }
 
-int colisao_cima(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+int colisao_cima_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     x+=2;
     largura=largura-4;
     y = y -1;
-
     int xMatrix = x/32;
     int yMatrix = y/32;
-
     int i, ehBloqueio=0;
-    //int j;
-    //int intervalo;
 
     for(i=0;i<3;i++)
     {
@@ -353,28 +259,6 @@ int colisao_cima(float x,float y, int altura, int largura, int matriz_tela[ALTUR
             }
         }
     }
-/*
-    if(!ehBloqueio)
-    {
-
-        i=(altura*1.0)/6;
-
-        if(i<1)i=1;
-        intervalo=i;
-        for(i=i;i<(y+altura);i+=intervalo)
-        {
-            yMatrix= (y + i)/32;
-
-            for(j=0;j<3;j++)
-            {
-                if(matriz_tela[yMatrix][xMatrix]==bloqueios[j])
-                {
-                    ehBloqueio=1;
-                }
-            }
-        }
-    }
-*/
     if(!ehBloqueio)
     {
         int intermediario = largura/2;
@@ -387,7 +271,5 @@ int colisao_cima(float x,float y, int altura, int largura, int matriz_tela[ALTUR
             }
         }
     }
-
-
     return ehBloqueio;
 }

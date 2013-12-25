@@ -170,7 +170,7 @@ int main()
                         guerreiro.levando_dano=1;
                         guerreiro.tempo_dano=tempo_de_jogo;
                         guerreiro.caracteristicas.hp-=1;
-                        if(guerreiro.x+guerreiro.largura<inimigos.goblins_guerreiros.goblins[i].x+inimigos.goblins_guerreiros.goblins[i].largura)
+                        if(guerreiro.x+guerreiro.largura < (inimigos.goblins_guerreiros.goblins[i].x+inimigos.goblins_guerreiros.goblins[i].largura))
                             guerreiro.direcao=1;
                         else
                             guerreiro.direcao=2;
@@ -261,6 +261,10 @@ int main()
                     janela_variavel(buffer,390,200,50,50,inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp,corpo_texto,0);
                     janela_variavel(buffer,390,230,50,50,inimigos.goblins_guerreiros.goblins[1].caracteristicas.hp,corpo_texto,0);
                     janela_variavel(buffer,450,230,50,50,guerreiro.atacando,corpo_texto,0);
+                    janela_variavel(buffer,450,260,50,50,inimigos.goblins_guerreiros.goblins[1].x,corpo_texto,0);
+                    janela_variavel(buffer,500,260,50,50,inimigos.goblins_guerreiros.goblins[1].largura,corpo_texto,0);
+                    janela_variavel(buffer,450,290,50,50,inimigos.goblins_guerreiros.goblins[1].y,corpo_texto,0);
+                    janela_variavel(buffer,500,290,50,50,inimigos.goblins_guerreiros.goblins[1].altura,corpo_texto,0);
                 }
 
                 if(janela_atual==1) // teste de janela
@@ -294,6 +298,7 @@ int main()
                     carrega_fase=1;
                     guerreiro.x = 10;
                     inimigos.goblins_guerreiros.goblins[0].x = 300;
+                    inimigos.goblins_guerreiros.goblins[1].x = 500;
                     ajuste_mapa=0;
                     fase++;
                     tela=9;
