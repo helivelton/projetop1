@@ -44,7 +44,7 @@ void imagens_guerreiro(Tcriatura *guerreiro)
     destroy_bitmap(tiles);
 }
 
-void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     int i;
 
@@ -53,19 +53,12 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
         if(guerreiro->estado_sprite > 3 && !guerreiro->atacando)
             guerreiro->estado_sprite = 0;
 
-        if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < SCREEN_W
-            && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+        if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < LARGURA_MAPA
+            && !colisao_direita(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
-            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
+            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < LARGURA_MAPA ;i++)
             {
-                if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
-                {
-                    guerreiro->x+=1;
-                }
-                else
-                {
-                    mov_mapa[0]-=1;
-                }
+                guerreiro->x+=1;
                 if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
                 {
                     guerreiro->controle_estado=timer;
@@ -75,18 +68,11 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
             guerreiro->direcao =1;
         }
         else if (segurou(KEY_LEFT) && guerreiro->x > 0 &&
-                 !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+                 !colisao_esquerda(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
             for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x > 0;i++)
             {
-                if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
-                {
-                    guerreiro->x-=1;
-                }
-                else
-                {
-                    mov_mapa[0]+=1;
-                }
+                guerreiro->x-=1;
                 if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
                 {
                     guerreiro->controle_estado=timer;
@@ -101,50 +87,35 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
         guerreiro->estado_sprite=0;
 
         if (guerreiro->direcao==2 && guerreiro->x+guerreiro->largura < SCREEN_W
-            && !colisao_direita(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+            && !colisao_direita(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
             for(i=0;i<6 && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
             {
-                if(guerreiro->x < SCREEN_W/2 || mov_mapa[0] <= ((-32)*(LARGURA_MAPA/32-20)))
-                {
-                    guerreiro->x+=1;
-                }
-                else
-                {
-                    mov_mapa[0]-=1;
-                }
+                guerreiro->x+=1;
             }
         }
         else if (guerreiro->direcao==1 && guerreiro->x > 0 &&
-                 !colisao_esquerda(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+                 !colisao_esquerda(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
         {
             for(i=0;i<6 && guerreiro->x > 0;i++)
             {
-                if(guerreiro->x > SCREEN_W/2 || mov_mapa[0] >= 0)
-                {
-                    guerreiro->x-=1;
-                }
-                else
-                {
-                    mov_mapa[0]+=1;
-                }
+                guerreiro->x-=1;
             }
         }
     }
 
-    if(colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+    if(colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
         guerreiro->caindo=0;
         if(!key[KEY_UP])guerreiro->nivel_plataforma = guerreiro->y+guerreiro->altura - 1;
         guerreiro->pulando=0;
         if(!key[KEY_UP])guerreiro->permitir_pulo=1;
-
     }
 
     if(guerreiro->y <= guerreiro->nivel_plataforma - ALTURA_PULO ||
-       (!colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios)
+       (!colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios)
         && !guerreiro->pulando)||
-       colisao_cima(guerreiro->x - mov_mapa[0],guerreiro->y,guerreiro->altura,guerreiro->largura,matriz_tela,bloqueios))
+       colisao_cima(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,matriz_tela,bloqueios))
     {
 
         guerreiro->caindo=1;
@@ -152,9 +123,9 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
 
 
-    if(guerreiro->caindo && !colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+    if(guerreiro->caindo && !colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
     {
-        for(i=0;i<5 && !colisao_abaixo(guerreiro->x - mov_mapa[0], guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios);i++)
+        for(i=0;i<5 && !colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios);i++)
         {
             guerreiro->y+=1;
         }
@@ -162,7 +133,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
 
     if(segurou(KEY_UP) && guerreiro->y > guerreiro->nivel_plataforma - ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo &&
-       !colisao_cima(guerreiro->x - mov_mapa[0],guerreiro->y,guerreiro->altura,guerreiro->largura,
+       !colisao_cima(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,
                      matriz_tela,bloqueios))
     {
         guerreiro->pulando=1;
@@ -180,7 +151,7 @@ void movimento_guerreiro(Tcriatura *guerreiro,int mov_mapa[2], int matriz_tela[A
     }
 }
 
-void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos, int mov_mapa[2])
+void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
 {
     int i;
     if(apertou(KEY_Z) && !guerreiro->atacando)
@@ -226,7 +197,7 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos, 
     }
 }
 
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro)
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
     if(guerreiro->direcao==1)
@@ -237,7 +208,7 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro)
     {
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
     }
-    draw_sprite(buffer, guerreiro->sprite, guerreiro->x-(64 - guerreiro->largura)/2,
+    draw_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 }
 
@@ -329,7 +300,7 @@ void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
 
 }
 
-void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
+void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
 {
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
@@ -354,7 +325,7 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1)
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    draw_sprite(buffer, goblin1->sprite, goblin1->x-(64-goblin1->largura)/2,
+    draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
