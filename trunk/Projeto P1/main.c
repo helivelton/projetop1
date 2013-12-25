@@ -142,7 +142,7 @@ int main()
             // tela de jogo
             else if(tela==1)
             {
-                if(carrega_fase)
+                if(carrega_fase)// carrega todos os elementos da fase
                 {
                     prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
                     carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
@@ -195,10 +195,10 @@ int main()
 
                 botao_w(&janela_atual,&janelas,tempo_de_jogo);
 
-                if(apertou(KEY_Q))
+                /*if(apertou(KEY_Q))
                 {
                     calcular_dano(&guerreiro,&inimigos.goblins_guerreiros.goblins[0],0);
-                }
+                }*/
 
                 if (itens.todosItens[0].ativo)
                 {
