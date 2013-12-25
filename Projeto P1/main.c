@@ -24,9 +24,7 @@ int main()
     int ticks; // controla velocidade do jogo
     int tempo_de_jogo=0; // controla o tempo de jogo
     int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]; // matriz da tela
-    int mov_mapa[2]; // vetor que cuida do movimento do mapa e dos objetos nele
-    mov_mapa[0]=0; // o primeiro índice controla com o segundo os objetos no mapa
-    mov_mapa[1]=0;
+    int ajuste_mapa = 0; // vetor que cuida do movimento do mapa e dos objetos nele
     int janela_atual = 0; // controla janela atual
     int tela = 0, selecionar = 0; //controla o carregamento de cada tela
     int fase=1;
@@ -180,18 +178,19 @@ int main()
                 }
                 if(guerreiro.tempo_dano+20<=tempo_de_jogo)
                     guerreiro.levando_dano=0;
-                movimento_guerreiro(&guerreiro,mov_mapa,matriz_tela, bloqueios);
-                ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos,mov_mapa);
+                movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
+                ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
+
+                if(guerreiro.x>=SCREEN_W/2 && guerreiro.x <= (LARGURA_MAPA-SCREEN_W/2))
+                    ajuste_mapa=(-1)*(guerreiro.x-SCREEN_W/2);
+
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
-                    inimigos.goblins_guerreiros.goblins[i].x += mov_mapa[0] - mov_mapa[1]; // ajusta posição goblin com mov_mapa
                     if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
                     {
                         movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x,tempo_de_jogo);
                     }
                 }
-
-                mov_mapa[1] = mov_mapa[0]; // evita acumulação no próximo ajuste mapa (se houver)
 
                 botao_w(&janela_atual,&janelas,tempo_de_jogo);
 
@@ -202,7 +201,7 @@ int main()
 
                 if (itens.todosItens[0].ativo)
                 {
-                    if (colisao(guerreiro.x - mov_mapa[0],guerreiro.y,guerreiro.altura,guerreiro.largura,itens.todosItens[0].x,itens.todosItens[0].y,itens.todosItens[0].altura,itens.todosItens[0].largura))
+                    if (colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura,itens.todosItens[0].x,itens.todosItens[0].y,itens.todosItens[0].altura,itens.todosItens[0].largura))
                     {
                         guerreiro.caracteristicas.hp+=5;
                         itens.todosItens[0].ativo=0;
@@ -210,17 +209,17 @@ int main()
                 }
                 // Desenhar
 
-                draw_sprite(buffer, mapa, mov_mapa[0], 0); // manda mapa para o buffer na posição mov_mapa
+                draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
 
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
                     if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
-                        desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i]); // desenha goblin tipo 1 e manda para o buffer
+                        desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
                 }
 
-                desenhar_guerreiro(buffer,&guerreiro); // desenha guerreiro e manda para buffer
+                desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa); // desenha guerreiro e manda para buffer
 
-                if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],mov_mapa);
+                if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],ajuste_mapa);
 
                 janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
                              titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
@@ -228,8 +227,8 @@ int main()
 
                 if(DEBUG)
                 {
-                    rectfill(buffer,guerreiro.x,guerreiro.y,guerreiro.x+1,guerreiro.y+1,makecol(0,0,160));
-                    rectfill(buffer,guerreiro.x+guerreiro.largura,guerreiro.y,guerreiro.x+guerreiro.largura+1,guerreiro.y+1,makecol(0,0,160));
+                    rectfill(buffer,guerreiro.x+ajuste_mapa,guerreiro.y,guerreiro.x+ajuste_mapa+1,guerreiro.y+1,makecol(0,0,160));
+                    rectfill(buffer,guerreiro.x+guerreiro.largura+ajuste_mapa,guerreiro.y,guerreiro.x+guerreiro.largura+ajuste_mapa+1,guerreiro.y+1,makecol(0,0,160));
                     rectfill(buffer,LARGURA_SCREEN/2,guerreiro.y-5,LARGURA_SCREEN/2+1,guerreiro.y-4,makecol(0,255,0));
                     rectfill(buffer,0,guerreiro.y-5,1,guerreiro.y-4,makecol(0,255,0));
                     rectfill(buffer,LARGURA_SCREEN-1,guerreiro.y-5,LARGURA_SCREEN,guerreiro.y-4,makecol(0,255,0));
@@ -251,8 +250,8 @@ int main()
                                  corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
                     janela_texto(buffer,150,50,100,50,"GuerreiroHP","",
                                  corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_variavel(buffer,80,170,50,50,(guerreiro.x-mov_mapa[0])/32,corpo_texto,0);
-                    janela_variavel(buffer,50,200,50,50,guerreiro.x-mov_mapa[0],corpo_texto,0);
+                    janela_variavel(buffer,80,170,50,50,(guerreiro.x)/32,corpo_texto,0);
+                    janela_variavel(buffer,50,200,50,50,guerreiro.x,corpo_texto,0);
                     janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
                     janela_variavel(buffer,50,260,50,50,guerreiro.y,corpo_texto,0);
                     janela_variavel(buffer,50,290,50,50,guerreiro.y+guerreiro.altura,corpo_texto,0);
@@ -290,13 +289,12 @@ int main()
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
                 // nova fase
-                if(guerreiro.x +guerreiro.largura -mov_mapa[0] >= LARGURA_MAPA-50 && fase<N_FASES)
+                if(guerreiro.x +guerreiro.largura >= LARGURA_MAPA-50 && fase<N_FASES)
                 {
                     carrega_fase=1;
                     guerreiro.x = 10;
                     inimigos.goblins_guerreiros.goblins[0].x = 300;
-                    mov_mapa[0]=0;
-                    mov_mapa[1]=0;
+                    ajuste_mapa=0;
                     fase++;
                     tela=9;
                     loading_time = timer;
