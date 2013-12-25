@@ -1,141 +1,30 @@
 # depslib dependency file v1.0
-1383001505 source:c:\users\j.carlos\documents\dropbox\pasta de trabalho\arq em exe a\disciplinas\programação\programação i\trabalhos\projeto p1\teste.c
-	<stdio.h>
-	<allegro5/allegro.h>
-
-1383658760 source:c:\users\j.carlos\documents\dropbox\pasta de trabalho\arq em exe a\disciplinas\programação\programação i\trabalhos\projeto p1\main.c
-	<allegro.h>
-
-1383629875 source:c:\users\gabriel\desktop\gabriel\ciência\projeto\projeto p1\main.c
-	<allegro.h>
-
-1383629875 source:c:\users\j.carlos\downloads\projeto p1\main.c
-	<allegro.h>
-
-1387988464 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
-	"basico.h"
-	"mapa.h"
-	"criaturas.h"
-	"controle.h"
-	"item.h"
-	"eventos.h"
-
 1387856260 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 
-1387903770 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388007673 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 	<time.h>
 	<stdlib.h>
 
-1387985815 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
-	"mapa.h"
-
-1387985814 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
-	"basico.h"
-
-1384665075 source:c:\users\j.carlos\documents\p1\projeto p1\guerreiro.c
-	"guerreiro.h"
-
-1384665255 c:\users\j.carlos\documents\p1\projeto p1\guerreiro.h
-	<allegro.h>
+1388004010 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
 1387856144 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1387856144 c:\users\j.carlos\documents\p1\projeto p1\controle.h
-	"basico.h"
-
-1387988593 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388009882 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1387988413 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388011999 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 
-1386336802 source:c:\users\j.carlos\documents\dropbox\projeto p1\basico.c
-	"basico.h"
-
-1386595509 c:\users\j.carlos\documents\dropbox\projeto p1\basico.h
-	<stdio.h>
-	<allegro.h>
-	<string.h>
-
-1384646715 source:c:\users\j.carlos\documents\dropbox\projeto p1\controle.c
-	"controle.h"
-
-1384899117 c:\users\j.carlos\documents\dropbox\projeto p1\controle.h
-	"basico.h"
-
-1386330825 source:c:\users\j.carlos\documents\dropbox\projeto p1\criaturas.c
-	"criaturas.h"
-
-1386331746 c:\users\j.carlos\documents\dropbox\projeto p1\criaturas.h
-	"basico.h"
-	"controle.h"
-
-1386337241 source:c:\users\j.carlos\documents\dropbox\projeto p1\main.c
-	"basico.h"
-	"mapa.h"
-	"criaturas.h"
-	"controle.h"
-
-1385215169 c:\users\j.carlos\documents\dropbox\projeto p1\mapa.h
-	"basico.h"
-
-1385862331 source:c:\users\j.carlos\documents\dropbox\projeto p1\mapa.c
-	"mapa.h"
-
-1387340895 source:c:\users\helivelton\projetop1\projeto p1\basico.c
-	"basico.h"
-
-1387340895 c:\users\helivelton\projetop1\projeto p1\basico.h
-	<stdio.h>
-	<allegro.h>
-	<string.h>
-
-1387340895 source:c:\users\helivelton\projetop1\projeto p1\controle.c
-	"controle.h"
-
-1387340896 c:\users\helivelton\projetop1\projeto p1\controle.h
-	"basico.h"
-
-1387346978 source:c:\users\helivelton\projetop1\projeto p1\criaturas.c
-	"criaturas.h"
-
-1387343083 c:\users\helivelton\projetop1\projeto p1\criaturas.h
-	"basico.h"
-	"controle.h"
-	"mapa.h"
-
-1387341184 source:c:\users\helivelton\projetop1\projeto p1\main.c
-	"basico.h"
-	"mapa.h"
-	"criaturas.h"
-	"controle.h"
-	"item.h"
-
-1387340895 c:\users\helivelton\projetop1\projeto p1\mapa.h
-	"basico.h"
-
-1387340895 source:c:\users\helivelton\projetop1\projeto p1\mapa.c
-	"mapa.h"
-
-1387988413 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
-	"item.h"
-
-1387988413 c:\users\j.carlos\documents\p1\projeto p1\item.h
-	"basico.h"
-
-1387340895 source:c:\users\helivelton\projetop1\projeto p1\item.c
-	"item.h"
-
-1387340895 c:\users\helivelton\projetop1\projeto p1\item.h
+1387998501 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
 1387856144 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
@@ -145,54 +34,20 @@
 1387856144 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 
-1387768578 source:e:\dropbox\projeto p1 manu\basico.c
-	"basico.h"
-	"mapa.h"
-
-1387821576 e:\dropbox\projeto p1 manu\basico.h
-	<stdio.h>
-	<allegro.h>
-	<string.h>
-	<time.h>
-	<stdlib.h>
-
-1387767658 e:\dropbox\projeto p1 manu\mapa.h
-	"basico.h"
-
-1387767658 source:e:\dropbox\projeto p1 manu\controle.c
-	"controle.h"
-
-1387767658 e:\dropbox\projeto p1 manu\controle.h
-	"basico.h"
-
-1387821148 source:e:\dropbox\projeto p1 manu\criaturas.c
-	"criaturas.h"
-
-1387821100 e:\dropbox\projeto p1 manu\criaturas.h
-	"basico.h"
-	"controle.h"
-
-1387769978 source:e:\dropbox\projeto p1 manu\eventos.c
-	"eventos.h"
-	"controle.h"
-
-1387769978 e:\dropbox\projeto p1 manu\eventos.h
-	"basico.h"
-
-1387767658 source:e:\dropbox\projeto p1 manu\mapa.c
-	"mapa.h"
-
-1387818794 source:e:\dropbox\projeto p1 manu\item.c
+1387988413 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1387817158 e:\dropbox\projeto p1 manu\item.h
+1387988413 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
-1387821101 source:e:\dropbox\projeto p1 manu\main.c
+1388007898 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
 	"controle.h"
 	"item.h"
 	"eventos.h"
+
+1388001346 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+	"mapa.h"
 

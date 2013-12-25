@@ -36,119 +36,52 @@ void imagens_guerreiro(Tcriatura *guerreiro)
             guerreiro->vetor_sprite[j+4*i]=create_bitmap(64,64);
             blit(tiles,guerreiro->vetor_sprite[j+4*i],j*64,i*64,0,0,64,64);
         }
-
     }
 
     guerreiro->face = load_bitmap(link_imagem("imagens_p1/hero_face.bmp"),NULL);
-
     destroy_bitmap(tiles);
 }
 
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-    int i;
-
-    if(!guerreiro->levando_dano)
+    if(!guerreiro->levando_dano) // se não esta levando dano
     {
+        // para movimento são os estados 0 a 3 do sprite
         if(guerreiro->estado_sprite > 3 && !guerreiro->atacando)
             guerreiro->estado_sprite = 0;
 
-        if (segurou(KEY_RIGHT) && guerreiro->x+guerreiro->largura < LARGURA_MAPA
-            && !colisao_direita(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
+        // apertou direita
+        if(segurou(KEY_RIGHT))
+            movimento_direita(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1);
+
+        // apertou esquerda
+        if(segurou(KEY_LEFT))
+            movimento_esquerda(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1);
+
+        // apertou para cima
+        if(segurou(KEY_UP))
+            pulo(guerreiro,guerreiro->caracteristicas.habilidade,0,matriz_tela,bloqueios);
+
+        // apertou para baixo
+        if(apertou(KEY_DOWN))
+            guerreiro->tempo_recuo=timer; // limita tempo de recuo
+        if(segurou(KEY_DOWN))
+            recuo(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios);
+
+        // se soltar o botão de pulo
+        if(soltou(KEY_UP))
         {
-            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x+guerreiro->largura < LARGURA_MAPA ;i++)
-            {
-                guerreiro->x+=1;
-                if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
-                {
-                    guerreiro->controle_estado=timer;
-                    guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
-                }
-            }
-            guerreiro->direcao =1;
-        }
-        else if (segurou(KEY_LEFT) && guerreiro->x > 0 &&
-                 !colisao_esquerda(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-        {
-            for(i=0;i<guerreiro->caracteristicas.habilidade && guerreiro->x > 0;i++)
-            {
-                guerreiro->x-=1;
-                if (timer-guerreiro->controle_estado>=ATUALIZAR_ESTADO && !guerreiro->pulando)
-                {
-                    guerreiro->controle_estado=timer;
-                    guerreiro->estado_sprite=(guerreiro->estado_sprite+1)%4;
-                }
-            }
-            guerreiro->direcao = 2;
+            guerreiro->pulando=0;
+            guerreiro->caindo=1;
+            guerreiro->permitir_pulo=1;
         }
     }
-    else
-    {
-        guerreiro->estado_sprite=0;
+    else // se sofre dano
+        recuo_por_dano(guerreiro,matriz_tela,bloqueios);
 
-        if (guerreiro->direcao==2 && guerreiro->x+guerreiro->largura < SCREEN_W
-            && !colisao_direita(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-        {
-            for(i=0;i<6 && guerreiro->x+guerreiro->largura < SCREEN_W ;i++)
-            {
-                guerreiro->x+=1;
-            }
-        }
-        else if (guerreiro->direcao==1 && guerreiro->x > 0 &&
-                 !colisao_esquerda(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-        {
-            for(i=0;i<6 && guerreiro->x > 0;i++)
-            {
-                guerreiro->x-=1;
-            }
-        }
-    }
-
-    if(colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-    {
-        guerreiro->caindo=0;
-        if(!key[KEY_UP])guerreiro->nivel_plataforma = guerreiro->y+guerreiro->altura - 1;
-        guerreiro->pulando=0;
-        if(!key[KEY_UP])guerreiro->permitir_pulo=1;
-    }
-
-    if(guerreiro->y <= guerreiro->nivel_plataforma - ALTURA_PULO ||
-       (!colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios)
-        && !guerreiro->pulando)||
-       colisao_cima(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,matriz_tela,bloqueios))
-    {
-
-        guerreiro->caindo=1;
-        guerreiro->permitir_pulo = 0;
-    }
-
-
-    if(guerreiro->caindo && !colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios))
-    {
-        for(i=0;i<5 && !colisao_abaixo(guerreiro->x, guerreiro->y, guerreiro->altura, guerreiro->largura, matriz_tela, bloqueios);i++)
-        {
-            guerreiro->y+=1;
-        }
-
-    }
-
-    if(segurou(KEY_UP) && guerreiro->y > guerreiro->nivel_plataforma - ALTURA_PULO && !guerreiro->caindo && guerreiro->permitir_pulo &&
-       !colisao_cima(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,
-                     matriz_tela,bloqueios))
-    {
-        guerreiro->pulando=1;
-        for(i=0;i<VELOCIDADE && guerreiro->y > guerreiro->nivel_plataforma - ALTURA_PULO;i++)
-        {
-            guerreiro->y = guerreiro->y - 1;
-        }
-
-    }
-    if(soltou(KEY_UP))
-    {
-        guerreiro->pulando=0;
-        guerreiro->caindo=1;
-        guerreiro->permitir_pulo=1;
-    }
+    // verificações básicas
+    colide_chao(guerreiro,matriz_tela,bloqueios,1); // colidiu com o chão? primeira verificação obrigatória
+    verificar_queda(guerreiro,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
@@ -168,14 +101,16 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
         guerreiro->estado_sprite = ((tempo_jogo-guerreiro->tempo_ataque)/5)%4;
         guerreiro->estado_sprite = guerreiro->estado_sprite + 4;
     }
-    for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando
+        && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
     {
         if(guerreiro->direcao==2)//esquerda
         {
             if(colisao(guerreiro->x - 16,guerreiro->y-4,25,20,
                        inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
                        inimigos->goblins_guerreiros.goblins[i].altura,
-                       inimigos->goblins_guerreiros.goblins[i].largura ))
+                       inimigos->goblins_guerreiros.goblins[i].largura )
+               && tempo_jogo-guerreiro->tempo_ataque > 15)
                {
                    inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
                    inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
@@ -187,7 +122,8 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
             if(colisao(guerreiro->x + guerreiro->largura - 4,guerreiro->y-4,25,20,
                        inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
                        inimigos->goblins_guerreiros.goblins[i].altura,
-                       inimigos->goblins_guerreiros.goblins[i].largura ))
+                       inimigos->goblins_guerreiros.goblins[i].largura )
+               && tempo_jogo-guerreiro->tempo_ataque > 15)
                {
                    inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
                    inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
@@ -260,7 +196,6 @@ void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
                     goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
                     goblin1->estado_sprite = goblin1->estado_sprite + 5;
                 }
-
             }
         }
         else if(goblin1->direcao==2)
@@ -362,4 +297,135 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque)
     dano= dano > 0? dano : 1;
 
     alvo->caracteristicas.hp-=dano;
+}
+
+void movimento_direita(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
+                       int mudar_direcao,int mudar_sprite)
+{
+    int i;
+    for(i=0; i < deslocamento && (ser->x + ser->largura) < LARGURA_MAPA &&
+        !colisao_direita_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios);i++)
+    {
+        ser->x+=1;
+    }
+    if(mudar_direcao)
+        ser->direcao=1;
+    if(mudar_sprite)
+    {
+        if (!ser->pulando)
+            mudanca_sprite(0,3,&ser->estado_sprite);
+    }
+}
+
+void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
+                       int mudar_direcao,int mudar_sprite)
+{
+    int i;
+    for(i=0; i < deslocamento && ser->x > 0 &&
+        !colisao_esquerda_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios);i++)
+    {
+        ser->x-=1;
+    }
+    if(mudar_direcao)
+        ser->direcao=2;
+    if(mudar_sprite)
+    {
+        if (!ser->pulando)
+            mudanca_sprite(0,3,&ser->estado_sprite);
+    }
+}
+
+void pulo(Tcriatura *ser,int deslocamentoy,int deslocamentox,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+    int i;
+    for(i=0; i < deslocamentoy && ser->y > ser->nivel_plataforma - ALTURA_PULO && !ser->caindo && ser->permitir_pulo &&
+        !colisao_cima_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios);i++)
+    {
+        ser->pulando=1;
+        ser->y-=1;
+        if(deslocamentox!=0)
+        {
+            if(deslocamentox<0)
+                movimento_esquerda(ser,(-1)*deslocamentox,matriz_tela,bloqueios,0,0);
+            if(deslocamentox>0)
+                movimento_direita(ser,deslocamentox,matriz_tela,bloqueios,0,0);
+        }
+    }
+}
+
+void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+    if(ser->tempo_recuo + 20 >= timer && !ser->pulando && !ser->caindo)
+    {
+        if(ser->direcao==2)
+            movimento_direita(ser,deslocamento*3,matriz_tela,bloqueios,0,0);
+        else
+            movimento_esquerda(ser,deslocamento*3,matriz_tela,bloqueios,0,0);
+    }
+}
+
+void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+    ser->estado_sprite=0;
+    ser->caindo=1;
+    ser->pulando=0;
+
+    // ele recua dependendo da direção que estiver
+    if (ser->direcao==2)
+        movimento_direita(ser,6,matriz_tela,bloqueios,0,0);
+    else
+        movimento_esquerda(ser,6,matriz_tela,bloqueios,0,0);
+}
+
+void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite)
+{
+    if(*estado_sprite < limite_inferior || *estado_sprite > limite_superior)
+        *estado_sprite = limite_inferior;
+    if ((timer)%12==0)
+    {
+        *estado_sprite = *estado_sprite - limite_inferior;
+        *estado_sprite = (*estado_sprite + 1) % (limite_superior-limite_inferior+1);
+        *estado_sprite = *estado_sprite + limite_inferior;
+    }
+}
+
+void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int tipo_criatura)
+{
+    // tipo_criatura pode ser 1 para heroi, e qualquer outro quando não é
+    if(colisao_abaixo_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios))
+    {
+        ser->caindo=0;
+        if(tipo_criatura==1)
+        {
+            if(!key[KEY_UP])ser->nivel_plataforma = ser->y+ser->altura - 1;
+        }
+        else
+            ser->nivel_plataforma = ser->y+ser->altura - 1;
+        ser->pulando=0;
+        if(tipo_criatura==1)
+        {
+            if(!key[KEY_UP])ser->permitir_pulo=1;
+        }
+        else
+            ser->permitir_pulo=1;
+    }
+}
+
+void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+    int i;
+
+    if(ser->y <= ser->nivel_plataforma - ALTURA_PULO ||
+       (!colisao_abaixo_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios)
+        && !ser->pulando)||
+       colisao_cima_mapa(ser->x,ser->y,ser->altura,ser->largura,matriz_tela,bloqueios))
+    {
+        ser->caindo=1;
+        ser->permitir_pulo = 0;
+    }
+
+    for(i=0;i<5 && ser->caindo && !colisao_abaixo_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios);i++)
+    {
+        ser->y+=1;
+    }
 }

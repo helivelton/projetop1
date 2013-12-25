@@ -82,10 +82,10 @@ typedef struct atributo
 typedef struct criatura
 {
     char nome[30];
-    float x;
-    float y;
-    float largura;
-    float altura;
+    int x;
+    int y;
+    int largura;
+    int altura;
     int direcao; // direita 1 e esquerda 2
     int direcao_anterior;
     int estado_sprite; // estado atual
@@ -98,6 +98,7 @@ typedef struct criatura
     int tempo_ataque;
     int levando_dano;
     int tempo_dano;
+    int tempo_recuo;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
@@ -131,8 +132,8 @@ typedef struct oponentes
 
 typedef struct item
 {
-    float x;
-    float y;
+    int x;
+    int y;
     int largura;
     int altura;
     int tipo;
@@ -148,8 +149,8 @@ typedef struct _itens
 
 typedef struct janela
 {
-    float x;
-    float y;
+    int x;
+    int y;
     int altura;
     int largura;
     int controle;
