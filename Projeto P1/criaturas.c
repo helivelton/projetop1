@@ -69,7 +69,7 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
             recuo(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios);
 
         // se soltar o botão de pulo
-        if(soltou(KEY_UP))
+        if(!key[KEY_UP])
         {
             guerreiro->pulando=0;
             guerreiro->caindo=1;
@@ -177,11 +177,12 @@ void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, 
         }
         else
         {
-            goblin1->direcao=0;
-
+            goblin1->direcao=goblin1->direcao_anterior;
             ataque_ajustes(goblin1,tempo_jogo,1,2,4);
             if(!guerreiro->levando_dano && goblin1->atacando)
                 ataque(goblin1,guerreiro,tempo_jogo,0,-16,-4,20,25);
+
+            goblin1->direcao=0;
         }
 
         /*if(goblin1->direcao==1)
