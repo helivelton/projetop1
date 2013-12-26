@@ -16,7 +16,9 @@ void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGU
 void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int tipo_criatura);
 void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
-void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite);
+void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,int intervalo,int tempo_inicio,int tempo_jogo);
+void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup);
+void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int at_ajusteX,int at_ajusteY,int at_largura,int at_altura);
 int dano_ataque(Tcriatura* atacante, int tipo_ataque);
 void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque);
 
