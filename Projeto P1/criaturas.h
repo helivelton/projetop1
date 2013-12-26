@@ -14,7 +14,7 @@ void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_M
 void pulo(Tcriatura *ser,int deslocamentoy,int deslocamentox,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
-void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int tipo_criatura);
+void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int eh_heroi);
 void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,int intervalo,int tempo_inicio,int tempo_jogo);
 void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup);
@@ -26,6 +26,7 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque);
 void imagens_guerreiro(Tcriatura *guerreiro);
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos);
+void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo);
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x);
 
 // Funções do goblin tipo 1

@@ -1,46 +1,46 @@
 # depslib dependency file v1.0
-1387856260 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388037016 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 
-1388007673 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388037016 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 	<time.h>
 	<stdlib.h>
 
-1388004010 c:\users\j.carlos\documents\p1\projeto p1\controle.h
+1388037016 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1387856144 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
+1388037015 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388017627 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388061756 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388016891 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388062761 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 
-1387998501 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1388037015 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1387856144 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388037015 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 	"controle.h"
 
-1387856144 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1388037016 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 
-1387988413 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1388037016 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1387988413 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1388037016 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
-1388007898 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388062084 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
@@ -48,6 +48,6 @@
 	"item.h"
 	"eventos.h"
 
-1388001346 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+1388037016 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
