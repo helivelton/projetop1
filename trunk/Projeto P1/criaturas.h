@@ -8,9 +8,9 @@
 // Funções para todas as criaturas
 void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf);
 void movimento_direita(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
-                       int mudar_direcao,int mudar_sprite);
+                       int mudar_direcao,int mudar_sprite,int sprite_inf,int sprite_sup);
 void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
-                       int mudar_direcao,int mudar_sprite);
+                       int mudar_direcao,int mudar_sprite,int sprite_inf,int sprite_sup);
 void pulo(Tcriatura *ser,int deslocamentoy,int deslocamentox,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
@@ -31,7 +31,7 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x);
 
 // Funções do goblin tipo 1
 void imagens_goblin1(Tcriatura *goblin1);
-void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro,int tempo_jogo);
+void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro,int l_guerreiro,int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x);
 
 #endif // CRIATURAS_H

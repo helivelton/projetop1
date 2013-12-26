@@ -52,11 +52,11 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
 
         // apertou direita
         if(segurou(KEY_RIGHT))
-            movimento_direita(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1);
+            movimento_direita(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,0,3);
 
         // apertou esquerda
         if(segurou(KEY_LEFT))
-            movimento_esquerda(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1);
+            movimento_esquerda(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,0,3);
 
         // apertou para cima
         if(segurou(KEY_UP))
@@ -154,27 +154,33 @@ void imagens_goblin1(Tcriatura *goblin)
     destroy_bitmap(tiles);
 }
 
-void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
+void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro,int l_guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     if(!goblin1->levando_dano)
     {
         if(goblin1->estado_sprite < 5 && !goblin1->atacando)
             goblin1->estado_sprite = 5;
 
-        if (goblin1->x > x_guerreiro)
+        if (goblin1->x-3 > x_guerreiro+l_guerreiro || goblin1->x-4 > x_guerreiro+l_guerreiro || goblin1->x-5 > x_guerreiro+l_guerreiro
+            || goblin1->x-6 > x_guerreiro+l_guerreiro)
         {
-            goblin1->direcao=2;
+            movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+            //goblin1->direcao=2;
+            goblin1->direcao_anterior=2;
         }
-        else if (goblin1->x < x_guerreiro)
+        else if (goblin1->x+goblin1->largura+3 < x_guerreiro || goblin1->x+goblin1->largura+4 < x_guerreiro
+                 || goblin1->x+goblin1->largura+5 < x_guerreiro || goblin1->x+goblin1->largura+6 < x_guerreiro)
         {
-            goblin1->direcao=1;
+            movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+            //goblin1->direcao=1;
+            goblin1->direcao_anterior=1;
         }
         else
         {
             goblin1->direcao=0;
         }
 
-        if(goblin1->direcao==1)
+        /*if(goblin1->direcao==1)
         {
             goblin1->x=goblin1->x+goblin1->caracteristicas.habilidade;
             if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
@@ -201,28 +207,28 @@ void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
                     goblin1->estado_sprite = goblin1->estado_sprite + 5;
                 }
             }
-        }
+        }*/
     }
     else
     {
         goblin1->estado_sprite = 1;
         if(goblin1->tempo_dano+10>=tempo_jogo)
         {
-            if(goblin1->direcao==1)//direita
+            recuo_por_dano(goblin1,matriz_tela,bloqueios);
+            /*if(goblin1->direcao==1)//direita
             {
                 goblin1->x = goblin1->x - 6;
             }
             else
             {
                 goblin1->x = goblin1->x + 6;
-            }
+            }*/
         }
         else
         {
             goblin1->levando_dano=0;
         }
     }
-
 }
 
 void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
@@ -231,13 +237,10 @@ void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
     if(goblin1->direcao==1)
     {
         draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
-        goblin1->direcao_anterior=1;
     }
     else if(goblin1->direcao==2)
     {
         draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
-        goblin1->direcao_anterior=2;
-
     }
     else if(goblin1->direcao==0)
     {
@@ -290,7 +293,7 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque)
 }
 
 void movimento_direita(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
-                       int mudar_direcao,int mudar_sprite)
+                       int mudar_direcao,int mudar_sprite,int sprite_inf,int sprite_sup)
 {
     int i;
     for(i=0; i < deslocamento && (ser->x + ser->largura) < LARGURA_MAPA &&
@@ -303,12 +306,12 @@ void movimento_direita(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MA
     if(mudar_sprite)
     {
         if (!ser->pulando)
-            mudanca_sprite(0,3,&ser->estado_sprite,12,0,0);
+            mudanca_sprite(sprite_inf,sprite_sup,&ser->estado_sprite,12,0,0);
     }
 }
 
 void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
-                       int mudar_direcao,int mudar_sprite)
+                       int mudar_direcao,int mudar_sprite,int sprite_inf,int sprite_sup)
 {
     int i;
     for(i=0; i < deslocamento && ser->x > 0 &&
@@ -321,7 +324,7 @@ void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_M
     if(mudar_sprite)
     {
         if (!ser->pulando)
-            mudanca_sprite(0,3,&ser->estado_sprite,12,0,0);
+            mudanca_sprite(sprite_inf,sprite_sup,&ser->estado_sprite,12,0,0);
     }
 }
 
@@ -336,9 +339,9 @@ void pulo(Tcriatura *ser,int deslocamentoy,int deslocamentox,int matriz_tela[ALT
         if(deslocamentox!=0)
         {
             if(deslocamentox<0)
-                movimento_esquerda(ser,(-1)*deslocamentox,matriz_tela,bloqueios,0,0);
+                movimento_esquerda(ser,(-1)*deslocamentox,matriz_tela,bloqueios,0,0,0,0);
             if(deslocamentox>0)
-                movimento_direita(ser,deslocamentox,matriz_tela,bloqueios,0,0);
+                movimento_direita(ser,deslocamentox,matriz_tela,bloqueios,0,0,0,0);
         }
     }
 }
@@ -348,9 +351,9 @@ void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGU
     if(ser->tempo_recuo + 20 >= timer && !ser->pulando && !ser->caindo)
     {
         if(ser->direcao==2)
-            movimento_direita(ser,deslocamento*3,matriz_tela,bloqueios,0,0);
+            movimento_direita(ser,deslocamento*3,matriz_tela,bloqueios,0,0,0,0);
         else
-            movimento_esquerda(ser,deslocamento*3,matriz_tela,bloqueios,0,0);
+            movimento_esquerda(ser,deslocamento*3,matriz_tela,bloqueios,0,0,0,0);
     }
 }
 
@@ -362,9 +365,9 @@ void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/
 
     // ele recua dependendo da direção que estiver
     if (ser->direcao==2)
-        movimento_direita(ser,6,matriz_tela,bloqueios,0,0);
+        movimento_direita(ser,6,matriz_tela,bloqueios,0,0,0,0);
     else
-        movimento_esquerda(ser,6,matriz_tela,bloqueios,0,0);
+        movimento_esquerda(ser,6,matriz_tela,bloqueios,0,0,0,0);
 }
 
 void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,int intervalo,int tempo_inicio,int tempo_jogo)

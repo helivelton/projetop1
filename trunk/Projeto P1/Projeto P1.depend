@@ -16,10 +16,10 @@
 1388037015 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388061756 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388064993 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388062761 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388063778 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
@@ -40,7 +40,7 @@
 1388037016 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
-1388062084 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388063778 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
