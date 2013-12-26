@@ -62,8 +62,6 @@ int main()
     FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
     FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
 
-
-
 /*  #######################################################################################
                                 fim da declaração das variáveis
     #######################################################################################
@@ -81,10 +79,10 @@ int main()
     inimigos.chefes.chefe_atual=0;
     preenche_criatura(&inimigos.goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0); // preenche status goblin
     inimigos.goblins_guerreiros.n_goblins+=1;
-    imagens_goblin1(&inimigos.goblins_guerreiros.goblins[0]); // preenche vetor de imagens do goblin tipo 1
+    imagens_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[0]); // preenche vetor de imagens do goblin tipo 1
     preenche_criatura(&inimigos.goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0); // preenche status goblin
     inimigos.goblins_guerreiros.n_goblins+=1;
-    imagens_goblin1(&inimigos.goblins_guerreiros.goblins[1]); // preenche vetor de imagens do goblin tipo 1
+    imagens_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[1]); // preenche vetor de imagens do goblin tipo 1
     carrega_texturas(texturas); // prepara as texturas
 
     janelas.n_janelas=0;
@@ -182,10 +180,11 @@ int main()
 
                     for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                     {
-                        if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
-                            movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
-                        else if(inimigos.goblins_guerreiros.goblins[i].levando_dano)
-                            movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
+                        if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 || inimigos.goblins_guerreiros.goblins[i].levando_dano)
+                        {
+                            movimento_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
+                            ataque_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo);
+                        }
                     }
 
                     botao_w(&janela_atual,&janelas,tempo_de_jogo);
@@ -203,7 +202,7 @@ int main()
                     if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp<=0
                             && !inimigos.goblins_guerreiros.goblins[i].levando_dano)
                         inimigos.goblins_guerreiros.goblins[i].estado_sprite=0;
-                    desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
+                    desenhar_goblin_guerreiro(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
                 }
 
                 desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa); // desenha guerreiro e manda para buffer
