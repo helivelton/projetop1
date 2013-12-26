@@ -87,49 +87,17 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
 {
     int i;
-    if(apertou(KEY_Z) && !guerreiro->atacando)
-    {
-        guerreiro->atacando = 1;
-        guerreiro->tempo_ataque = tempo_jogo;
-    }
-    if(guerreiro->tempo_ataque + 19 <= tempo_jogo)
-    {
-        guerreiro->atacando = 0;
-    }
-    if(guerreiro->atacando)
-    {
-        guerreiro->estado_sprite = ((tempo_jogo-guerreiro->tempo_ataque)/5)%4;
-        guerreiro->estado_sprite = guerreiro->estado_sprite + 4;
-    }
+    int confirmacao=0;
+
+    if(apertou(KEY_Z))
+        confirmacao=1;
+
+    ataque_ajustes(guerreiro,tempo_jogo,confirmacao,4,7);
+
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando
-        && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
+            && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
     {
-        if(guerreiro->direcao==2)//esquerda
-        {
-            if(colisao(guerreiro->x - 16,guerreiro->y-4,25,20,
-                       inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
-                       inimigos->goblins_guerreiros.goblins[i].altura,
-                       inimigos->goblins_guerreiros.goblins[i].largura )
-               && tempo_jogo-guerreiro->tempo_ataque > 15)
-               {
-                   inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
-                   inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
-                   calcular_dano(guerreiro,&inimigos->goblins_guerreiros.goblins[i],0);
-               }
-        }
-        if(guerreiro->direcao==1)//direita
-        {
-            if(colisao(guerreiro->x + guerreiro->largura - 4,guerreiro->y-4,25,20,
-                       inimigos->goblins_guerreiros.goblins[i].x,inimigos->goblins_guerreiros.goblins[i].y,
-                       inimigos->goblins_guerreiros.goblins[i].altura,
-                       inimigos->goblins_guerreiros.goblins[i].largura )
-               && tempo_jogo-guerreiro->tempo_ataque > 15)
-               {
-                   inimigos->goblins_guerreiros.goblins[i].levando_dano=1;
-                   inimigos->goblins_guerreiros.goblins[i].tempo_dano=tempo_jogo;
-                   calcular_dano(guerreiro,&inimigos->goblins_guerreiros.goblins[i],0);
-               }
-        }
+        ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25);
     }
 }
 
@@ -164,8 +132,6 @@ void imagens_goblin1(Tcriatura *goblin)
 
 void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro, int tempo_jogo)
 {
-
-
     if(!goblin1->levando_dano)
     {
         if(goblin1->estado_sprite < 5 && !goblin1->atacando)
@@ -313,7 +279,7 @@ void movimento_direita(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MA
     if(mudar_sprite)
     {
         if (!ser->pulando)
-            mudanca_sprite(0,3,&ser->estado_sprite);
+            mudanca_sprite(0,3,&ser->estado_sprite,12,0,0);
     }
 }
 
@@ -331,7 +297,7 @@ void movimento_esquerda(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_M
     if(mudar_sprite)
     {
         if (!ser->pulando)
-            mudanca_sprite(0,3,&ser->estado_sprite);
+            mudanca_sprite(0,3,&ser->estado_sprite,12,0,0);
     }
 }
 
@@ -377,15 +343,20 @@ void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/
         movimento_esquerda(ser,6,matriz_tela,bloqueios,0,0);
 }
 
-void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite)
+void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,int intervalo,int tempo_inicio,int tempo_jogo)
 {
     if(*estado_sprite < limite_inferior || *estado_sprite > limite_superior)
         *estado_sprite = limite_inferior;
-    if ((timer)%12==0)
+    if (timer%intervalo==0 && tempo_inicio<=0)
     {
         *estado_sprite = *estado_sprite - limite_inferior;
         *estado_sprite = (*estado_sprite + 1) % (limite_superior-limite_inferior+1);
         *estado_sprite = *estado_sprite + limite_inferior;
+    }
+    if (tempo_inicio>0)
+    {
+        *estado_sprite = ((tempo_jogo-tempo_inicio)/intervalo)%(limite_superior-limite_inferior+1);
+        *estado_sprite = *estado_sprite + (limite_superior-limite_inferior + 1);
     }
 }
 
@@ -427,5 +398,46 @@ void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA
     for(i=0;i<5 && ser->caindo && !colisao_abaixo_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios);i++)
     {
         ser->y+=1;
+    }
+}
+
+void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup)
+{
+    if(!atacante->atacando && confirmacao)
+    {
+        atacante->atacando = 1;
+        atacante->tempo_ataque = tempo_jogo;
+    }
+    if(atacante->tempo_ataque + 19 <= tempo_jogo)
+        atacante->atacando = 0;
+
+    if(atacante->atacando)
+        mudanca_sprite(sprite_lim_inf,sprite_lim_sup,&atacante->estado_sprite,5,atacante->tempo_ataque,tempo_jogo);
+}
+
+void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int at_ajusteX,int at_ajusteY,int at_largura,int at_altura)
+{
+    if(atacante->atacando && !alvo->levando_dano)
+    {
+        if(atacante->direcao==2)//esquerda
+        {
+            if(colisao(atacante->x + at_ajusteX,atacante->y + at_ajusteY,at_altura,at_largura,
+                       alvo->x,alvo->y,alvo->altura,alvo->largura)&& tempo_jogo-atacante->tempo_ataque > 15)
+               {
+                   alvo->levando_dano=1;
+                   alvo->tempo_dano=tempo_jogo;
+                   calcular_dano(atacante,alvo,tipo_at);
+               }
+        }
+        else //direita
+        {
+            if(colisao(atacante->x + atacante->largura + ((-1)*(at_largura+at_ajusteX)),atacante->y+at_ajusteY,at_altura,at_largura,
+                       alvo->x,alvo->y,alvo->altura,alvo->largura )&& tempo_jogo-atacante->tempo_ataque > 15)
+               {
+                   alvo->levando_dano=1;
+                   alvo->tempo_dano=tempo_jogo;
+                   calcular_dano(atacante,alvo,tipo_at);
+               }
+        }
     }
 }
