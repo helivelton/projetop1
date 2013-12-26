@@ -173,7 +173,7 @@ int main()
                 {
                     if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
                     {
-                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x,tempo_de_jogo);
+                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x,guerreiro.largura,tempo_de_jogo,matriz_tela,bloqueios);
                     }
                 }
 
