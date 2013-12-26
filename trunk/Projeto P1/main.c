@@ -160,22 +160,7 @@ int main()
                 keyboard_input();
 
                 // Lógica do jogo
-                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
-                {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro.x,guerreiro.y,
-                        guerreiro.altura,guerreiro.largura, inimigos.goblins_guerreiros.goblins[i].x,
-                        inimigos.goblins_guerreiros.goblins[i].y,inimigos.goblins_guerreiros.goblins[i].altura,
-                        inimigos.goblins_guerreiros.goblins[i].largura) && !guerreiro.levando_dano)
-                    {
-                        guerreiro.levando_dano=1;
-                        guerreiro.tempo_dano=tempo_de_jogo;
-                        guerreiro.caracteristicas.hp-=1;
-                        if(guerreiro.x+guerreiro.largura < (inimigos.goblins_guerreiros.goblins[i].x+inimigos.goblins_guerreiros.goblins[i].largura))
-                            guerreiro.direcao=1;
-                        else
-                            guerreiro.direcao=2;
-                    }
-                }
+                tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
                 if(guerreiro.tempo_dano+20<=tempo_de_jogo)
                     guerreiro.levando_dano=0;
                 movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
@@ -194,11 +179,6 @@ int main()
 
                 botao_w(&janela_atual,&janelas,tempo_de_jogo);
 
-                /*if(apertou(KEY_Q))
-                {
-                    calcular_dano(&guerreiro,&inimigos.goblins_guerreiros.goblins[0],0);
-                }*/
-
                 if (itens.todosItens[0].ativo)
                 {
                     if (colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura,itens.todosItens[0].x,itens.todosItens[0].y,itens.todosItens[0].altura,itens.todosItens[0].largura))
@@ -213,8 +193,9 @@ int main()
 
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
-                        desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp<=0)
+                        inimigos.goblins_guerreiros.goblins[i].estado_sprite=0;
+                    desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
                 }
 
                 desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa); // desenha guerreiro e manda para buffer
@@ -286,9 +267,6 @@ int main()
                     if(tempo_de_jogo==janelas.total[1].tempo_fim)
                         janela_atual=0;
                 }
-
-
-
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 

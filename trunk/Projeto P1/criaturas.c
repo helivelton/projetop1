@@ -94,11 +94,35 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
 
     ataque_ajustes(guerreiro,tempo_jogo,confirmacao,4,7);
 
-    for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando
-            && !inimigos->goblins_guerreiros.goblins[i].levando_dano;i++)
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando;i++)
     {
-        ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25);
+        if(!inimigos->goblins_guerreiros.goblins[i].levando_dano)
+            ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25);
     }
+}
+
+void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
+{
+    int i;
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
+    {
+        if(inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp>0 && colisao(guerreiro->x,guerreiro->y,
+            guerreiro->altura,guerreiro->largura, inimigos->goblins_guerreiros.goblins[i].x,
+            inimigos->goblins_guerreiros.goblins[i].y,inimigos->goblins_guerreiros.goblins[i].altura,
+            inimigos->goblins_guerreiros.goblins[i].largura) && !guerreiro->levando_dano)
+        {
+            guerreiro->levando_dano=1;
+            guerreiro->tempo_dano=tempo_jogo;
+            guerreiro->caracteristicas.hp-=1;
+            if(guerreiro->x+guerreiro->largura < (inimigos->goblins_guerreiros.goblins[i].x+inimigos->goblins_guerreiros.goblins[i].largura))
+                guerreiro->direcao=1;
+            else
+                guerreiro->direcao=2;
+        }
+    }
+
+    if(guerreiro->tempo_dano+20 <= tempo_jogo)
+        guerreiro->levando_dano=0;
 }
 
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
@@ -360,20 +384,19 @@ void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,i
     }
 }
 
-void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int tipo_criatura)
+void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int eh_heroi)
 {
-    // tipo_criatura pode ser 1 para heroi, e qualquer outro quando não é
     if(colisao_abaixo_mapa(ser->x, ser->y, ser->altura, ser->largura, matriz_tela, bloqueios))
     {
         ser->caindo=0;
-        if(tipo_criatura==1)
+        if(eh_heroi==1)
         {
             if(!key[KEY_UP])ser->nivel_plataforma = ser->y+ser->altura - 1;
         }
         else
             ser->nivel_plataforma = ser->y+ser->altura - 1;
         ser->pulando=0;
-        if(tipo_criatura==1)
+        if(eh_heroi==1)
         {
             if(!key[KEY_UP])ser->permitir_pulo=1;
         }
@@ -426,6 +449,7 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int a
                {
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
+                   alvo->direcao = 1;
                    calcular_dano(atacante,alvo,tipo_at);
                }
         }
@@ -436,6 +460,7 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int a
                {
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
+                   alvo->direcao = 2;
                    calcular_dano(atacante,alvo,tipo_at);
                }
         }
