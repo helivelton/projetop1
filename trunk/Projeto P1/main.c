@@ -151,7 +151,7 @@ int main()
                 // atualiza estado do teclado
                 keyboard_input();
 
-                if (apertou(KEY_P))
+                if (apertou(KEY_SPACE))
                 {
                     if (pause == TRUE)
                         pause = FALSE;
@@ -169,6 +169,7 @@ int main()
                 {
                     // incrementa o tempo de jogo
                     tempo_de_jogo++;
+
                     // Lógica do jogo
                     tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
                     if(guerreiro.tempo_dano+20<=tempo_de_jogo)
@@ -182,9 +183,9 @@ int main()
                     for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                     {
                         if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
-                        {
                             movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
-                        }
+                        else if(inimigos.goblins_guerreiros.goblins[i].levando_dano)
+                            movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
                     }
 
                     botao_w(&janela_atual,&janelas,tempo_de_jogo);
@@ -199,7 +200,8 @@ int main()
 
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                 {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp<=0)
+                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp<=0
+                            && !inimigos.goblins_guerreiros.goblins[i].levando_dano)
                         inimigos.goblins_guerreiros.goblins[i].estado_sprite=0;
                     desenhar_goblin1(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
                 }
@@ -274,7 +276,7 @@ int main()
                         janela_atual=0;
                 }
 
-                if(pause)
+                if(pause) // o que acontece em um pause
                 {
                     drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
                     set_trans_blender(255,0,0,150);
