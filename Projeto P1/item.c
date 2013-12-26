@@ -20,3 +20,27 @@ void desenhar_item(BITMAP *buffer,Titem *objeto,int ajuste_x)
     draw_sprite(buffer, objeto->imagem, objeto->x + ajuste_x -(32-objeto->largura)/2,
                 objeto->y - (32-objeto->altura)/2); // manda objeto para buffer
 }
+
+void verifique_efeito(Titens *itens,Tcriatura *guerreiro)
+{
+    int i;
+
+    for(i=0;i<itens->n_itens;i++)
+    {
+        if (itens->todosItens[i].ativo)
+        {
+            if (colisao(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,itens->todosItens[i].x,itens->todosItens[i].y,itens->todosItens[i].altura,itens->todosItens[i].largura))
+            {
+                switch(itens->todosItens[i].tipo)
+                {
+                case 1:
+                    guerreiro->caracteristicas.hp+=5;
+                    itens->todosItens[i].ativo=0;
+                    break;
+                }
+            }
+        }
+    }
+
+
+}
