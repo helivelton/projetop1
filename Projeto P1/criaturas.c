@@ -97,7 +97,7 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando;i++)
     {
         if(!inimigos->goblins_guerreiros.goblins[i].levando_dano)
-            ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25);
+            ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25,4);
     }
 }
 
@@ -178,9 +178,10 @@ void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, 
         else
         {
             goblin1->direcao=goblin1->direcao_anterior;
+
             ataque_ajustes(goblin1,tempo_jogo,1,2,4);
             if(!guerreiro->levando_dano && goblin1->atacando)
-                ataque(goblin1,guerreiro,tempo_jogo,0,-16,-4,20,25);
+                ataque(goblin1,guerreiro,tempo_jogo,0,-19,0,19,26,2);
 
             goblin1->direcao=0;
         }
@@ -234,6 +235,9 @@ void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, 
             goblin1->levando_dano=0;
         }
     }
+    // verificações básicas
+    colide_chao(goblin1,matriz_tela,bloqueios,0); // colidiu com o chão? primeira verificação obrigatória
+    verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
 void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
@@ -439,21 +443,22 @@ void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprit
         atacante->atacando = 1;
         atacante->tempo_ataque = tempo_jogo;
     }
-    if(atacante->tempo_ataque + 19 <= tempo_jogo)
+    if(atacante->tempo_ataque + (sprite_lim_sup-sprite_lim_inf+1)*5 <= tempo_jogo)
         atacante->atacando = 0;
 
     if(atacante->atacando)
         mudanca_sprite(sprite_lim_inf,sprite_lim_sup,&atacante->estado_sprite,5,atacante->tempo_ataque,tempo_jogo);
 }
 
-void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int at_ajusteX,int at_ajusteY,int at_largura,int at_altura)
+void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int at_ajusteX,int at_ajusteY,int at_largura,int at_altura,
+            int quadro_ataque)
 {
     if(atacante->atacando && !alvo->levando_dano)
     {
         if(atacante->direcao==2)//esquerda
         {
             if(colisao(atacante->x + at_ajusteX,atacante->y + at_ajusteY,at_altura,at_largura,
-                       alvo->x,alvo->y,alvo->altura,alvo->largura)&& tempo_jogo-atacante->tempo_ataque > 15)
+                       alvo->x,alvo->y,alvo->altura,alvo->largura)&& tempo_jogo-atacante->tempo_ataque > (quadro_ataque-1)*5)
                {
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
@@ -464,7 +469,7 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int a
         else //direita
         {
             if(colisao(atacante->x + atacante->largura + ((-1)*(at_largura+at_ajusteX)),atacante->y+at_ajusteY,at_altura,at_largura,
-                       alvo->x,alvo->y,alvo->altura,alvo->largura )&& tempo_jogo-atacante->tempo_ataque > 15)
+                       alvo->x,alvo->y,alvo->altura,alvo->largura )&& tempo_jogo-atacante->tempo_ataque > (quadro_ataque-1)*5)
                {
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
