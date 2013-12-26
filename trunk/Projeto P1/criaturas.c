@@ -154,22 +154,22 @@ void imagens_goblin1(Tcriatura *goblin)
     destroy_bitmap(tiles);
 }
 
-void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro,int l_guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     if(!goblin1->levando_dano)
     {
         if(goblin1->estado_sprite < 5 && !goblin1->atacando)
             goblin1->estado_sprite = 5;
 
-        if (goblin1->x-3 > x_guerreiro+l_guerreiro || goblin1->x-4 > x_guerreiro+l_guerreiro || goblin1->x-5 > x_guerreiro+l_guerreiro
-            || goblin1->x-6 > x_guerreiro+l_guerreiro)
+        if (goblin1->x-3 > guerreiro->x+guerreiro->largura || goblin1->x-4 > guerreiro->x+guerreiro->largura || goblin1->x-5 > guerreiro->x+guerreiro->largura
+            || goblin1->x-6 > guerreiro->x+guerreiro->largura)
         {
             movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
             //goblin1->direcao=2;
             goblin1->direcao_anterior=2;
         }
-        else if (goblin1->x+goblin1->largura+3 < x_guerreiro || goblin1->x+goblin1->largura+4 < x_guerreiro
-                 || goblin1->x+goblin1->largura+5 < x_guerreiro || goblin1->x+goblin1->largura+6 < x_guerreiro)
+        else if (goblin1->x+goblin1->largura+3 < guerreiro->x || goblin1->x+goblin1->largura+4 < guerreiro->x
+                 || goblin1->x+goblin1->largura+5 < guerreiro->x || goblin1->x+goblin1->largura+6 < guerreiro->x)
         {
             movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
             //goblin1->direcao=1;
@@ -178,6 +178,10 @@ void movimento_goblin1(Tcriatura *goblin1,int x_guerreiro,int l_guerreiro, int t
         else
         {
             goblin1->direcao=0;
+
+            ataque_ajustes(goblin1,tempo_jogo,1,2,4);
+            if(!guerreiro->levando_dano && goblin1->atacando)
+                ataque(goblin1,guerreiro,tempo_jogo,0,-16,-4,20,25);
         }
 
         /*if(goblin1->direcao==1)

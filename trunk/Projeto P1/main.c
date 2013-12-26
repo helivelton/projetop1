@@ -32,6 +32,7 @@ int main()
     char nome_fase[N_FASES][10]={"mapa1.txt","mapa2.txt","mapa3.txt"};
     int loading_time = 0;
     int bloqueios[3] = {TERRA, PEDRA, CHAO};
+    int pause = 0;
 
     //BITMAPs do Menu
     BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
@@ -147,8 +148,16 @@ int main()
                     carrega_fase=0;
                 }
 
-                // incrementa o tempo de jogo
-                tempo_de_jogo++;
+                // atualiza estado do teclado
+                keyboard_input();
+
+                if (apertou(KEY_P))
+                {
+                    if (pause == TRUE)
+                        pause = FALSE;
+                    else
+                        pause = TRUE;
+                }
 
                 // limpa bitmaps de armazenamento
                 clear_bitmap(buffer); // Limpa o buffer;
@@ -156,37 +165,34 @@ int main()
                 clear_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite); // Limpa bitmap goblin tipo 1
                 clear_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite); // Limpa bitmap goblin tipo 1
 
-                // atualiza estado do teclado
-                keyboard_input();
-
-                // Lógica do jogo
-                tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
-                if(guerreiro.tempo_dano+20<=tempo_de_jogo)
-                    guerreiro.levando_dano=0;
-                movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
-                ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
-
-                if(guerreiro.x>=SCREEN_W/2 && guerreiro.x <= (LARGURA_MAPA-SCREEN_W/2))
-                    ajuste_mapa=(-1)*(guerreiro.x-SCREEN_W/2);
-
-                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
+                if (!pause)
                 {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
+                    // incrementa o tempo de jogo
+                    tempo_de_jogo++;
+                    // Lógica do jogo
+                    tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
+                    if(guerreiro.tempo_dano+20<=tempo_de_jogo)
+                        guerreiro.levando_dano=0;
+                    movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
+                    ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
+
+                    if(guerreiro.x>=SCREEN_W/2 && guerreiro.x <= (LARGURA_MAPA-SCREEN_W/2))
+                        ajuste_mapa=(-1)*(guerreiro.x-SCREEN_W/2);
+
+                    for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                     {
-                        movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],guerreiro.x,guerreiro.largura,tempo_de_jogo,matriz_tela,bloqueios);
+                        if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0)
+                        {
+                            movimento_goblin1(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
+                        }
                     }
+
+                    botao_w(&janela_atual,&janelas,tempo_de_jogo);
+
+                    verifique_efeito(&itens,&guerreiro);
+
                 }
 
-                botao_w(&janela_atual,&janelas,tempo_de_jogo);
-
-                if (itens.todosItens[0].ativo)
-                {
-                    if (colisao(guerreiro.x,guerreiro.y,guerreiro.altura,guerreiro.largura,itens.todosItens[0].x,itens.todosItens[0].y,itens.todosItens[0].altura,itens.todosItens[0].largura))
-                    {
-                        guerreiro.caracteristicas.hp+=5;
-                        itens.todosItens[0].ativo=0;
-                    }
-                }
                 // Desenhar
 
                 draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
@@ -268,7 +274,16 @@ int main()
                         janela_atual=0;
                 }
 
+                if(pause)
+                {
+                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+                    set_trans_blender(255,0,0,150);
+                    rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+                    solid_mode();
+                }
+
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
+
 
                 // nova fase
                 if(guerreiro.x +guerreiro.largura >= LARGURA_MAPA-50 && fase<N_FASES)
