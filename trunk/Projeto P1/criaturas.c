@@ -140,7 +140,7 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 }
 
-void imagens_goblin1(Tcriatura *goblin)
+void imagens_goblin_guerreiro(Tcriatura *goblin)
 {
     int i;
     BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinG.bmp"),NULL);
@@ -154,7 +154,7 @@ void imagens_goblin1(Tcriatura *goblin)
     destroy_bitmap(tiles);
 }
 
-void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     if(!goblin1->levando_dano)
     {
@@ -165,82 +165,46 @@ void movimento_goblin1(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, 
             || goblin1->x-6 > guerreiro->x+guerreiro->largura)
         {
             movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
-            //goblin1->direcao=2;
             goblin1->direcao_anterior=2;
         }
         else if (goblin1->x+goblin1->largura+3 < guerreiro->x || goblin1->x+goblin1->largura+4 < guerreiro->x
                  || goblin1->x+goblin1->largura+5 < guerreiro->x || goblin1->x+goblin1->largura+6 < guerreiro->x)
         {
             movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
-            //goblin1->direcao=1;
             goblin1->direcao_anterior=1;
         }
         else
-        {
-            goblin1->direcao=goblin1->direcao_anterior;
-
-            ataque_ajustes(goblin1,tempo_jogo,1,2,4);
-            if(!guerreiro->levando_dano && goblin1->atacando)
-                ataque(goblin1,guerreiro,tempo_jogo,0,-19,0,19,26,2);
-
             goblin1->direcao=0;
-        }
-
-        /*if(goblin1->direcao==1)
-        {
-            goblin1->x=goblin1->x+goblin1->caracteristicas.habilidade;
-            if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
-            {
-                goblin1->controle_estado = timer;
-                if(goblin1->estado_sprite > 4)
-                {
-                    goblin1->estado_sprite=goblin1->estado_sprite-5;
-                    goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
-                    goblin1->estado_sprite = goblin1->estado_sprite + 5;
-                }
-            }
-        }
-        else if(goblin1->direcao==2)
-        {
-            goblin1->x=goblin1->x-goblin1->caracteristicas.habilidade;
-            if(timer-goblin1->controle_estado >= ATUALIZAR_ESTADO)
-            {
-                goblin1->controle_estado = timer;
-                if(goblin1->estado_sprite > 4)
-                {
-                    goblin1->estado_sprite=goblin1->estado_sprite-5;
-                    goblin1->estado_sprite = (goblin1->estado_sprite + 1)%3;
-                    goblin1->estado_sprite = goblin1->estado_sprite + 5;
-                }
-            }
-        }*/
     }
     else
     {
         goblin1->estado_sprite = 1;
         if(goblin1->tempo_dano+10>=tempo_jogo)
-        {
             recuo_por_dano(goblin1,matriz_tela,bloqueios);
-            /*if(goblin1->direcao==1)//direita
-            {
-                goblin1->x = goblin1->x - 6;
-            }
-            else
-            {
-                goblin1->x = goblin1->x + 6;
-            }*/
-        }
         else
-        {
             goblin1->levando_dano=0;
-        }
     }
+
     // verificações básicas
     colide_chao(goblin1,matriz_tela,bloqueios,0); // colidiu com o chão? primeira verificação obrigatória
     verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void desenhar_goblin1(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
+void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo)
+{
+    if(goblin->direcao==0)
+    {
+        goblin->direcao=goblin->direcao_anterior;
+
+        ataque_ajustes(goblin,tempo_jogo,1,2,4);
+        if(!guerreiro->levando_dano && goblin->atacando)
+            ataque(goblin,guerreiro,tempo_jogo,0,-19,0,19,26,2);
+
+        goblin->direcao=0;
+    }
+}
+
+void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
 {
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
