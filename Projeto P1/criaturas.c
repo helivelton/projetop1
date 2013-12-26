@@ -166,7 +166,8 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
         {
             if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_esquerda_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-               || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+               || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+               || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
                 pulo(goblin1,3,-1,matriz_tela,bloqueios);
             else
                 movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
@@ -177,7 +178,8 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
         {
             if(!colisao_abaixo_mapa(goblin1->x+goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_direita_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-               || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+               || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+               || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
                 pulo(goblin1,3,1,matriz_tela,bloqueios);
             else
                 movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
