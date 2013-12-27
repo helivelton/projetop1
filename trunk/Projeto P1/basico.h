@@ -100,6 +100,7 @@ typedef struct criatura
     int levando_dano;
     int tempo_dano;
     int tempo_recuo;
+    int alerta;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
