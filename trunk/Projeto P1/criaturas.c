@@ -104,7 +104,7 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
 
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando;i++)
     {
-        if(!inimigos->goblins_guerreiros.goblins[i].levando_dano)
+        if(!inimigos->goblins_guerreiros.goblins[i].levando_dano && inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp>0)
             ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,-16,-4,20,25,4);
     }
 }

@@ -102,7 +102,7 @@ typedef struct criatura
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
-    BITMAP *barraHp[10];
+    BITMAP *barraHp[11];
     Tatributo caracteristicas;
 }Tcriatura;
 
