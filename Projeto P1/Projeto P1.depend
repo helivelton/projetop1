@@ -3,7 +3,7 @@
 	"basico.h"
 	"controle.h"
 
-1388158432 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388165580 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -16,7 +16,7 @@
 1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388163813 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388167204 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
 1388163813 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
@@ -27,7 +27,7 @@
 1388119843 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388163101 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388165311 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
 1388160460 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
@@ -43,7 +43,7 @@
 1388162898 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
-1388163360 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388165530 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
