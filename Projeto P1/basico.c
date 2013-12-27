@@ -82,38 +82,49 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
     for(i=0;i<menor;i++)
         texto1[i]=texto_corpo[i];
     texto1[i]=0;
-    menor_anterior+=menor+1;
+    menor_anterior+=menor;
 
     // tratamento de texto linha 2
-    if(strlen(texto_corpo)>menor_anterior)
-        menor=strlen(texto_corpo)-menor_anterior;
-    if(menor>30)
-        menor=30;
-    if(texto_corpo[menor+menor_anterior]!=0)
+    if(strlen(texto_corpo)-menor_anterior+1 > 0)
     {
-        while(texto_corpo[menor+menor_anterior]!=' ' && menor>=0)
-            menor-=1;
-        if(menor==0)
-        {
-            if(strlen(texto_corpo)>menor_anterior)
-                menor=strlen(texto_corpo)-menor_anterior;
-        }
+        if(strlen(texto_corpo)>menor_anterior)
+            menor=strlen(texto_corpo)-menor_anterior;
         if(menor>30)
             menor=30;
+        if(texto_corpo[menor+menor_anterior]!=0)
+        {
+            while(texto_corpo[menor+menor_anterior]!=' ' && menor>=0)
+                menor-=1;
+            if(menor==0)
+            {
+                if(strlen(texto_corpo)>menor_anterior)
+                    menor=strlen(texto_corpo)-menor_anterior;
+            }
+            if(menor>30)
+                menor=30;
+        }
+        for(i=0;i<menor;i++)
+            texto2[i]=texto_corpo[i+menor_anterior];
+        texto2[i]=0;
+        menor_anterior+=menor;
     }
-    for(i=0;i<menor;i++)
-        texto2[i]=texto_corpo[i+menor_anterior];
-    texto2[i]=0;
-    menor_anterior+=menor+1;
+    else
+        texto2[0]=0;
+
 
     // tratamento de texto linha 3
-    if(strlen(texto_corpo)>menor_anterior)
+    if(strlen(texto_corpo)-menor_anterior > 0 && strlen(texto_corpo)>30)
+    {
+        if(strlen(texto_corpo)>menor_anterior)
         menor=strlen(texto_corpo)-menor_anterior;
-    if(menor>30)
-        menor=30;
-    for(i=0;i<menor;i++)
-        texto3[i]=texto_corpo[i+menor_anterior];
-    texto3[i]=0;
+        if(menor>30)
+            menor=30;
+        for(i=0;i<menor;i++)
+            texto3[i]=texto_corpo[i+menor_anterior];
+        texto3[i]=0;
+    }
+    else
+        texto3[0]=0;
 
     if(tempo_jogo>=inicio)
     {

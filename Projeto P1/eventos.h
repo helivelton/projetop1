@@ -7,9 +7,12 @@
 #include "criaturas.h"
 #include "mapa.h"
 
-void botao_w(int *janela_atual, Tjanelas *janelas,int tempo_de_jogo);
+void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro,Tjanelas *janelas);
+
+void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janelas,Tcriatura *guerreiro,FONT* corpo_texto,
+                     FONT *titulo_texto);
 
 void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,Tjanelas *janelas,BITMAP *background,
-                       BITMAP *texturas[MAX_TERRENOS]);
+                       BITMAP *texturas[MAX_TERRENOS],Teventos *eventos);
 
 #endif // EVENTOS_H

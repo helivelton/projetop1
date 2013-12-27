@@ -222,6 +222,7 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
             else
                 goblin1->direcao=0;
 
+            // radar
             if((guerreiro->x + guerreiro->largura < goblin1->x && goblin1->x - (guerreiro->x + guerreiro->largura) >= SCREEN_W)
                || (goblin1->x + goblin1->largura < guerreiro->x && guerreiro->x - (goblin1->x +goblin1->largura) >= SCREEN_W))
                     goblin1->alerta=0;
@@ -254,6 +255,8 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
                     movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
                 goblin1->direcao_anterior=1;
             }
+
+            // radar
             if((guerreiro->x + guerreiro->largura < goblin1->x && goblin1->direcao==2
                  && goblin1->x - (guerreiro->x + guerreiro->largura) <= 150)
                || (goblin1->x + goblin1->largura < guerreiro->x && goblin1->direcao==1

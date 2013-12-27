@@ -25,7 +25,6 @@ int main()
     int tempo_de_jogo=0; // controla o tempo de jogo
     int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]; // matriz da tela
     int ajuste_mapa = 0; // vetor que cuida do movimento do mapa e dos objetos nele
-    int janela_atual = 0; // controla janela atual
     int tela = 0, selecionar = 0; //controla o carregamento de cada tela
     int fase=1;
     int carrega_fase=1;
@@ -53,6 +52,7 @@ int main()
     Tcriatura guerreiro; // declara objeto guerreiro
     Toponentes inimigos;
     Titens itens;
+    Teventos eventos;
 
     // declara BITMAPS
     BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
@@ -120,7 +120,7 @@ int main()
                 if(carrega_fase)// carrega todos os elementos da fase
                 {
                     prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
-                    carregar_var_fase(fase,&itens,&guerreiro,&inimigos,&janelas,background,texturas);
+                    carregar_var_fase(fase,&itens,&guerreiro,&inimigos,&janelas,background,texturas,&eventos);
                     carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
                     carrega_fase=0;
                 }
@@ -167,11 +167,10 @@ int main()
                         ataque_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo);
                     }
 
-                    botao_w(&janela_atual,&janelas,tempo_de_jogo);
-
-                    verifique_efeito(&itens,&guerreiro);
-
+                    verifique_efeito_item(&itens,&guerreiro);
                 }
+
+                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas);
 
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
@@ -189,89 +188,28 @@ int main()
 
                 if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],ajuste_mapa);
 
-                if(DEBUG)janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
-                             titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
-                if(DEBUG)janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
-
-                if(DEBUG)
-                {
-                    rectfill(buffer,guerreiro.x+ajuste_mapa,guerreiro.y,guerreiro.x+ajuste_mapa+1,guerreiro.y+1,makecol(0,0,160));
-                    rectfill(buffer,guerreiro.x+guerreiro.largura+ajuste_mapa,guerreiro.y,guerreiro.x+guerreiro.largura+ajuste_mapa+1,guerreiro.y+1,makecol(0,0,160));
-                    rectfill(buffer,LARGURA_SCREEN/2,guerreiro.y-5,LARGURA_SCREEN/2+1,guerreiro.y-4,makecol(0,255,0));
-                    rectfill(buffer,0,guerreiro.y-5,1,guerreiro.y-4,makecol(0,255,0));
-                    rectfill(buffer,LARGURA_SCREEN-1,guerreiro.y-5,LARGURA_SCREEN,guerreiro.y-4,makecol(0,255,0));
-                    janela_texto(buffer,20,170,50,50,"x/32","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,20,200,50,50,"x","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,20,230,50,50,"x+l","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,20,260,50,50,"y","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,20,290,50,50,"y+a","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,150,170,50,50,"pocaoX","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,150,200,50,50,"pocaoY","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,310,200,50,50,"goblinHP","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_texto(buffer,150,50,100,50,"GuerreiroHP","",
-                                 corpo_texto,corpo_texto,0,0,-1,tempo_de_jogo,0);
-                    janela_variavel(buffer,80,170,50,50,(guerreiro.x)/32,corpo_texto,0);
-                    janela_variavel(buffer,50,200,50,50,guerreiro.x,corpo_texto,0);
-                    janela_variavel(buffer,50,230,50,50,guerreiro.x+guerreiro.largura,corpo_texto,0);
-                    janela_variavel(buffer,50,260,50,50,guerreiro.y,corpo_texto,0);
-                    janela_variavel(buffer,50,290,50,50,guerreiro.y+guerreiro.altura,corpo_texto,0);
-                    janela_variavel(buffer,250,50,50,50,guerreiro.caracteristicas.hp,titulo_texto,0);
-                    janela_variavel(buffer,210,170,50,50,itens.todosItens[0].x,corpo_texto,0);
-                    janela_variavel(buffer,210,200,50,50,itens.todosItens[0].y,corpo_texto,0);
-                    janela_variavel(buffer,390,200,50,50,inimigos.goblins_guerreiros.goblins[0].caracteristicas.hp,corpo_texto,0);
-                    janela_variavel(buffer,390,230,50,50,inimigos.goblins_guerreiros.goblins[1].caracteristicas.hp,corpo_texto,0);
-                    janela_variavel(buffer,450,230,50,50,guerreiro.atacando,corpo_texto,0);
-                    janela_variavel(buffer,450,260,50,50,inimigos.goblins_guerreiros.goblins[1].x,corpo_texto,0);
-                    janela_variavel(buffer,500,260,50,50,inimigos.goblins_guerreiros.goblins[1].largura,corpo_texto,0);
-                    janela_variavel(buffer,450,290,50,50,inimigos.goblins_guerreiros.goblins[1].y,corpo_texto,0);
-                    janela_variavel(buffer,500,290,50,50,inimigos.goblins_guerreiros.goblins[1].altura,corpo_texto,0);
-                }
-
-                if(janela_atual==1) // teste de janela
-                {
-                    /*janela_texto(buffer,150,250,300,100,"Jaques","Oi, esse e meu nome.",
-                             titulo_texto,corpo_texto,150,controle_janela[0],
-                             controle_janela[1],tempo_de_jogo); // exemplo caixa texto*/
-                    janela_dialogo(buffer,&guerreiro,janelas.total[0].x,janelas.total[0].y,titulo_texto,corpo_texto,
-                                   janelas.total[0].tempo_inicio,janelas.total[0].tempo_fim,tempo_de_jogo,janelas.total[0].titulo,
-                                   janelas.total[0].conteudo,1);
-                    if(tempo_de_jogo==janelas.total[0].tempo_fim)
-                        janela_atual=0;
-                }
-                else if(janela_atual==2)
-                {
-                    janela_dialogo(buffer,&guerreiro,janelas.total[1].x,janelas.total[1].y,titulo_texto,corpo_texto,
-                                   janelas.total[1].tempo_inicio,janelas.total[1].tempo_fim,tempo_de_jogo,janelas.total[1].titulo,
-                                   janelas.total[1].conteudo,0);
-                    if(tempo_de_jogo==janelas.total[1].tempo_fim)
-                        janela_atual=0;
-                }
+                desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto);
 
                 if(pause) // o que acontece em um pause
                 {
-                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-                    set_trans_blender(255,0,0,150);
-                    rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
-                    solid_mode();
+                    if(eventos.evento_atual==0)
+                    {
+                        // coloca tela cinza por cima da tela atual
+                        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+                        set_trans_blender(255,0,0,150);
+                        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+                        solid_mode();
+                    }
                 }
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
-
 
                 // nova fase
                 if(guerreiro.x +guerreiro.largura >= LARGURA_MAPA-50 && fase<N_FASES)
                 {
                     carrega_fase=1;
                     fase++;
-                    tela=9;
+                    tela=9; // a próxima tela será a de loading game
                     loading_time = timer;
                 }
 

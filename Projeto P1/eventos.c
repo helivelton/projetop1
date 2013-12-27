@@ -1,33 +1,195 @@
 #include "eventos.h"
 
-void botao_w(int *janela_atual, Tjanelas *janelas,int tempo_de_jogo)
+void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro,Tjanelas *janelas)
 {
-    if(apertou(KEY_W)) // W controla caixa de texto. teste.
+    // eventos da primeira fase
+    if(fase==1)
     {
-        if(*janela_atual==0)
+        // evento 1
+        if(!eventos->eventos_executados[0] &&
+           (guerreiro->x>=100 || eventos->evento_atual==1))
         {
-            *janela_atual=1;
-            janelas->total[0].tempo_inicio=tempo_de_jogo;
-            janelas->total[0].tempo_fim=-1;
+            // trava o evento atual e pausa o jogo
+            if(!eventos->evento_atual)
+                eventos->evento_atual=1;
+
+            if(*pause==0)
+                *pause=1;
+
+            // agora chama janela com texto
+            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1)
+            {
+                janelas->janela_atual=1;
+                janelas->total[0].tempo_inicio=timer;
+                janelas->total[0].tempo_fim=-1;
+            }
+
+            if(apertou(KEY_ENTER)||apertou(KEY_SPACE))
+            {
+                if(janelas->janela_atual==1)
+                {
+                    janelas->janela_atual=2;
+                    janelas->total[1].tempo_inicio=timer;
+                    janelas->total[1].tempo_fim=-1;
+                }
+                else if(janelas->janela_atual==2 && janelas->total[1].tempo_fim==-1)
+                    janelas->total[1].tempo_fim=timer+20;
+            }
+            // agora a condição de saída é janelas->janela_atual==0
+            if(janelas->janela_atual==0)
+            {
+                eventos->evento_atual=0;
+                eventos->eventos_executados[0]=1;
+                *pause=0;
+            }
         }
-        else if(*janela_atual==1)
+    }
+    else if(fase==2)
+    {
+        // evento 1
+        if(!eventos->eventos_executados[0] &&
+           (guerreiro->x>=100 || eventos->evento_atual==1))
         {
-            *janela_atual=2;
-            janelas->total[1].tempo_inicio=tempo_de_jogo;
-            janelas->total[1].tempo_fim=-1;
+            // trava o evento atual e pausa o jogo
+            if(!eventos->evento_atual)
+                eventos->evento_atual=1;
+
+            if(*pause==0)
+                *pause=1;
+
+            // agora chama janela com texto
+            if(janelas->janela_atual==0 && janelas->total[0].tempo_fim==-1)
+            {
+                janelas->janela_atual=1;
+                janelas->total[0].tempo_inicio=timer;
+                janelas->total[0].tempo_fim=-1;
+            }
+
+            if(apertou(KEY_ENTER)||apertou(KEY_SPACE))
+            {
+                if(janelas->janela_atual==1 && janelas->total[0].tempo_fim==-1)
+                    janelas->total[0].tempo_fim=timer+20;
+            }
+            // agora a condição de saída é janelas->janela_atual==0
+            if(janelas->janela_atual==0)
+            {
+                eventos->evento_atual=0;
+                eventos->eventos_executados[0]=1;
+                *pause=0;
+            }
         }
-        else
-            janelas->total[1].tempo_fim=tempo_de_jogo+20;
+    }
+    else if(fase==3)
+    {
+        // evento 1
+        if(!eventos->eventos_executados[0] &&
+           (guerreiro->x>=100 || eventos->evento_atual==1))
+        {
+            // trava o evento atual e pausa o jogo
+            if(!eventos->evento_atual)
+                eventos->evento_atual=1;
+
+            if(*pause==0)
+                *pause=1;
+
+            // agora chama janela com texto
+            if(janelas->janela_atual==0 && janelas->total[0].tempo_fim==-1)
+            {
+                janelas->janela_atual=1;
+                janelas->total[0].tempo_inicio=timer;
+                janelas->total[0].tempo_fim=-1;
+            }
+
+            if(apertou(KEY_ENTER)||apertou(KEY_SPACE))
+            {
+                if(janelas->janela_atual==1 && janelas->total[0].tempo_fim==-1)
+                    janelas->total[0].tempo_fim=timer+20;
+            }
+            // agora a condição de saída é janelas->janela_atual==0
+            if(janelas->janela_atual==0)
+            {
+                eventos->evento_atual=0;
+                eventos->eventos_executados[0]=1;
+                *pause=0;
+            }
+        }
+    }
+}
+
+void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janelas,Tcriatura *guerreiro,FONT* corpo_texto,
+                     FONT *titulo_texto)
+{
+    // eventos da primeira fase
+    if(fase==1)
+    {
+        // primeiro evento
+        if(eventos->evento_atual==1)
+        {
+            if(janelas->janela_atual==1) // teste de janela
+            {
+                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
+                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
+                               janelas->total[0].conteudo,1);
+                if(timer==janelas->total[0].tempo_fim)
+                    janelas->janela_atual=0;
+            }
+            else if(janelas->janela_atual==2)
+            {
+                janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
+                               janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
+                               janelas->total[1].conteudo,0);
+                if(timer==janelas->total[1].tempo_fim)
+                    janelas->janela_atual=0;
+            }
+        }
+    }
+    else if(fase==2)
+    {
+        // primeiro evento
+        if(eventos->evento_atual==1)
+        {
+            if(janelas->janela_atual==1) // teste de janela
+            {
+                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
+                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
+                               janelas->total[0].conteudo,1);
+                if(timer==janelas->total[0].tempo_fim)
+                    janelas->janela_atual=0;
+            }
+        }
+    }
+    else if(fase==3)
+    {
+        // primeiro evento
+        if(eventos->evento_atual==1)
+        {
+            if(janelas->janela_atual==1) // teste de janela
+            {
+                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
+                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
+                               janelas->total[0].conteudo,1);
+                if(timer==janelas->total[0].tempo_fim)
+                    janelas->janela_atual=0;
+            }
+        }
     }
 }
 
 void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,Tjanelas *janelas,BITMAP *background,
-                       BITMAP *texturas[MAX_TERRENOS])
+                       BITMAP *texturas[MAX_TERRENOS],Teventos *eventos)
 {
+    int i;
     BITMAP *fundo;
+
+    for(i=0;i<3;i++)
+        eventos->eventos_executados[i]=0;
+
+    eventos->evento_atual=0;
 
     if(fase==1)
     {
+        eventos->n_eventos=1;
+
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,0);
         itens->n_itens=1;
 
@@ -42,8 +204,9 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
         carrega_texturas(texturas); // prepara as texturas
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Droga, me perdi nesta maldita floresta infestada de goblins.");
+        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Agora tenho de sair daqui...");
+        janelas->janela_atual=0;
         janelas->n_janelas=2;
 
         fundo = load_bitmap(link_imagem("imagens_p1/Forest01.bmp"),NULL);
@@ -53,6 +216,8 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
     if(fase==2)
     {
+        eventos->n_eventos=1;
+
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,1);
         itens->n_itens=1;
 
@@ -64,9 +229,9 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[1],1); // preenche vetor de imagens do goblin tipo 1
         inimigos->goblins_guerreiros.n_goblins=2;
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
-        janelas->n_janelas=2;
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Hum...");
+        janelas->janela_atual=0;
+        janelas->n_janelas=1;
 
         fundo = load_bitmap(link_imagem("imagens_p1/Stone2.bmp"),NULL);
         clear_bitmap(background);
@@ -75,6 +240,8 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
     if(fase==3)
     {
+        eventos->n_eventos=1;
+
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,1);
         itens->n_itens=1;
 
@@ -86,9 +253,9 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[1],1); // preenche vetor de imagens do goblin tipo 1
         inimigos->goblins_guerreiros.n_goblins=2;
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
-        janelas->n_janelas=2;
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Agora estou mais proximo de sair desse lugar horrivel.");
+        janelas->janela_atual=0;
+        janelas->n_janelas=1;
 
         fundo = load_bitmap(link_imagem("imagens_p1/Forest01.bmp"),NULL);
         clear_bitmap(background);
