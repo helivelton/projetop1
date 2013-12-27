@@ -28,6 +28,7 @@ void imagens_guerreiro(Tcriatura *guerreiro)
 {
     int i,j;
     BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/guerreiro_.bmp"),NULL);
+    BITMAP *tilesHp = load_bitmap(link_imagem("imagens_p1/barraHP.bmp"),NULL);
 
     for(i=0;i<2;i++)
     {
@@ -38,8 +39,15 @@ void imagens_guerreiro(Tcriatura *guerreiro)
         }
     }
 
+    for(i=0;i<11;i++)
+    {
+        guerreiro->barraHp[i]=create_bitmap(123,16);
+        blit(tilesHp,guerreiro->barraHp[i],0,i*16,0,0,123,16);
+    }
+
     guerreiro->face = load_bitmap(link_imagem("imagens_p1/hero_face.bmp"),NULL);
     destroy_bitmap(tiles);
+    destroy_bitmap(tilesHp);
 }
 
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
@@ -138,6 +146,19 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
     }
     draw_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
+
+    if(guerreiro->caracteristicas.hp>10)guerreiro->caracteristicas.hp=10;
+    int hpAtual = guerreiro->caracteristicas.hp;
+
+    if(hpAtual>=0 && hpAtual<=10)
+    {
+        draw_sprite(buffer, guerreiro->barraHp[hpAtual], 10, 10);
+    }else
+        {
+            if(hpAtual<0) draw_sprite(buffer, guerreiro->barraHp[0], 10, 10);
+
+        }
+
 }
 
 void imagens_goblin_guerreiro(Tcriatura *goblin)
