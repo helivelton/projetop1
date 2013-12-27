@@ -167,7 +167,16 @@ typedef struct _janelas
 {
     Tjanela total[15];
     int n_janelas;
+    int janela_atual;
 }Tjanelas;
+
+typedef struct _eventos
+{
+    int eventos_executados[3];
+    int n_eventos;
+    int evento_atual;
+    int tempo_evento_atual;
+}Teventos;
 
 /*
     Cabeçalhos das funções

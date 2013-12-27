@@ -28,7 +28,7 @@ void desenhar_item(BITMAP *buffer,Titem *objeto,int ajuste_x)
                 objeto->y - (32-objeto->altura)/2); // manda objeto para buffer
 }
 
-void verifique_efeito(Titens *itens,Tcriatura *guerreiro)
+void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro)
 {
     int i;
 
