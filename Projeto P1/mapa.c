@@ -94,7 +94,8 @@ void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],char nome_map
 void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32])
 {
     int i,j;
-    rectfill(mapa,0,0,640*5,480,makecol(127,127,127));
+    //rectfill(mapa,0,0,640*5,480,makecol(127,127,127));
+    rectfill(mapa,0,0,LARGURA_MAPA,ALTURA_MAPA,makecol(255,0,255));
     for(i=0;i<ALTURA_MAPA/32;i++)
     {
         for(j=0;j<LARGURA_MAPA/32;j++)

@@ -39,6 +39,7 @@ int main()
     BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
     BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
     BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu3.bmp"), NULL);//menu saída
+    BITMAP *background = create_bitmap(960,480);
 
     // BITMAPS da tela de carregamento
     BITMAP *tela_loading[4];
@@ -90,6 +91,11 @@ int main()
     janelas.n_janelas+=1;
     preencher_janela(&janelas.total[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
     janelas.n_janelas+=1;
+
+    BITMAP *fundo = load_bitmap(link_imagem("imagens_p1/Forest01.bmp"),NULL);
+    clear_bitmap(background);
+    draw_sprite(background,fundo,0,0);
+    destroy_bitmap(fundo);
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
@@ -180,11 +186,8 @@ int main()
 
                     for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                     {
-                        if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp>0 || inimigos.goblins_guerreiros.goblins[i].levando_dano)
-                        {
-                            movimento_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
-                            ataque_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo);
-                        }
+                        movimento_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
+                        ataque_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo);
                     }
 
                     botao_w(&janela_atual,&janelas,tempo_de_jogo);
@@ -194,7 +197,7 @@ int main()
                 }
 
                 // Desenhar
-
+                draw_sprite(buffer,background,ajuste_mapa/10,0);
                 draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
 
                 for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
@@ -209,9 +212,9 @@ int main()
 
                 if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],ajuste_mapa);
 
-                janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
+                if(DEBUG)janela_texto(buffer,SCREEN_W/2-60,10,120,50,"Kill Goblins","",
                              titulo_texto,corpo_texto,150,0,-1,tempo_de_jogo,0); // desenha titulo
-                janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
+                if(DEBUG)janela_variavel(buffer,SCREEN_W-50,0,50,50,(tempo_de_jogo)/60,titulo_texto,40); // desenha tempo
 
                 if(DEBUG)
                 {
@@ -313,6 +316,7 @@ int main()
     destroy_bitmap(menu_iniciar);
     destroy_bitmap(menu_options);
     destroy_bitmap(menu_exit);
+    destroy_bitmap(background);
     for (i = 0; i < 4; i++)
     {
         destroy_bitmap(tela_loading[i]);
@@ -325,6 +329,10 @@ int main()
     for(i=0;i<8;i++)
     {
         destroy_bitmap(guerreiro.vetor_sprite[i]);
+    }
+    for(i=0;i<10;i++)
+    {
+        destroy_bitmap(guerreiro.barraHp[i]);
     }
     for(i=0;i<7;i++)
     {
