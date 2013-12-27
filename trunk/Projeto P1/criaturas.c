@@ -177,7 +177,8 @@ void imagens_goblin_guerreiro(Tcriatura *goblin)
 
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-    if(!goblin1->levando_dano)
+
+    if(!goblin1->levando_dano && goblin1->caracteristicas.hp > 0)
     {
         if(goblin1->estado_sprite < 5 && !goblin1->atacando)
             goblin1->estado_sprite = 5;
@@ -188,7 +189,8 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
             if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_esquerda_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-               || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+               || (colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                   && guerreiro->y + guerreiro->altura < goblin1->y))
                 pulo(goblin1,3,-1,matriz_tela,bloqueios);
             else
                 movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
@@ -200,7 +202,8 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
             if(!colisao_abaixo_mapa(goblin1->x+goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_direita_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
                || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-               || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+               || (colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                   && guerreiro->y + guerreiro->altura < goblin1->y))
                 pulo(goblin1,3,1,matriz_tela,bloqueios);
             else
                 movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
@@ -209,7 +212,7 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
         else
             goblin1->direcao=0;
     }
-    else
+    else if(goblin1->levando_dano && (goblin1->caracteristicas.hp > 0 || goblin1->levando_dano))
     {
         goblin1->estado_sprite = 1;
         if(goblin1->tempo_dano+10>=tempo_jogo)
@@ -225,7 +228,7 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
 
 void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo)
 {
-    if(goblin->direcao==0)
+    if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
         goblin->caindo=1;
         goblin->pulando=0;
