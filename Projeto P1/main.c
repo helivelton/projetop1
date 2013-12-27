@@ -39,7 +39,7 @@ int main()
     BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
     BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
     BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu3.bmp"), NULL);//menu saída
-    BITMAP *background = create_bitmap(960,480);
+
 
     // BITMAPS da tela de carregamento
     BITMAP *tela_loading[4];
@@ -58,6 +58,7 @@ int main()
     BITMAP *buffer = create_bitmap(SCREEN_W,SCREEN_H); // Cria o buffer;
     BITMAP *mapa = create_bitmap(LARGURA_MAPA,ALTURA_MAPA); // Cria o mapa
     BITMAP *texturas[MAX_TERRENOS]; // declara a array de texturas
+    BITMAP *background = create_bitmap(960,480);
 
     // Declara fontes
     FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
@@ -67,35 +68,6 @@ int main()
                                 fim da declaração das variáveis
     #######################################################################################
 */
-    // carregamento inicial
-    itens.n_itens = 0;
-    preencher_item(&itens.todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1);
-    itens.n_itens+=1;
-
-    preenche_criatura(&guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0); // preenche status guerreiro
-    imagens_guerreiro(&guerreiro); // preenche vetor de imagens do guerreiro
-
-    inimigos.goblins_guerreiros.n_goblins=0;
-    inimigos.goblins_arqueiros.n_goblins=0;
-    inimigos.chefes.chefe_atual=0;
-    preenche_criatura(&inimigos.goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0); // preenche status goblin
-    inimigos.goblins_guerreiros.n_goblins+=1;
-    imagens_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[0]); // preenche vetor de imagens do goblin tipo 1
-    preenche_criatura(&inimigos.goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0); // preenche status goblin
-    inimigos.goblins_guerreiros.n_goblins+=1;
-    imagens_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[1]); // preenche vetor de imagens do goblin tipo 1
-    carrega_texturas(texturas); // prepara as texturas
-
-    janelas.n_janelas=0;
-    preencher_janela(&janelas.total[0],70,300,0,0,0,0,0,"Joao","Oh, terrivel goblin esqueleto, irei mata-lo de novo, por todo o sempre.");
-    janelas.n_janelas+=1;
-    preencher_janela(&janelas.total[1],70,300,0,0,0,0,0,"Joao","Irei derrota-lo com certeza.");
-    janelas.n_janelas+=1;
-
-    BITMAP *fundo = load_bitmap(link_imagem("imagens_p1/Forest01.bmp"),NULL);
-    clear_bitmap(background);
-    draw_sprite(background,fundo,0,0);
-    destroy_bitmap(fundo);
 
     // configura saída com o botão x no alto da tela
     exit_program = FALSE;
@@ -148,6 +120,7 @@ int main()
                 if(carrega_fase)// carrega todos os elementos da fase
                 {
                     prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
+                    carregar_var_fase(fase,&itens,&guerreiro,&inimigos,&janelas,background,texturas);
                     carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
                     carrega_fase=0;
                 }
@@ -183,6 +156,10 @@ int main()
 
                     if(guerreiro.x>=SCREEN_W/2 && guerreiro.x <= (LARGURA_MAPA-SCREEN_W/2))
                         ajuste_mapa=(-1)*(guerreiro.x-SCREEN_W/2);
+                    else if(guerreiro.x<SCREEN_W/2)
+                        ajuste_mapa=0;
+                    else
+                        ajuste_mapa=(-1)*(LARGURA_MAPA-SCREEN_W);
 
                     for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
                     {
@@ -293,10 +270,6 @@ int main()
                 if(guerreiro.x +guerreiro.largura >= LARGURA_MAPA-50 && fase<N_FASES)
                 {
                     carrega_fase=1;
-                    guerreiro.x = 10;
-                    inimigos.goblins_guerreiros.goblins[0].x = 300;
-                    inimigos.goblins_guerreiros.goblins[1].x = 500;
-                    ajuste_mapa=0;
                     fase++;
                     tela=9;
                     loading_time = timer;

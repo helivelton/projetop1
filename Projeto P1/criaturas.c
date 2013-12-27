@@ -161,16 +161,24 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
 
 }
 
-void imagens_goblin_guerreiro(Tcriatura *goblin)
+void imagens_goblin_guerreiro(Tcriatura *goblin, int preenchida)
 {
     int i;
     BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinG.bmp"),NULL);
 
-    for(i=0;i<8;i++)
+    if(preenchida)
     {
-        goblin->vetor_sprite[i]=create_bitmap(64,64);
-        blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
+        for(i=0;i<8;i++)
+            clear_bitmap(goblin->vetor_sprite[i]);
     }
+    else
+    {
+        for(i=0;i<8;i++)
+            goblin->vetor_sprite[i]=create_bitmap(64,64);
+    }
+
+    for(i=0;i<8;i++)
+        blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
 
     destroy_bitmap(tiles);
 }
