@@ -264,3 +264,26 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
     destroy_bitmap(fundo);
 }
+
+void pausar(int *pause)
+{
+    if (apertou(KEY_SPACE))
+    {
+        if (*pause == TRUE)
+            *pause = FALSE;
+        else
+            *pause = TRUE;
+    }
+}
+
+void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading)
+{
+    if(guerreiro->x +guerreiro->largura >= LARGURA_MAPA-50 && *fase<N_FASES)
+    {
+        *carrega_fase=1;
+        *fase=*fase+1;
+        *tela=9; // a próxima tela será a de loading game
+        *loading_time = timer;
+        *estagio_loading=0;
+    }
+}

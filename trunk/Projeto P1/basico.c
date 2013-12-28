@@ -1,5 +1,7 @@
 #include "basico.h"
 #include "controle.h"
+#include "mapa.h"
+#include "eventos.h"
 
 // função de saída
 void fecha_programa(){exit_program = TRUE;}
@@ -205,7 +207,7 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
 }
 
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
-                    int *tela)
+                    int *tela,int *estagio_loading)
 {
     if(apertou(KEY_DOWN))
     {
@@ -247,12 +249,12 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
     {
         *tela = 9;
         *loading_time = timer;
+        *estagio_loading = 0;
     }
 }
 
 void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela)
 {
-    int tempo=1*60+30;
     if((timer/16)%4 == 0)
         draw_sprite(buffer, tela_loading[0], 0, 0);
     else if((timer/16)%4 == 1)
@@ -263,8 +265,46 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
         draw_sprite(buffer, tela_loading[3], 0, 0);
 
     rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
-    rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(tempo))*140),355+15, makecol(0,0,160));
+    rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(TEMPO_LOADING))*140),355+15, makecol(0,0,160));
     draw_sprite (screen, buffer,0, 0);
-    if(*loading_time+tempo <= timer)
+    if(*loading_time+TEMPO_LOADING <= timer)
         *tela = 1;
+}
+
+void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
+                            char nome_fase[N_FASES][10],int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,
+                            Tjanelas *janelas, BITMAP *background,BITMAP *texturas[MAX_TERRENOS],Teventos *eventos,
+                            BITMAP *mapa)
+{
+    if(*carrega_fase)
+    {
+        switch(*estagio_loading)
+        {
+        case 0:
+            prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
+            *estagio_loading=*estagio_loading+1;
+            break;
+        case 1:
+            carregar_var_fase(fase,itens,guerreiro,inimigos,janelas,background,texturas,eventos);
+            *estagio_loading=*estagio_loading+1;
+            break;
+        case 2:
+            carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
+            *estagio_loading=*estagio_loading+1;
+            *carrega_fase=0;
+            break;
+        }
+    }
+}
+
+void pause_menu(int pause, Teventos *eventos, BITMAP *buffer)
+{
+    if(pause && eventos->evento_atual==0)
+    {
+        // coloca tela cinza por cima da tela atual
+        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+        set_trans_blender(255,0,0,150);
+        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+        solid_mode();
+    }
 }

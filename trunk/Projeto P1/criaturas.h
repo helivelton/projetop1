@@ -16,6 +16,7 @@ void recuo(Tcriatura *ser,int deslocamento,int matriz_tela[ALTURA_MAPA/32][LARGU
 void recuo_por_dano(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void colide_chao(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int eh_heroi);
 void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
+void verificar_status(Tcriatura *ser, int tempo_jogo);
 void mudanca_sprite(int limite_inferior,int limite_superior,int *estado_sprite,int intervalo,int tempo_inicio,int tempo_jogo);
 void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup);
 void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,int at_ajusteX,int at_ajusteY,int at_largura,int at_altura,
@@ -32,8 +33,10 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x);
 
 // Funções do goblin tipo 1
 void imagens_goblin_guerreiro(Tcriatura *goblin1, int preenchida);
+void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro,int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo);
 void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x);
+void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa);
 
 #endif // CRIATURAS_H
