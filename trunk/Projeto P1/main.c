@@ -142,7 +142,7 @@ int main()
                     verifique_efeito_item(&itens,&guerreiro);
                 }
 
-                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas);
+                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios);
 
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
@@ -156,7 +156,7 @@ int main()
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
-                // nova fase
+                // nova fase?
                 verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino);
             }
             ticks++; // incrementa controle de velocidade do jogo
@@ -174,6 +174,7 @@ int main()
     destroy_bitmap(menu_exit);
     destroy_bitmap(logo);
     destroy_bitmap(background);
+
     for (i = 0; i < 4; i++)
     {
         destroy_bitmap(tela_loading[i]);

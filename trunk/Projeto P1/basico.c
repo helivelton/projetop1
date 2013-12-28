@@ -318,8 +318,9 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
         solid_mode();
 
-        textout_ex(buffer,font,"Continue",SCREEN_W/2-100+70,SCREEN_H/2-50+30,makecol(255,255,255),-1);
-        textout_ex(buffer,font,"Exit",SCREEN_W/2-100+70,SCREEN_H/2-50+60,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Continue",SCREEN_W/2-100+55,SCREEN_H/2-50+30,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Tela inicial",SCREEN_W/2-100+55,SCREEN_H/2-50+50,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Sair do jogo",SCREEN_W/2-100+55,SCREEN_H/2-50+70,makecol(255,255,255),-1);
 
         if((timer/30)%2==0)
             textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d:%d:%d",
@@ -330,32 +331,36 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
         int posicao_y_cursor;
 
-        if(apertou(KEY_DOWN) || apertou(KEY_UP))
+        if(apertou(KEY_DOWN))
+            *selecionar=(*selecionar+1)%3;
+        else if(apertou(KEY_UP))
         {
             if(*selecionar==0)
-                *selecionar=1;
+                *selecionar=2;
             else
-                *selecionar=0;
+                *selecionar=(*selecionar-1)%3;
         }
 
         if(*selecionar==0)
             posicao_y_cursor=SCREEN_H/2-50+30;
+        else if(*selecionar==1)
+            posicao_y_cursor=SCREEN_H/2-50+50;
         else
-            posicao_y_cursor=SCREEN_H/2-50+60;
+            posicao_y_cursor=SCREEN_H/2-50+70;
 
         if((timer/16)%2==0)
         {
-            rectfill(buffer,SCREEN_W/2-100+50,posicao_y_cursor,SCREEN_W/2-100+60,posicao_y_cursor+10,makecol(255,0,0));
-            rectfill(buffer,SCREEN_W/2-100+52,posicao_y_cursor-2,SCREEN_W/2-100+62,posicao_y_cursor+10-2,makecol(180,0,0));
+            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(255,0,0));
+            rectfill(buffer,SCREEN_W/2-100+37,posicao_y_cursor-2,SCREEN_W/2-100+47,posicao_y_cursor+10-2,makecol(180,0,0));
         }
         else
-            rectfill(buffer,SCREEN_W/2-100+50,posicao_y_cursor,SCREEN_W/2-100+60,posicao_y_cursor+10,makecol(180,0,0));
+            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(180,0,0));
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
             if(*selecionar==0)
                 *pause=FALSE;
-            else
+            else if(*selecionar==1)
             {
                 *pause=FALSE;
                 *selecionar=0;
@@ -363,6 +368,8 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
                 *tela_destino=0;
                 *loading_time=timer-60;
             }
+            else
+                fecha_programa();
         }
     }
 }
