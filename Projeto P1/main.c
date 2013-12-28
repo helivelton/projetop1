@@ -136,10 +136,9 @@ int main()
                     ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
 
                     calcular_ajuste_mapa(&guerreiro,&ajuste_mapa);
-
-                    acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
-
-                    verifique_efeito_item(&itens,&guerreiro,&inimigos);
+                    acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios,&itens);
+                    verifique_efeito_item(&itens,&guerreiro,&inimigos,tempo_de_jogo);
+                    movimento_itens(&itens,&guerreiro);
                 }
 
                 verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios);
@@ -192,18 +191,33 @@ int main()
     {
         destroy_bitmap(guerreiro.barraHp[i]);
     }
-    for(i=0;i<7;i++)
+    for(i=0;i<8;i++)
     {
         destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].vetor_sprite[i]);
         destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].vetor_sprite[i]);
+
+        if(i!=7)destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].vetor_sprite[i]);
+        if(i!=7)destroy_bitmap(inimigos.goblins_arqueiros.goblins[1].vetor_sprite[i]);
+
+        destroy_bitmap(inimigos.chefes.chefe[0].vetor_sprite[i]);
     }
     destroy_bitmap(guerreiro.sprite);
     destroy_bitmap(guerreiro.face);
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite);
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite);
+    destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].sprite);
+    destroy_bitmap(inimigos.goblins_arqueiros.goblins[1].sprite);
+    destroy_bitmap(inimigos.chefes.chefe[0].sprite);
+
     destroy_font(corpo_texto);
     destroy_font(titulo_texto);
     destroy_bitmap(itens.todosItens[0].imagem);
+    destroy_bitmap(itens.todosItens[1].imagem);
+    destroy_bitmap(itens.todosItens[2].imagem);
+    destroy_bitmap(itens.todosItens[0].imagem_buffer);
+    destroy_bitmap(itens.todosItens[1].imagem_buffer);
+    destroy_bitmap(itens.todosItens[2].imagem_buffer);
+
 
     return 0 ;
 }
