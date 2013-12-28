@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1388247703 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388250115 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 	"eventos.h"
 
-1388244475 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388254387 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -18,10 +18,10 @@
 1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388192862 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388257783 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388192780 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388257533 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
@@ -29,7 +29,7 @@
 1388192385 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388246747 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388250818 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
 1388245969 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
@@ -39,13 +39,14 @@
 	"criaturas.h"
 	"mapa.h"
 
-1388185559 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1388254413 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1388185559 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1388254040 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
+	"criaturas.h"
 
-1388245969 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388254776 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"

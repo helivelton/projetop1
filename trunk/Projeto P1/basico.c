@@ -208,7 +208,7 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
 }
 
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,
-                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase)
+                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase, int *tempo_jogo)
 {
     if(apertou(KEY_DOWN))
         *selecionar = (*selecionar+1)%4;
@@ -244,6 +244,7 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
             *fase=1;
             posicaoX_logo=10;
             posicaoY_logo=10;
+            *tempo_jogo=0;
         }
         else if(*selecionar==3)
             fecha_programa();
