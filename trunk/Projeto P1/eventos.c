@@ -205,25 +205,27 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     {
         eventos->n_eventos=2;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,0,0);
-        itens->n_itens=1;
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,0,0);
+        preencher_item(&itens->todosItens[1],0,0,8,15,0,2,0,1);
+        preencher_item(&itens->todosItens[2],0,0,8,15,0,2,0,2);
+        itens->n_itens=3;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro
         imagens_guerreiro(guerreiro); // preenche vetor de imagens do guerreiro
 
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[0],0); // preenche vetor de imagens do goblin tipo 1
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[1],0); // preenche vetor de imagens do goblin tipo 1
         inimigos->goblins_guerreiros.n_goblins=2;
 
-        preenche_criatura(&inimigos->goblins_arqueiros.goblins[0],1020,NIVEL_CHAO-32,28,32,2,0,2,1,1,2,0,0,1,1,2);
+        preenche_criatura(&inimigos->goblins_arqueiros.goblins[0],1020,NIVEL_CHAO-32,28,32,2,0,2,1,1,2,0,0,1,1,2,2);
         imagens_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[0],0);
-        preenche_criatura(&inimigos->goblins_arqueiros.goblins[1],1520,NIVEL_CHAO-32,28,32,2,0,2,1,1,2,0,0,1,1,2);
+        preenche_criatura(&inimigos->goblins_arqueiros.goblins[1],1520,NIVEL_CHAO-32,28,32,2,0,2,1,1,2,0,0,1,1,2,3);
         imagens_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[1],0);
         inimigos->goblins_arqueiros.n_goblins=2;
 
-        preenche_criatura(&inimigos->chefes.chefe[0],LARGURA_MAPA-150,NIVEL_CHAO-32,28,32,2,3,3,2,2,2,-19,0,19,26,2);
+        preenche_criatura(&inimigos->chefes.chefe[0],LARGURA_MAPA-150,NIVEL_CHAO-32,28,32,2,3,3,2,2,2,-19,0,19,26,2,0);
         imagens_goblin_chefe(&inimigos->chefes.chefe[0],0);
         inimigos->chefes.chefe_atual=1;
 
@@ -247,14 +249,14 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         eventos->n_eventos=1;
         inimigos->chefes.chefe_atual=0;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,1,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0);
         itens->n_itens=1;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro
 
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[0],1); // preenche vetor de imagens do goblin tipo 1
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[1],1); // preenche vetor de imagens do goblin tipo 1
         inimigos->goblins_guerreiros.n_goblins=2;
         inimigos->goblins_arqueiros.n_goblins=0;
@@ -276,14 +278,14 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         eventos->n_eventos=1;
         inimigos->chefes.chefe_atual=0;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,"imagens_p1/Itens1.bmp",6,12,1,1,1,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0);
         itens->n_itens=1;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro
 
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[0],1); // preenche vetor de imagens do goblin tipo 1
-        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2); // preenche status goblin
+        preenche_criatura(&inimigos->goblins_guerreiros.goblins[1],750,NIVEL_CHAO-32,28,32,2,1,2,1,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[1],1); // preenche vetor de imagens do goblin tipo 1
         inimigos->goblins_guerreiros.n_goblins=2;
         inimigos->goblins_arqueiros.n_goblins=0;

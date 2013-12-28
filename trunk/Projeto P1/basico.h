@@ -94,10 +94,11 @@ typedef struct criatura
     int at_largura;
     int at_altura;
     int quadro_at;
+    int id_flecha; // indica que flecha usa, a partir de 1; se 0, não usa flecha
     int direcao; // direita 1 e esquerda 2
     int direcao_anterior;
     int estado_sprite; // estado atual
-    int controle_estado; // verifica certos intervalos de tempo
+    //int controle_estado; // verifica certos intervalos de tempo
     int caindo;
     int pulando;
     int permitir_pulo;
@@ -148,9 +149,10 @@ typedef struct item
     int altura;
     int tipo;
     int ativo;
-    int id_arqueiro;
+    int id_arqueiro; // indique qual arqueiro, a partir de 1, pertence a flecha
     int direcao;
     BITMAP *imagem;
+    BITMAP *imagem_buffer;
 }Titem;
 
 typedef struct _itens

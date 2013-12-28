@@ -1,7 +1,7 @@
 #include "criaturas.h"
 
 void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altura,int direcao,int f,int h,int r,int a,int pdf,
-                       int at_ajusteX,int at_ajusteY,int at_largura,int at_altura,int quadro_at)
+                       int at_ajusteX,int at_ajusteY,int at_largura,int at_altura,int quadro_at, int id_flecha)
 {
     ser->x=x;
     ser->y=y;
@@ -12,6 +12,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->at_largura = at_largura;
     ser->at_altura = at_altura;
     ser->quadro_at = quadro_at;
+    ser->id_flecha = id_flecha;
     ser->direcao=direcao;
     ser->direcao_anterior=1;
     ser->estado_sprite=0;
@@ -486,20 +487,25 @@ void movimento_goblin_arqueiro(Tcriatura *goblin1,Tcriatura *guerreiro, int temp
     verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo)
+void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,Titens *itens)
 {
     if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
         goblin->caindo=1;
         goblin->pulando=0;
-        if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y)
+        if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y &&
+           !itens->todosItens[goblin->id_flecha-1].ativo)
         {
             goblin->direcao=goblin->direcao_anterior;
 
             ataque_ajustes(goblin,tempo_jogo,1,2,3);
-            if(!guerreiro->levando_dano && goblin->atacando)
-                ataque(goblin,guerreiro,tempo_jogo,0);
-
+            if(goblin->tempo_ataque+10<=tempo_jogo)
+            {
+                itens->todosItens[goblin->id_flecha-1].direcao=goblin->direcao_anterior;
+                itens->todosItens[goblin->id_flecha-1].ativo=1;
+                itens->todosItens[goblin->id_flecha-1].x=goblin->x;
+                itens->todosItens[goblin->id_flecha-1].y=goblin->y;
+            }
             goblin->direcao=0;
         }
     }
@@ -692,7 +698,8 @@ void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
-void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
+                   Titens *itens)
 {
     int i;
 
@@ -704,7 +711,7 @@ void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, i
     for(i=0;i<inimigos->goblins_arqueiros.n_goblins;i++)
     {
         movimento_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo,matriz_tela,bloqueios);
-        ataque_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo);
+        ataque_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo,itens);
     }
     if(inimigos->chefes.chefe_atual!=0)
     {
