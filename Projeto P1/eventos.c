@@ -1,6 +1,7 @@
 #include "eventos.h"
 
-void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro,Tjanelas *janelas)
+void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro,Tjanelas *janelas,
+                      int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
     // eventos da primeira fase
     if(fase==1)
@@ -11,20 +12,34 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         {
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
+            {
                 eventos->evento_atual=1;
+                eventos->tempo_evento_atual=timer;
+            }
 
             if(*pause==0)
                 *pause=1;
 
+            // faz o guerreiro cair e andar um pouco
+            if(eventos->tempo_evento_atual+60>=timer)
+            {
+                guerreiro->pulando=0;
+                guerreiro->caindo=1;
+                guerreiro->permitir_pulo=1;
+                colide_chao(guerreiro,matriz_tela,bloqueios,1);
+                verificar_queda(guerreiro,matriz_tela,bloqueios);
+                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
+            }
+
             // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1)
+            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
             {
                 janelas->janela_atual=1;
                 janelas->total[0].tempo_inicio=timer;
                 janelas->total[0].tempo_fim=-1;
             }
 
-            if(apertou(KEY_ENTER)||apertou(KEY_SPACE))
+            if(apertou(KEY_ENTER)||apertou(KEY_SPACE) && timer>=eventos->tempo_evento_atual+60)
             {
                 if(janelas->janela_atual==1)
                 {
@@ -36,7 +51,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                     janelas->total[1].tempo_fim=timer+20;
             }
             // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==0)
+            if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
             {
                 eventos->evento_atual=0;
                 eventos->eventos_executados[0]=1;
