@@ -30,6 +30,7 @@ int main()
     int carrega_fase=1;
     char nome_fase[N_FASES][10]={"mapa1.txt","mapa2.txt","mapa3.txt"};
     int loading_time = 0;
+    int estagio_loading=0;
     int bloqueios[3] = {TERRA, PEDRA, CHAO};
     int pause = 0;
 
@@ -102,8 +103,7 @@ int main()
             {
                 clear_bitmap(buffer);
                 keyboard_input();
-
-                menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit, &loading_time, &tela);
+                menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit, &loading_time, &tela,&estagio_loading);
             }
 
             // tela de loading
@@ -111,30 +111,17 @@ int main()
             {
                 clear_bitmap(buffer);
                 tela_carregamento(buffer, tela_loading, &loading_time, &tela);
-
+                carrega_elementos_fase(&carrega_fase,&estagio_loading,matriz_tela,nome_fase,fase,&itens,&guerreiro,&inimigos,
+                                       &janelas,background,texturas,&eventos,mapa);
             }
 
             // tela de jogo
             else if(tela==1)
             {
-                if(carrega_fase)// carrega todos os elementos da fase
-                {
-                    prepara_mapa(matriz_tela, nome_fase[fase-1]); // preenche matriz com os tilesets corretos
-                    carregar_var_fase(fase,&itens,&guerreiro,&inimigos,&janelas,background,texturas,&eventos);
-                    carrega_mapa(mapa,texturas,matriz_tela); // cria mapa com as texturas
-                    carrega_fase=0;
-                }
-
                 // atualiza estado do teclado
                 keyboard_input();
 
-                if (apertou(KEY_SPACE))
-                {
-                    if (pause == TRUE)
-                        pause = FALSE;
-                    else
-                        pause = TRUE;
-                }
+                pausar(&pause); // verifica se pressionou pause
 
                 // limpa bitmaps de armazenamento
                 clear_bitmap(buffer); // Limpa o buffer;
@@ -142,30 +129,20 @@ int main()
                 clear_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite); // Limpa bitmap goblin tipo 1
                 clear_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite); // Limpa bitmap goblin tipo 1
 
-                if (!pause)
+                if (!pause) // pause pode travar toda a lógica e tempo de jogo, exceto os eventos
                 {
                     // incrementa o tempo de jogo
                     tempo_de_jogo++;
 
                     // Lógica do jogo
                     tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
-                    if(guerreiro.tempo_dano+20<=tempo_de_jogo)
-                        guerreiro.levando_dano=0;
+                    verificar_status(&guerreiro,tempo_de_jogo);
                     movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
                     ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
 
-                    if(guerreiro.x>=SCREEN_W/2 && guerreiro.x <= (LARGURA_MAPA-SCREEN_W/2))
-                        ajuste_mapa=(-1)*(guerreiro.x-SCREEN_W/2);
-                    else if(guerreiro.x<SCREEN_W/2)
-                        ajuste_mapa=0;
-                    else
-                        ajuste_mapa=(-1)*(LARGURA_MAPA-SCREEN_W);
+                    calcular_ajuste_mapa(&guerreiro,&ajuste_mapa);
 
-                    for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
-                    {
-                        movimento_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
-                        ataque_goblin_guerreiro(&inimigos.goblins_guerreiros.goblins[i],&guerreiro,tempo_de_jogo);
-                    }
+                    acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
 
                     verifique_efeito_item(&itens,&guerreiro);
                 }
@@ -175,44 +152,17 @@ int main()
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
                 draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
-
-                for(i=0;i<inimigos.goblins_guerreiros.n_goblins;i++)
-                {
-                    if(inimigos.goblins_guerreiros.goblins[i].caracteristicas.hp<=0
-                            && !inimigos.goblins_guerreiros.goblins[i].levando_dano)
-                        inimigos.goblins_guerreiros.goblins[i].estado_sprite=0;
-                    desenhar_goblin_guerreiro(buffer,&inimigos.goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
-                }
-
+                desenhar_todos_goblins(&inimigos,buffer,ajuste_mapa);
                 desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa); // desenha guerreiro e manda para buffer
-
-                if (itens.todosItens[0].ativo)desenhar_item(buffer,&itens.todosItens[0],ajuste_mapa);
-
+                desenhar_itens(buffer,&itens,ajuste_mapa);
                 desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto);
 
-                if(pause) // o que acontece em um pause
-                {
-                    if(eventos.evento_atual==0)
-                    {
-                        // coloca tela cinza por cima da tela atual
-                        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-                        set_trans_blender(255,0,0,150);
-                        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
-                        solid_mode();
-                    }
-                }
+                pause_menu(pause,&eventos,buffer);
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
                 // nova fase
-                if(guerreiro.x +guerreiro.largura >= LARGURA_MAPA-50 && fase<N_FASES)
-                {
-                    carrega_fase=1;
-                    fase++;
-                    tela=9; // a próxima tela será a de loading game
-                    loading_time = timer;
-                }
-
+                verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading);
             }
             ticks++; // incrementa controle de velocidade do jogo
         }

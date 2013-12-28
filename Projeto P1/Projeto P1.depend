@@ -1,9 +1,11 @@
 # depslib dependency file v1.0
-1388182825 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388195334 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
+	"mapa.h"
+	"eventos.h"
 
-1388183187 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388195159 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -16,34 +18,34 @@
 1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388169199 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388192862 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388163813 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388192780 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 
-1388119843 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1388192385 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388182064 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388194333 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
-1388177958 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1388194291 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 	"controle.h"
 	"item.h"
 	"criaturas.h"
 	"mapa.h"
 
-1388175423 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1388185559 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1388175423 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1388185559 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 
-1388182945 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388195273 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
@@ -51,7 +53,7 @@
 	"item.h"
 	"eventos.h"
 
-1388156130 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+1388192528 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
 1388037018 source:e:\dropbox\projeto p1 jirlean\basico.c

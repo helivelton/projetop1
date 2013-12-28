@@ -274,3 +274,13 @@ int colisao_cima_mapa(float x,float y, int altura, int largura, int matriz_tela[
     }
     return ehBloqueio;
 }
+
+void calcular_ajuste_mapa(Tcriatura *guerreiro,int *ajuste_mapa)
+{
+    if(guerreiro->x>=SCREEN_W/2 && guerreiro->x <= (LARGURA_MAPA-SCREEN_W/2))
+        *ajuste_mapa=(-1)*(guerreiro->x-SCREEN_W/2);
+    else if(guerreiro->x<SCREEN_W/2)
+        *ajuste_mapa=0;
+    else
+        *ajuste_mapa=(-1)*(LARGURA_MAPA-SCREEN_W);
+}

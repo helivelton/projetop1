@@ -93,6 +93,12 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
     verificar_queda(guerreiro,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
+void verificar_status(Tcriatura *ser, int tempo_jogo)
+{
+    if(ser->tempo_dano+20<=tempo_jogo)
+        ser->levando_dano=0;
+}
+
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
 {
     int i;
@@ -137,28 +143,23 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
 void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
+
     if(guerreiro->direcao==1)
-    {
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
-    }
     else
-    {
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
-    }
     draw_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 
-    if(guerreiro->caracteristicas.hp>10)guerreiro->caracteristicas.hp=10;
+    if(guerreiro->caracteristicas.hp>10)
+        guerreiro->caracteristicas.hp=10;
+
     int hpAtual = guerreiro->caracteristicas.hp;
 
     if(hpAtual>=0 && hpAtual<=10)
-    {
         draw_sprite(buffer, guerreiro->barraHp[hpAtual], 10, 10);
-    }else
-        {
-            if(hpAtual<0) draw_sprite(buffer, guerreiro->barraHp[0], 10, 10);
-
-        }
+    else
+        if(hpAtual<0) draw_sprite(buffer, guerreiro->barraHp[0], 10, 10);
 
 }
 
@@ -182,6 +183,17 @@ void imagens_goblin_guerreiro(Tcriatura *goblin, int preenchida)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
 
     destroy_bitmap(tiles);
+}
+
+void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+{
+    int i;
+
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
+    {
+        movimento_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[i],guerreiro,tempo_jogo,matriz_tela,bloqueios);
+        ataque_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[i],guerreiro,tempo_jogo);
+    }
 }
 
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
@@ -321,6 +333,18 @@ void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
     }
     draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
+}
+
+void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa)
+{
+    int i;
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
+    {
+        if(inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp<=0
+                && !inimigos->goblins_guerreiros.goblins[i].levando_dano)
+            inimigos->goblins_guerreiros.goblins[i].estado_sprite=0;
+        desenhar_goblin_guerreiro(buffer,&inimigos->goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
+    }
 }
 
 int dano_ataque(Tcriatura* atacante, int tipo_ataque)

@@ -39,6 +39,8 @@
 #define ALTURA_PULO 130
 // Quantidade de fases
 #define N_FASES 3
+// tempo da tela de loading
+#define TEMPO_LOADING 1*60+30
 // DEBUG
 #define DEBUG 0
 
@@ -198,6 +200,11 @@ char *link_imagem(char caminho[256]);
 // Funções gerais que afetam diversos tipos de objetos
 int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
 
+void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
+                            char nome_fase[N_FASES][10],int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,
+                            Tjanelas *janelas, BITMAP *background,BITMAP *texturas[MAX_TERRENOS],Teventos *eventos,
+                            BITMAP *mapa);
+
 // funções de janela ____________________________________________________________________________________________
 void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
 void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
@@ -209,8 +216,9 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256]);
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
-                    int *tela);
+                    int *tela,int *estagio_loading);
 void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela);
+void pause_menu(int pause, Teventos *eventos, BITMAP *buffer);
 //_______________________________________________________________________________________________________________
 
 #endif // BASICO_H

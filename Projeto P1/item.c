@@ -22,10 +22,16 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura, ch
     destroy_bitmap(tiles);
 }
 
-void desenhar_item(BITMAP *buffer,Titem *objeto,int ajuste_x)
+void desenhar_itens(BITMAP *buffer,Titens *objetos,int ajuste_x)
 {
-    draw_sprite(buffer, objeto->imagem, objeto->x + ajuste_x -(32-objeto->largura)/2,
-                objeto->y - (32-objeto->altura)/2); // manda objeto para buffer
+    int i;
+
+    for(i=0;i<objetos->n_itens;i++)
+    {
+        if(objetos->todosItens[i].ativo)
+            draw_sprite(buffer, objetos->todosItens[i].imagem, objetos->todosItens[i].x + ajuste_x -(32-objetos->todosItens[i].largura)/2,
+                        objetos->todosItens[i].y - (32-objetos->todosItens[i].altura)/2); // manda objeto para buffer
+    }
 }
 
 void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro)
@@ -40,7 +46,7 @@ void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro)
             {
                 switch(itens->todosItens[i].tipo)
                 {
-                case 1:
+                case 1: // poção
                     guerreiro->caracteristicas.hp+=5;
                     itens->todosItens[i].ativo=0;
                     break;
