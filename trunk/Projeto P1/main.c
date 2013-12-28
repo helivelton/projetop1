@@ -35,20 +35,6 @@ int main()
     int bloqueios[3] = {TERRA, PEDRA, CHAO};
     int pause = 0;
 
-    //BITMAPs do Menu
-    BITMAP *bg = load_bitmap(link_imagem("imagens_p1/menu.bmp"), NULL); //fundo do menu
-    BITMAP *menu_iniciar = load_bitmap (link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
-    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
-    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu3.bmp"), NULL);//menu saída
-
-
-    // BITMAPS da tela de carregamento
-    BITMAP *tela_loading[4];
-    tela_loading[0] = load_bitmap (link_imagem("imagens_p1/carregar1.bmp"), NULL);
-    tela_loading[1] = load_bitmap (link_imagem("imagens_p1/carregar2.bmp"), NULL);
-    tela_loading[2] = load_bitmap (link_imagem("imagens_p1/carregar3.bmp"), NULL);
-    tela_loading[3] = load_bitmap (link_imagem("imagens_p1/carregar4.bmp"), NULL);
-
     // variáveis de objetos
     Tjanelas janelas;
     Tcriatura guerreiro; // declara objeto guerreiro
@@ -61,6 +47,21 @@ int main()
     BITMAP *mapa = create_bitmap(LARGURA_MAPA,ALTURA_MAPA); // Cria o mapa
     BITMAP *texturas[MAX_TERRENOS]; // declara a array de texturas
     BITMAP *background = create_bitmap(960,480);
+
+    //BITMAPs do Menu
+    BITMAP *menu_iniciar = load_bitmap(link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
+    BITMAP *menu_creditos = load_bitmap(link_imagem("imagens_p1/menu3.bmp"),NULL);
+    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
+    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu4.bmp"), NULL);//menu saída
+
+    BITMAP *logo = load_bitmap(link_imagem("imagens_p1/logo.bmp"),NULL);
+
+    // BITMAPS da tela de carregamento
+    BITMAP *tela_loading[4];
+    tela_loading[0] = load_bitmap (link_imagem("imagens_p1/carregar1.bmp"), NULL);
+    tela_loading[1] = load_bitmap (link_imagem("imagens_p1/carregar2.bmp"), NULL);
+    tela_loading[2] = load_bitmap (link_imagem("imagens_p1/carregar3.bmp"), NULL);
+    tela_loading[3] = load_bitmap (link_imagem("imagens_p1/carregar4.bmp"), NULL);
 
     // Declara fontes
     FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
@@ -88,27 +89,23 @@ int main()
     // Processo de repetição principal
     while (!exit_program)
     {
-        // loop válido
+        // loop válido, executado 60 vezes por segundo
         while(ticks<=timer && !exit_program)
         {
-            // termina jogo se pressionar esc
-            /*if(key[KEY_ESC])
-                fecha_programa();*/
-
             // tela de menu
             if(tela==0)
             {
                 clear_bitmap(buffer);
                 keyboard_input();
-                menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit, &loading_time, &tela,&estagio_loading,
-                             &tela_destino,&fase,&carrega_fase);
+                menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit,menu_creditos,&loading_time, &tela,
+                             &estagio_loading,&tela_destino,&fase,&carrega_fase);
             }
 
             // tela de loading
             else if (tela == 9)
             {
                 clear_bitmap(buffer);
-                tela_carregamento(buffer, tela_loading, &loading_time,tela_destino, &tela);
+                tela_carregamento(buffer, tela_loading, &loading_time,tela_destino, &tela,logo);
                 carrega_elementos_fase(&carrega_fase,&estagio_loading,matriz_tela,nome_fase,fase,&itens,&guerreiro,&inimigos,
                                        &janelas,background,texturas,&eventos,mapa);
             }
@@ -171,10 +168,11 @@ int main()
     // destruição de bitmaps
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
-    destroy_bitmap(bg);
     destroy_bitmap(menu_iniciar);
     destroy_bitmap(menu_options);
+    destroy_bitmap(menu_creditos);
     destroy_bitmap(menu_exit);
+    destroy_bitmap(logo);
     destroy_bitmap(background);
     for (i = 0; i < 4; i++)
     {
