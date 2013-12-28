@@ -3,6 +3,9 @@
 #include "mapa.h"
 #include "eventos.h"
 
+int posicaoX_logo;
+int posicaoY_logo;
+
 // função de saída
 void fecha_programa(){exit_program = TRUE;}
 END_OF_FUNCTION(fecha_programa)
@@ -204,57 +207,57 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
     strcpy(janela_atual->conteudo,conteudo);
 }
 
-void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
-                    int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase)
+void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,
+                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase)
 {
     if(apertou(KEY_DOWN))
-    {
-        *selecionar = (*selecionar+1)%3;
-    }
+        *selecionar = (*selecionar+1)%4;
 
     else if(apertou(KEY_UP))
     {
         if (*selecionar != 0)
-            *selecionar = (*selecionar-1)%3;
-
+            *selecionar = (*selecionar-1)%4;
         else if (*selecionar == 0)
-            *selecionar = 2;
+            *selecionar = 3;
     }
 
     if (*selecionar == 0)
-    {
-
-        draw_sprite (buffer, menu_iniciar, 0, 0);
-
-    }
-
+        draw_sprite(buffer, menu_iniciar, 0, 0);
     else if (*selecionar == 1)
-    {
-        draw_sprite (buffer, menu_options, 0, 0);
-    }
+        draw_sprite(buffer, menu_options, 0, 0);
+    else if(*selecionar == 2)
+        draw_sprite(buffer, menu_creditos,0,0);
+    else if (*selecionar == 3)
+        draw_sprite(buffer, menu_exit, 0, 0);
 
-    else if (*selecionar == 2)
-    {
-        draw_sprite (buffer, menu_exit, 0, 0);
-    }
     draw_sprite (screen, buffer,0, 0);
 
-    if (*selecionar == 2 && (apertou(KEY_ENTER) || apertou(KEY_SPACE)))
-        fecha_programa();
-
-    else if (*selecionar == 0 && (apertou(KEY_ENTER) || apertou(KEY_SPACE)))
+    if(apertou(KEY_ENTER) || apertou(KEY_SPACE))
     {
-        *tela = 9;
-        *loading_time = timer;
-        *estagio_loading = 0;
-        *tela_destino=1;
-        *carrega_fase=1;
-        *fase=1;
+        if(*selecionar==0)
+        {
+            *tela = 9;
+            *loading_time = timer;
+            *estagio_loading = 0;
+            *tela_destino=1;
+            *carrega_fase=1;
+            *fase=1;
+            posicaoX_logo=10;
+            posicaoY_logo=10;
+        }
+        else if(*selecionar==3)
+            fecha_programa();
     }
 }
 
-void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela)
+void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela,BITMAP *logo)
 {
+    if(timer%16==0)
+    {
+        posicaoX_logo = rand()%(SCREEN_W-250);
+        posicaoY_logo = rand()%(SCREEN_H-55-130);
+    }
+
     if((timer/16)%4 == 0)
         draw_sprite(buffer, tela_loading[0], 0, 0);
     else if((timer/16)%4 == 1)
@@ -263,6 +266,8 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
         draw_sprite(buffer, tela_loading[2], 0, 0);
     else if((timer/16)%4 == 3)
         draw_sprite(buffer, tela_loading[3], 0, 0);
+
+    draw_sprite(buffer,logo,posicaoX_logo,posicaoY_logo);
 
     rectfill(buffer,(SCREEN_W/2)-75,350,(SCREEN_W/2)+75, 350+25, makecol(255,0,0));
     rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(TEMPO_LOADING))*140),355+15, makecol(0,0,160));
@@ -356,7 +361,7 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
                 *selecionar=0;
                 *tela=9;
                 *tela_destino=0;
-                *loading_time=timer;
+                *loading_time=timer-60;
             }
         }
     }

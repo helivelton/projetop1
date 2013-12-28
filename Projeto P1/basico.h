@@ -215,9 +215,9 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
                     int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256],int efeito);
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256]);
-void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
-                    int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase);
-void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela);
+void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,
+                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase);
+void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela,BITMAP *logo);
 void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
                 int *loading_time);
 //_______________________________________________________________________________________________________________
