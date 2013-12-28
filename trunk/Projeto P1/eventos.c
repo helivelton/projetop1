@@ -265,18 +265,21 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     destroy_bitmap(fundo);
 }
 
-void pausar(int *pause)
+void pausar(int *pause, int *selecionar)
 {
-    if (apertou(KEY_SPACE))
+    if (apertou(KEY_ESC))
     {
         if (*pause == TRUE)
             *pause = FALSE;
         else
             *pause = TRUE;
+        if(*selecionar!=0 && *pause==TRUE)
+            *selecionar=0;
     }
 }
 
-void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading)
+void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
+                        int *tela_destino)
 {
     if(guerreiro->x +guerreiro->largura >= LARGURA_MAPA-50 && *fase<N_FASES)
     {
@@ -285,5 +288,6 @@ void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int 
         *tela=9; // a próxima tela será a de loading game
         *loading_time = timer;
         *estagio_loading=0;
+        *tela_destino=1;
     }
 }

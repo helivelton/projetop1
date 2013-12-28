@@ -15,7 +15,8 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
 void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,Tjanelas *janelas,BITMAP *background,
                        BITMAP *texturas[MAX_TERRENOS],Teventos *eventos);
 
-void pausar(int *pause);
-void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading);
+void pausar(int *pause, int *selecionar);
+void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
+                        int *tela_destino);
 
 #endif // EVENTOS_H
