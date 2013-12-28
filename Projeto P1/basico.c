@@ -190,8 +190,6 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
 
 }
 
-
-
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
                       int tempo_fim, char titulo[30],char conteudo[256])
 {
@@ -207,7 +205,7 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
 }
 
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit, int *loading_time,
-                    int *tela,int *estagio_loading)
+                    int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase)
 {
     if(apertou(KEY_DOWN))
     {
@@ -221,7 +219,6 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
 
         else if (*selecionar == 0)
             *selecionar = 2;
-
     }
 
     if (*selecionar == 0)
@@ -242,18 +239,21 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
     }
     draw_sprite (screen, buffer,0, 0);
 
-    if (*selecionar == 2 && apertou(KEY_ENTER))
+    if (*selecionar == 2 && (apertou(KEY_ENTER) || apertou(KEY_SPACE)))
         fecha_programa();
 
-    else if (*selecionar == 0 && apertou(KEY_ENTER))
+    else if (*selecionar == 0 && (apertou(KEY_ENTER) || apertou(KEY_SPACE)))
     {
         *tela = 9;
         *loading_time = timer;
         *estagio_loading = 0;
+        *tela_destino=1;
+        *carrega_fase=1;
+        *fase=1;
     }
 }
 
-void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time, int *tela)
+void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela)
 {
     if((timer/16)%4 == 0)
         draw_sprite(buffer, tela_loading[0], 0, 0);
@@ -268,7 +268,7 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
     rectfill(buffer,(SCREEN_W/2)-70,355,((SCREEN_W/2)-70)+(((timer-*loading_time)*1.0/(TEMPO_LOADING))*140),355+15, makecol(0,0,160));
     draw_sprite (screen, buffer,0, 0);
     if(*loading_time+TEMPO_LOADING <= timer)
-        *tela = 1;
+        *tela = tela_destino;
 }
 
 void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
@@ -297,14 +297,67 @@ void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_te
     }
 }
 
-void pause_menu(int pause, Teventos *eventos, BITMAP *buffer)
+void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
+                int *loading_time)
 {
-    if(pause && eventos->evento_atual==0)
+    if(*pause && eventos->evento_atual==0)
     {
         // coloca tela cinza por cima da tela atual
         drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
         set_trans_blender(255,0,0,150);
         rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+
+        // desenha tela de opções
+        rectfill(buffer,SCREEN_W/2-80,SCREEN_H/2-50,SCREEN_W/2+80,SCREEN_H/2+70,makecol(255,0,0));
+        rectfill(buffer,SCREEN_W/2-80+5,SCREEN_H/2-50+5,SCREEN_W/2+80-5,SCREEN_H/2+70-5,makecol(0,0,255));
+
         solid_mode();
+
+        textout_ex(buffer,font,"Continue",SCREEN_W/2-100+70,SCREEN_H/2-50+30,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Exit",SCREEN_W/2-100+70,SCREEN_H/2-50+60,makecol(255,255,255),-1);
+
+        if((timer/30)%2==0)
+            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d:%d:%d",
+                          tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
+        else
+            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d %d %d",
+                          tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
+
+        int posicao_y_cursor;
+
+        if(apertou(KEY_DOWN) || apertou(KEY_UP))
+        {
+            if(*selecionar==0)
+                *selecionar=1;
+            else
+                *selecionar=0;
+        }
+
+        if(*selecionar==0)
+            posicao_y_cursor=SCREEN_H/2-50+30;
+        else
+            posicao_y_cursor=SCREEN_H/2-50+60;
+
+        if((timer/16)%2==0)
+        {
+            rectfill(buffer,SCREEN_W/2-100+50,posicao_y_cursor,SCREEN_W/2-100+60,posicao_y_cursor+10,makecol(255,0,0));
+            rectfill(buffer,SCREEN_W/2-100+52,posicao_y_cursor-2,SCREEN_W/2-100+62,posicao_y_cursor+10-2,makecol(180,0,0));
+        }
+        else
+            rectfill(buffer,SCREEN_W/2-100+50,posicao_y_cursor,SCREEN_W/2-100+60,posicao_y_cursor+10,makecol(180,0,0));
+
+        if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
+        {
+            if(*selecionar==0)
+                *pause=FALSE;
+            else
+            {
+                *pause=FALSE;
+                *selecionar=0;
+                *tela=9;
+                *tela_destino=0;
+                *loading_time=timer;
+            }
+        }
     }
 }
