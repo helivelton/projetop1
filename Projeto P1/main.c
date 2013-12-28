@@ -98,7 +98,7 @@ int main()
                 clear_bitmap(buffer);
                 keyboard_input();
                 menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit,menu_creditos,&loading_time, &tela,
-                             &estagio_loading,&tela_destino,&fase,&carrega_fase);
+                             &estagio_loading,&tela_destino,&fase,&carrega_fase,&tempo_de_jogo);
             }
 
             // tela de loading
@@ -139,7 +139,7 @@ int main()
 
                     acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
 
-                    verifique_efeito_item(&itens,&guerreiro);
+                    verifique_efeito_item(&itens,&guerreiro,&inimigos);
                 }
 
                 verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios);

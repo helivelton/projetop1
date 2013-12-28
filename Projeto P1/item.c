@@ -1,7 +1,7 @@
 #include "item.h"
 
 void preencher_item(Titem *objeto, float x, float y, int altura, int largura, char imagem_link[255],int posicaox,int posicaoy,
-                    int ativo, int tipo,int imagem_preenchida)
+                    int ativo, int tipo,int imagem_preenchida,int id_arqueiro)
 {
     BITMAP *tiles = load_bitmap(link_imagem(imagem_link),NULL);
 
@@ -18,6 +18,8 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura, ch
     objeto->largura=largura;
     objeto->tipo=tipo;
     objeto->ativo=ativo;
+    objeto->id_arqueiro;
+    objeto->direcao=0;
 
     destroy_bitmap(tiles);
 }
@@ -34,7 +36,7 @@ void desenhar_itens(BITMAP *buffer,Titens *objetos,int ajuste_x)
     }
 }
 
-void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro)
+void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimigos)
 {
     int i;
 
@@ -42,12 +44,17 @@ void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro)
     {
         if (itens->todosItens[i].ativo)
         {
-            if (colisao(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,itens->todosItens[i].x,itens->todosItens[i].y,itens->todosItens[i].altura,itens->todosItens[i].largura))
+            if (colisao(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,itens->todosItens[i].x,
+                        itens->todosItens[i].y,itens->todosItens[i].altura,itens->todosItens[i].largura))
             {
                 switch(itens->todosItens[i].tipo)
                 {
                 case 1: // poção
                     guerreiro->caracteristicas.hp+=5;
+                    itens->todosItens[i].ativo=0;
+                    break;
+                case 2: // flecha
+                    // goblin arqueiro causa dano no guerreiro
                     itens->todosItens[i].ativo=0;
                     break;
                 }
