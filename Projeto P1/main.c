@@ -131,14 +131,14 @@ int main()
 
                     // Lógica do jogo
                     tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
-                    verificar_status(&guerreiro,tempo_de_jogo);
+                    verificar_status(&guerreiro,&inimigos,tempo_de_jogo,&itens);
                     movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
                     ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
 
                     calcular_ajuste_mapa(&guerreiro,&ajuste_mapa);
                     acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios,&itens);
                     verifique_efeito_item(&itens,&guerreiro,&inimigos,tempo_de_jogo);
-                    movimento_itens(&itens,&guerreiro);
+                    movimento_itens(&itens,&guerreiro,tempo_de_jogo);
                 }
 
                 verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios);

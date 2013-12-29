@@ -5,7 +5,7 @@
 	"mapa.h"
 	"eventos.h"
 
-1388263116 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388282559 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -18,10 +18,10 @@
 1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388267376 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388283684 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388266471 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388283199 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
@@ -29,7 +29,7 @@
 1388192385 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388264546 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388283824 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
 1388245969 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
@@ -39,14 +39,14 @@
 	"criaturas.h"
 	"mapa.h"
 
-1388266067 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1388281823 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1388265657 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1388276733 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 	"criaturas.h"
 
-1388267443 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388283394 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"

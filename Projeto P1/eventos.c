@@ -205,7 +205,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     {
         eventos->n_eventos=2;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,0,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,0,1,0,0);
         preencher_item(&itens->todosItens[1],0,0,8,15,0,2,0,1);
         preencher_item(&itens->todosItens[2],0,0,8,15,0,2,0,2);
         itens->n_itens=3;
@@ -249,7 +249,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         eventos->n_eventos=1;
         inimigos->chefes.chefe_atual=0;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,0,1,1,0);
         itens->n_itens=1;
 
         preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro
@@ -278,7 +278,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         eventos->n_eventos=1;
         inimigos->chefes.chefe_atual=0;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,0,1,1,0);
         itens->n_itens=1;
 
         preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro

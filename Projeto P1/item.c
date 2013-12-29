@@ -36,7 +36,7 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura,
     destroy_bitmap(tiles);
 }
 
-void movimento_itens(Titens *itens,Tcriatura *guerreiro)
+void movimento_itens(Titens *itens,Tcriatura *guerreiro,int tempo_jogo)
 {
     int i;
     for(i=0;i<itens->n_itens;i++)
