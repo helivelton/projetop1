@@ -67,6 +67,9 @@ int main()
     FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
     FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
 
+    // Declara sons
+
+
 /*  #######################################################################################
                                 fim da declaração das variáveis
     #######################################################################################
@@ -141,7 +144,7 @@ int main()
                     movimento_itens(&itens,&guerreiro,tempo_de_jogo);
                 }
 
-                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios);
+                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios,&ajuste_mapa);
 
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
@@ -149,14 +152,15 @@ int main()
                 desenhar_todos_goblins(&inimigos,buffer,ajuste_mapa,tempo_de_jogo);
                 desenhar_guerreiro(buffer,&guerreiro,&inimigos,ajuste_mapa,tempo_de_jogo); // desenha guerreiro e manda para buffer
                 desenhar_itens(buffer,&itens,ajuste_mapa);
-                desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto);
+                desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto,&inimigos);
 
                 pause_menu(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time);
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
                 // nova fase?
-                verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino);
+                verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino,
+                                   &inimigos.chefes,&eventos);
             }
             ticks++; // incrementa controle de velocidade do jogo
         }

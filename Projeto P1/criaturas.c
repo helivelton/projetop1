@@ -574,7 +574,7 @@ void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_j
         goblin->caindo=1;
         goblin->pulando=0;
         if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y &&
-           !itens->todosItens[goblin->id_flecha-1].ativo)
+           !itens->todosItens[goblin->id_flecha-1].ativo && goblin->alerta)
         {
             goblin->direcao=goblin->direcao_anterior;
 
@@ -645,6 +645,8 @@ void imagens_goblin_chefe(Tcriatura *goblin, int preenchida)
     }
     for(i=0;i<8;i++)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
+
+    goblin->face = load_bitmap(link_imagem("imagens_p1/Goblin_f.bmp"),NULL);
 
     destroy_bitmap(tiles);
 }
@@ -722,7 +724,9 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
         }
         else
         {
-            if((tempo_jogo/120)%2==0)
+            goblin1->direcao=2;
+            goblin1->direcao_anterior=2;
+            /*if((tempo_jogo/120)%2==0)
                 goblin1->direcao=1;
             else
                 goblin1->direcao=2;
@@ -747,7 +751,7 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
                 else
                     movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
                 goblin1->direcao_anterior=1;
-            }
+            }*/
 
             // radar
             if((guerreiro->x + guerreiro->largura < goblin1->x && goblin1->direcao==2

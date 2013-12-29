@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1388250115 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388349713 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 	"mapa.h"
@@ -18,7 +18,7 @@
 1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388339423 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388345872 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
 1388331095 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
@@ -29,10 +29,10 @@
 1388192385 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388339288 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388348482 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
-1388245969 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1388346865 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 	"controle.h"
 	"item.h"
@@ -46,7 +46,7 @@
 	"basico.h"
 	"criaturas.h"
 
-1388331114 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388346886 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
