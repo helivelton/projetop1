@@ -29,7 +29,7 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura,
     objeto->largura=largura;
     objeto->tipo=tipo;
     objeto->ativo=ativo;
-    objeto->id_arqueiro;
+    objeto->id_arqueiro=id_arqueiro;
     objeto->direcao=0;
     objeto->imagem_buffer = create_bitmap(32,32);
 
