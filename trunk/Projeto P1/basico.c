@@ -32,6 +32,7 @@ void init()
     install_timer();
     install_keyboard();
     install_mouse();
+    install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
 }
 
 void deinit()
