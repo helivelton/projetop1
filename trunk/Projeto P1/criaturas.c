@@ -30,6 +30,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->levando_dano=0;
     ser->alerta=0;
     ser->drop_item=0;
+    ser->curando=-1;
     ser->sprite = create_bitmap(64,64);
 }
 
@@ -208,7 +209,7 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
         guerreiro->levando_dano=0;
 }
 
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x,int tempo_jogo)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
 
@@ -216,7 +217,29 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x)
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
     else
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
-    draw_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
+
+    if(guerreiro->levando_dano)
+    {
+        set_trans_blender(255,255,255,150);
+        if((tempo_jogo/10)%2==0)
+        {
+            draw_sprite_ex(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
+                guerreiro->y - (64 - guerreiro->altura)/2,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP); // manda guerreiro para buffer
+        }
+        else
+            draw_sprite_ex(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
+                guerreiro->y - (64 - guerreiro->altura)/2,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP); // manda guerreiro para buffer
+    }
+    else if(guerreiro->curando!=-1)
+    {
+        set_trans_blender(255, 255, 255, 255);
+        draw_lit_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
+                guerreiro->y - (64 - guerreiro->altura)/2, (tempo_jogo-guerreiro->curando)*4);
+        if(tempo_jogo - guerreiro->curando >= 60)
+            guerreiro->curando=-1;
+    }
+    else
+        draw_sprite(buffer, guerreiro->sprite, ajuste_x + guerreiro->x - (64 - guerreiro->largura)/2,
                 guerreiro->y - (64 - guerreiro->altura)/2); // manda guerreiro para buffer
 
     if(guerreiro->caracteristicas.hp>10)
@@ -366,7 +389,7 @@ void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_
     }
 }
 
-void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
+void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo)
 {
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
@@ -388,7 +411,18 @@ void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+    if(goblin1->levando_dano)
+    {
+        set_trans_blender(255,255,255,50);
+        if((tempo_jogo/10)%2==0)
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+        else
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+    }
+    else
+        draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
@@ -529,7 +563,7 @@ void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_j
     }
 }
 
-void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
+void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo)
 {
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
@@ -551,7 +585,18 @@ void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+    if(goblin1->levando_dano)
+    {
+        set_trans_blender(255,255,255,50);
+        if((tempo_jogo/10)%2==0)
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+        else
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+    }
+    else
+        draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
@@ -684,7 +729,7 @@ void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo
     }
 }
 
-void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
+void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo)
 {
     rectfill(goblin1->sprite,0,0,64,64,makecol(255,0,255));
     if(goblin1->direcao==1)
@@ -706,7 +751,18 @@ void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x)
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+    if(goblin1->levando_dano)
+    {
+        set_trans_blender(255,255,255,50);
+        if((tempo_jogo/10)%2==0)
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+        else
+            draw_sprite_ex(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
+                goblin1->y-(64-goblin1->altura)/2,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+    }
+    else
+        draw_sprite(buffer, goblin1->sprite, ajuste_x + goblin1->x-(64-goblin1->largura)/2,
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
@@ -732,7 +788,7 @@ void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, i
     }
 }
 
-void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa)
+void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa,int tempo_jogo)
 {
     int i;
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
@@ -740,21 +796,21 @@ void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa
         if(inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp<=0
                 && !inimigos->goblins_guerreiros.goblins[i].levando_dano)
             inimigos->goblins_guerreiros.goblins[i].estado_sprite=0;
-        desenhar_goblin_guerreiro(buffer,&inimigos->goblins_guerreiros.goblins[i],ajuste_mapa); // desenha goblin tipo 1 e manda para o buffer
+        desenhar_goblin_guerreiro(buffer,&inimigos->goblins_guerreiros.goblins[i],ajuste_mapa,tempo_jogo); // desenha goblin tipo 1 e manda para o buffer
     }
     for(i=0;i<inimigos->goblins_arqueiros.n_goblins;i++)
     {
         if(inimigos->goblins_arqueiros.goblins[i].caracteristicas.hp<=0
                 && !inimigos->goblins_arqueiros.goblins[i].levando_dano)
             inimigos->goblins_arqueiros.goblins[i].estado_sprite=0;
-        desenhar_goblin_arqueiro(buffer,&inimigos->goblins_arqueiros.goblins[i],ajuste_mapa);
+        desenhar_goblin_arqueiro(buffer,&inimigos->goblins_arqueiros.goblins[i],ajuste_mapa,tempo_jogo);
     }
     if(inimigos->chefes.chefe_atual!=0)
     {
         if(inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].caracteristicas.hp<=0
                 && !inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].levando_dano)
             inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].estado_sprite=0;
-        desenhar_goblin_chefe(buffer,&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],ajuste_mapa);
+        desenhar_goblin_chefe(buffer,&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],ajuste_mapa,tempo_jogo);
     }
 }
 

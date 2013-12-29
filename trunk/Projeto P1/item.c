@@ -94,6 +94,7 @@ void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimig
                 case 1: // poção
                     guerreiro->caracteristicas.hp+=5;
                     itens->todosItens[i].ativo=0;
+                    guerreiro->curando=tempo_jogo;
                     break;
                 case 2: // flecha
                     guerreiro->levando_dano=1;
