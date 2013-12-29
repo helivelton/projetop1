@@ -95,10 +95,10 @@ typedef struct criatura
     int at_altura;
     int quadro_at;
     int id_flecha; // indica que flecha usa, a partir de 1; se 0, não usa flecha
+    int estrategia;
     int direcao; // direita 1 e esquerda 2
     int direcao_anterior;
     int estado_sprite; // estado atual
-    //int controle_estado; // verifica certos intervalos de tempo
     int caindo;
     int pulando;
     int permitir_pulo;
@@ -109,6 +109,7 @@ typedef struct criatura
     int tempo_dano;
     int tempo_recuo;
     int alerta;
+    int drop_item;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;

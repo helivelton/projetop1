@@ -29,6 +29,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->atacando=0;
     ser->levando_dano=0;
     ser->alerta=0;
+    ser->drop_item=0;
     ser->sprite = create_bitmap(64,64);
 }
 
@@ -100,10 +101,27 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
     verificar_queda(guerreiro,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void verificar_status(Tcriatura *ser, int tempo_jogo)
+void verificar_status(Tcriatura *ser,Toponentes *inimigos, int tempo_jogo,Titens *itens)
 {
+    int i;
     if(ser->tempo_dano+20<=tempo_jogo)
         ser->levando_dano=0;
+    for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
+    {
+        if(inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp <= 0 && !inimigos->goblins_guerreiros.goblins[i].drop_item)
+        {
+            inimigos->goblins_guerreiros.goblins[i].drop_item=1;
+            deixa_item(itens,&inimigos->goblins_guerreiros.goblins[i]);
+        }
+    }
+    for(i=0;i<inimigos->goblins_arqueiros.n_goblins;i++)
+    {
+        if(inimigos->goblins_arqueiros.goblins[i].caracteristicas.hp <= 0 && !inimigos->goblins_arqueiros.goblins[i].drop_item)
+        {
+            inimigos->goblins_arqueiros.goblins[i].drop_item=1;
+            deixa_item(itens,&inimigos->goblins_arqueiros.goblins[i]);
+        }
+    }
 }
 
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
@@ -552,7 +570,6 @@ void imagens_goblin_chefe(Tcriatura *goblin, int preenchida)
         for(i=0;i<8;i++)
             goblin->vetor_sprite[i]=create_bitmap(64,64);
     }
-
     for(i=0;i<8;i++)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
 
@@ -596,11 +613,6 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
             }
             else
                 goblin1->direcao=0;
-
-            // radar
-            if((guerreiro->x + guerreiro->largura < goblin1->x && goblin1->x - (guerreiro->x + guerreiro->largura) >= SCREEN_W)
-               || (goblin1->x + goblin1->largura < guerreiro->x && guerreiro->x - (goblin1->x +goblin1->largura) >= SCREEN_W))
-                    goblin1->alerta=0;
         }
         else
         {
@@ -955,6 +967,24 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at)
                    alvo->direcao = 2;
                    calcular_dano(atacante,alvo,tipo_at);
                }
+        }
+    }
+}
+
+void deixa_item(Titens *itens,Tcriatura *goblin)
+{
+    int i,chance;
+    for(i=0;i<itens->n_itens;i++)
+    {
+        if(!itens->todosItens[i].ativo && itens->todosItens[0].tipo==1)
+        {
+            chance=rand()%100;
+            if(chance<=15)
+            {
+                itens->todosItens[i].x=goblin->x;
+                itens->todosItens[i].y=goblin->y+goblin->altura-itens->todosItens[i].altura;
+                itens->todosItens[i].ativo=1;
+            }
         }
     }
 }
