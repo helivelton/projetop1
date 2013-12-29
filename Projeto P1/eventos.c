@@ -205,7 +205,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     {
         eventos->n_eventos=2;
 
-        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,0,1,0,0);
+        preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,0,0);
         preencher_item(&itens->todosItens[1],0,0,8,15,0,2,0,1);
         preencher_item(&itens->todosItens[2],0,0,8,15,0,2,0,2);
         itens->n_itens=3;

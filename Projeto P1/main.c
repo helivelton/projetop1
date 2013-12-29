@@ -146,8 +146,8 @@ int main()
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
                 draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
-                desenhar_todos_goblins(&inimigos,buffer,ajuste_mapa);
-                desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa); // desenha guerreiro e manda para buffer
+                desenhar_todos_goblins(&inimigos,buffer,ajuste_mapa,tempo_de_jogo);
+                desenhar_guerreiro(buffer,&guerreiro,ajuste_mapa,tempo_de_jogo); // desenha guerreiro e manda para buffer
                 desenhar_itens(buffer,&itens,ajuste_mapa);
                 desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto);
 

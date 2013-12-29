@@ -30,29 +30,29 @@ void imagens_guerreiro(Tcriatura *guerreiro);
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos);
 void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo);
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x);
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x,int tempo_jogo);
 
 // Funções do goblin guerreiro
 void imagens_goblin_guerreiro(Tcriatura *goblin1, int preenchida);
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro,int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo);
-void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x);
+void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo);
 
 // Funções para o goblin arqueiro
 void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida);
 void movimento_goblin_arqueiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,Titens *itens);
-void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x);
+void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo);
 
 // Funções para o goblin chefe
 void imagens_goblin_chefe(Tcriatura *goblin, int preenchida);
 void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo);
-void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x);
+void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo);
 
 // Funções para todos os goblins
 void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
                    Titens *itens);
-void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa);
+void desenhar_todos_goblins(Toponentes *inimigos,BITMAP *buffer, int ajuste_mapa,int tempo_jogo);
 
 #endif // CRIATURAS_H
