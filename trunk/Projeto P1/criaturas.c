@@ -31,6 +31,8 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->alerta=0;
     ser->drop_item=0;
     ser->curando=-1;
+    ser->estrategia=1;
+    ser->paralisado=0;
     ser->sprite = create_bitmap(64,64);
 }
 
@@ -69,21 +71,21 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
             guerreiro->estado_sprite = 0;
 
         // apertou direita
-        if(segurou(KEY_RIGHT))
+        if(segurou(KEY_RIGHT) && !guerreiro->paralisado)
             movimento_direita(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,0,3);
 
         // apertou esquerda
-        if(segurou(KEY_LEFT))
+        if(segurou(KEY_LEFT) && !guerreiro->paralisado)
             movimento_esquerda(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,0,3);
 
         // apertou para cima
-        if(segurou(KEY_UP))
+        if(segurou(KEY_UP) && !guerreiro->paralisado)
             pulo(guerreiro,guerreiro->caracteristicas.habilidade,0,matriz_tela,bloqueios);
 
         // apertou para baixo
-        if(apertou(KEY_DOWN))
+        if(apertou(KEY_DOWN) && !guerreiro->paralisado)
             guerreiro->tempo_recuo=timer; // limita tempo de recuo
-        if(segurou(KEY_DOWN))
+        if(segurou(KEY_DOWN) && !guerreiro->paralisado)
             recuo(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios);
 
         // se soltar o botão de pulo
@@ -107,6 +109,8 @@ void verificar_status(Tcriatura *ser,Toponentes *inimigos, int tempo_jogo,Titens
     int i;
     if(ser->tempo_dano+20<=tempo_jogo)
         ser->levando_dano=0;
+    if(tempo_jogo>=ser->tempo_paralisado+1*60+30)
+        ser->paralisado=0;
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
     {
         if(inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp <= 0 && !inimigos->goblins_guerreiros.goblins[i].drop_item)
@@ -130,7 +134,7 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
     int i;
     int confirmacao=0;
 
-    if(apertou(KEY_Z))
+    if(apertou(KEY_Z) && !guerreiro->paralisado)
         confirmacao=1;
 
     ataque_ajustes(guerreiro,tempo_jogo,confirmacao,4,7);
@@ -209,16 +213,37 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
         guerreiro->levando_dano=0;
 }
 
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x,int tempo_jogo)
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
+    BITMAP *mato=load_bitmap(link_imagem("imagens_p1/tiles01b.bmp"),NULL);
+    BITMAP *mato_recortado=create_bitmap(32,32);
+    rectfill(mato_recortado,0,0,32,32,makecol(255,0,255));
 
     if(guerreiro->direcao==1)
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_H_FLIP);
     else
         draw_sprite_ex(guerreiro->sprite,guerreiro->vetor_sprite[guerreiro->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
 
-    if(guerreiro->levando_dano)
+    if(inimigos->chefes.chefe_atual!=0)
+    {
+        if(inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].estrategia==2 &&
+           tempo_jogo<=inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].tempo_estrategia+3*60 &&
+           !guerreiro->caindo && !guerreiro->pulando)
+        {
+            blit(mato,mato_recortado,5*32,8*32,0,0,32,32);
+            draw_sprite(guerreiro->sprite,mato_recortado,16,32+(guerreiro->altura/2)-28);
+        }
+        else if(inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].estrategia==2 &&
+           tempo_jogo>inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].tempo_estrategia+3*60 &&
+           !guerreiro->caindo && !guerreiro->pulando)
+       {
+            blit(mato,mato_recortado,3*32,14*32,0,0,32,32);
+            draw_sprite(guerreiro->sprite,mato_recortado,16,32+(guerreiro->altura/2)-28);
+       }
+    }
+
+    if(guerreiro->levando_dano || guerreiro->paralisado)
     {
         set_trans_blender(255,255,255,150);
         if((tempo_jogo/10)%2==0)
@@ -251,6 +276,9 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x,int tem
         draw_sprite(buffer, guerreiro->barraHp[hpAtual], 10, 10);
     else
         if(hpAtual<0) draw_sprite(buffer, guerreiro->barraHp[0], 10, 10);
+
+    destroy_bitmap(mato);
+    destroy_bitmap(mato_recortado);
 
 }
 
@@ -623,41 +651,74 @@ void imagens_goblin_chefe(Tcriatura *goblin, int preenchida)
 
 void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
-
     if(!goblin1->levando_dano && goblin1->caracteristicas.hp > 0)
     {
         if(goblin1->estado_sprite < 5 && !goblin1->atacando)
             goblin1->estado_sprite = 5;
         if(goblin1->alerta)
         {
-            if (goblin1->x-3 > guerreiro->x+guerreiro->largura || goblin1->x-4 > guerreiro->x+guerreiro->largura || goblin1->x-5 > guerreiro->x+guerreiro->largura
-                || goblin1->x-6 > guerreiro->x+guerreiro->largura)
+            if(goblin1->estrategia==1)
             {
-                if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || colisao_esquerda_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || (colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                       && guerreiro->y + guerreiro->altura < goblin1->y))
-                    pulo(goblin1,3,-1,matriz_tela,bloqueios);
+                if (goblin1->x-3 > guerreiro->x+guerreiro->largura || goblin1->x-4 > guerreiro->x+guerreiro->largura || goblin1->x-5 > guerreiro->x+guerreiro->largura
+                    || goblin1->x-6 > guerreiro->x+guerreiro->largura)
+                {
+                    if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_esquerda_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || (colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                           && guerreiro->y + guerreiro->altura < goblin1->y))
+                        pulo(goblin1,3,-1,matriz_tela,bloqueios);
+                    else
+                        movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+                    goblin1->direcao_anterior=2;
+                }
+                else if (goblin1->x+goblin1->largura+3 < guerreiro->x || goblin1->x+goblin1->largura+4 < guerreiro->x
+                         || goblin1->x+goblin1->largura+5 < guerreiro->x || goblin1->x+goblin1->largura+6 < guerreiro->x)
+                {
+                    if(!colisao_abaixo_mapa(goblin1->x+goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_direita_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || (colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                           && guerreiro->y + guerreiro->altura < goblin1->y))
+                        pulo(goblin1,3,1,matriz_tela,bloqueios);
+                    else
+                        movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+                    goblin1->direcao_anterior=1;
+                }
                 else
-                    movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
-                goblin1->direcao_anterior=2;
+                    goblin1->direcao=0;
             }
-            else if (goblin1->x+goblin1->largura+3 < guerreiro->x || goblin1->x+goblin1->largura+4 < guerreiro->x
-                     || goblin1->x+goblin1->largura+5 < guerreiro->x || goblin1->x+goblin1->largura+6 < guerreiro->x)
+            else if(goblin1->estrategia==2)
             {
-                if(!colisao_abaixo_mapa(goblin1->x+goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || colisao_direita_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                   || (colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
-                       && guerreiro->y + guerreiro->altura < goblin1->y))
-                    pulo(goblin1,3,1,matriz_tela,bloqueios);
+                if (goblin1->x-3 > LARGURA_MAPA-100 || goblin1->x-4 > LARGURA_MAPA-100 || goblin1->x-5 > LARGURA_MAPA-100)
+                {
+                    if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_esquerda_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x-goblin1->caracteristicas.habilidade-40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+                        pulo(goblin1,3,-1,matriz_tela,bloqueios);
+                    else
+                        movimento_esquerda(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+                    goblin1->direcao_anterior=(guerreiro->direcao%2)+1;
+                }
+                else if (goblin1->x+3 < LARGURA_MAPA-100 || goblin1->x+4 < LARGURA_MAPA-100 || goblin1->x+5 < LARGURA_MAPA-100)
+                {
+                    if(!colisao_abaixo_mapa(goblin1->x+goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_direita_mapa(goblin1->x,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+2,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
+                       || colisao_cima_mapa(goblin1->x+goblin1->caracteristicas.habilidade+40,goblin1->y-32,goblin1->altura,goblin1->largura,matriz_tela,bloqueios))
+                        pulo(goblin1,3,1,matriz_tela,bloqueios);
+                    else
+                        movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
+                    goblin1->direcao_anterior=(guerreiro->direcao%2)+1;
+                }
                 else
-                    movimento_direita(goblin1,goblin1->caracteristicas.habilidade,matriz_tela,bloqueios,1,1,5,7);
-                goblin1->direcao_anterior=1;
+                    goblin1->direcao=0;
+
+                if(tempo_jogo>=goblin1->tempo_estrategia+3*60+30)
+                    goblin1->estrategia=1;
             }
-            else
-                goblin1->direcao=0;
+
         }
         else
         {
@@ -699,11 +760,18 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
     else if(goblin1->levando_dano && (goblin1->caracteristicas.hp > 0 || goblin1->levando_dano))
     {
         goblin1->estado_sprite = 1;
-        if(goblin1->tempo_dano+10>=tempo_jogo)
+        if(goblin1->tempo_dano+20>=tempo_jogo)
             recuo_por_dano(goblin1,matriz_tela,bloqueios);
         else
+        {
             goblin1->levando_dano=0;
+            goblin1->estrategia=2;
+            goblin1->tempo_estrategia=tempo_jogo;
+        }
+
     }
+    if(goblin1->caracteristicas.hp <= 0)
+        goblin1->estrategia=1;
 
     // verificações básicas
     colide_chao(goblin1,matriz_tela,bloqueios,0); // colidiu com o chão? primeira verificação obrigatória
@@ -714,18 +782,30 @@ void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo
 {
     if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
-        goblin->caindo=1;
-        goblin->pulando=0;
-        if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y)
+        if(goblin->estrategia==1)
         {
-            goblin->direcao=goblin->direcao_anterior;
+            goblin->caindo=1;
+            goblin->pulando=0;
+            if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y)
+            {
+                goblin->direcao=goblin->direcao_anterior;
 
-            ataque_ajustes(goblin,tempo_jogo,1,2,4);
-            if(!guerreiro->levando_dano && goblin->atacando)
-                ataque(goblin,guerreiro,tempo_jogo,0);
+                ataque_ajustes(goblin,tempo_jogo,1,2,4);
+                if(!guerreiro->levando_dano && goblin->atacando)
+                    ataque(goblin,guerreiro,tempo_jogo,0);
 
-            goblin->direcao=0;
+                goblin->direcao=0;
+            }
         }
+        else if(goblin->estrategia==2)
+        {
+            if(tempo_jogo>=goblin->tempo_estrategia+3*60 && !guerreiro->pulando && !guerreiro->caindo)
+            {
+                guerreiro->paralisado=1;
+                guerreiro->tempo_paralisado=tempo_jogo;
+            }
+        }
+
     }
 }
 

@@ -30,7 +30,7 @@ void imagens_guerreiro(Tcriatura *guerreiro);
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos);
 void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo);
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,int ajuste_x,int tempo_jogo);
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo);
 
 // Funções do goblin guerreiro
 void imagens_goblin_guerreiro(Tcriatura *goblin1, int preenchida);
