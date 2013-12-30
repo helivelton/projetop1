@@ -78,7 +78,7 @@ void desenhar_itens(BITMAP *buffer,Titens *objetos,int ajuste_x)
     }
 }
 
-void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
+void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo,SAMPLE *som_dano,SAMPLE* som_cura)
 {
     int i;
 
@@ -92,11 +92,13 @@ void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimig
                 switch(itens->todosItens[i].tipo)
                 {
                 case 1: // poção
+                    play_sample(som_cura,255,128,1000,FALSE);
                     guerreiro->caracteristicas.hp+=5;
                     itens->todosItens[i].ativo=0;
                     guerreiro->curando=tempo_jogo;
                     break;
                 case 2: // flecha
+                    play_sample(som_dano,255,128,1000,FALSE);
                     guerreiro->levando_dano=1;
                     guerreiro->tempo_dano=tempo_jogo;
                     calcular_dano(&inimigos->goblins_arqueiros.goblins[itens->todosItens[i].id_arqueiro-1],guerreiro,1);

@@ -34,6 +34,7 @@ int main()
     int estagio_loading=0;
     int bloqueios[3] = {TERRA, PEDRA, CHAO};
     int pause = 0;
+    int tocando=0;
 
     // variáveis de objetos
     Tjanelas janelas;
@@ -68,7 +69,27 @@ int main()
     FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
 
     // Declara sons
+    MIDI* musica_floresta = load_midi(link_imagem("imagens_p1/f1.mid"));
+    MIDI* musica_caverna = load_midi(link_imagem("imagens_p1/c1.mid"));
+    MIDI* musica_chefe1 = load_midi(link_imagem("imagens_p1/b1.mid"));
+    MIDI* musica_chefe2 = load_midi(link_imagem("imagens_p1/b2.mid"));
+    MIDI* musica_chefe3 = load_midi(link_imagem("imagens_p1/b3.mid"));
+    MIDI* musica_menu = load_midi(link_imagem("imagens_p1/menu.mid"));
+    MIDI* musica_gameover = load_midi(link_imagem("imagens_p1/gOver.mid"));
 
+    SAMPLE* selecao = load_sample(link_imagem("imagens_p1/selec.wav"));
+    SAMPLE* confirmar = load_sample(link_imagem("imagens_p1/conf.wav"));
+    SAMPLE* espada = load_sample(link_imagem("imagens_p1/sword.wav"));
+    SAMPLE* besta = load_sample(link_imagem("imagens_p1/bow.wav"));
+    SAMPLE* som_pause = load_sample(link_imagem("imagens_p1/pause.wav"));
+    SAMPLE* som_dano_goblin = load_sample(link_imagem("imagens_p1/GobD.wav"));
+    SAMPLE* som_dano_guerreiro = load_sample(link_imagem("imagens_p1/heroD.wav"));
+    SAMPLE* som_cura = load_sample(link_imagem("imagens_p1/cura.wav"));
+    SAMPLE* som_vinhas = load_sample(link_imagem("imagens_p1/vinhas.wav"));
+    SAMPLE* som_recuo = load_sample(link_imagem("imagens_p1/recuo.wav"));
+
+    volume=255;
+    set_volume(volume,volume);
 
 /*  #######################################################################################
                                 fim da declaração das variáveis
@@ -101,7 +122,8 @@ int main()
                 clear_bitmap(buffer);
                 keyboard_input();
                 menu_inicial(buffer, &selecionar, menu_iniciar, menu_options, menu_exit,menu_creditos,&loading_time, &tela,
-                             &estagio_loading,&tela_destino,&fase,&carrega_fase,&tempo_de_jogo);
+                             &estagio_loading,&tela_destino,&fase,&carrega_fase,&tempo_de_jogo,selecao,confirmar,&tocando,
+                             musica_menu);
             }
 
             // tela de loading
@@ -116,10 +138,19 @@ int main()
             // tela de jogo
             else if(tela==1)
             {
+                if(!tocando)
+                {
+                    if(fase==1 || fase==3)
+                        play_midi(musica_floresta,TRUE);
+                    else
+                        play_midi(musica_caverna,TRUE);
+                    tocando=1;
+                }
+
                 // atualiza estado do teclado
                 keyboard_input();
 
-                pausar(&pause,&selecionar); // verifica se pressionou pause
+                pausar(&pause,&selecionar,som_pause); // verifica se pressionou pause
 
                 // limpa bitmaps de armazenamento
                 clear_bitmap(buffer); // Limpa o buffer;
@@ -133,18 +164,20 @@ int main()
                     tempo_de_jogo++;
 
                     // Lógica do jogo
-                    tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo);
+                    tocou_oponente(&guerreiro,&inimigos,tempo_de_jogo,som_dano_guerreiro);
                     verificar_status(&guerreiro,&inimigos,tempo_de_jogo,&itens);
-                    movimento_guerreiro(&guerreiro,matriz_tela, bloqueios);
-                    ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos);
+                    movimento_guerreiro(&guerreiro,matriz_tela, bloqueios,som_recuo);
+                    ataque_guerreiro(&guerreiro,tempo_de_jogo,&inimigos,espada,som_dano_goblin);
 
                     calcular_ajuste_mapa(&guerreiro,&ajuste_mapa);
-                    acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios,&itens);
-                    verifique_efeito_item(&itens,&guerreiro,&inimigos,tempo_de_jogo);
+                    acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios,&itens,espada,besta,som_dano_guerreiro,
+                                  som_vinhas);
+                    verifique_efeito_item(&itens,&guerreiro,&inimigos,tempo_de_jogo,som_dano_guerreiro,som_cura);
                     movimento_itens(&itens,&guerreiro,tempo_de_jogo);
                 }
 
-                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios,&ajuste_mapa);
+                verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios,&ajuste_mapa,musica_chefe1,
+                                 musica_chefe2,musica_chefe3,confirmar);
 
                 // Desenhar
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
@@ -154,13 +187,14 @@ int main()
                 desenhar_itens(buffer,&itens,ajuste_mapa);
                 desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto,&inimigos);
 
-                pause_menu(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time);
+                pause_menu(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,
+                           selecao,confirmar,&tocando);
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
                 // nova fase?
                 verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino,
-                                   &inimigos.chefes,&eventos);
+                                   &inimigos.chefes,&eventos,&tocando);
             }
             ticks++; // incrementa controle de velocidade do jogo
         }
@@ -207,6 +241,7 @@ int main()
     }
     destroy_bitmap(guerreiro.sprite);
     destroy_bitmap(guerreiro.face);
+
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite);
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite);
     destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].sprite);
@@ -215,6 +250,7 @@ int main()
 
     destroy_font(corpo_texto);
     destroy_font(titulo_texto);
+
     destroy_bitmap(itens.todosItens[0].imagem);
     destroy_bitmap(itens.todosItens[1].imagem);
     destroy_bitmap(itens.todosItens[2].imagem);
@@ -222,6 +258,24 @@ int main()
     destroy_bitmap(itens.todosItens[1].imagem_buffer);
     destroy_bitmap(itens.todosItens[2].imagem_buffer);
 
+    destroy_midi(musica_floresta);
+    destroy_midi(musica_caverna);
+    destroy_midi(musica_chefe1);
+    destroy_midi(musica_chefe2);
+    destroy_midi(musica_chefe3);
+    destroy_midi(musica_menu);
+    destroy_midi(musica_gameover);
+
+    destroy_sample(selecao);
+    destroy_sample(confirmar);
+    destroy_sample(espada);
+    destroy_sample(besta);
+    destroy_sample(som_pause);
+    destroy_sample(som_dano_goblin);
+    destroy_sample(som_dano_guerreiro);
+    destroy_sample(som_cura);
+    destroy_sample(som_vinhas);
+    destroy_sample(som_recuo);
 
     return 0 ;
 }
