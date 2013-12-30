@@ -1,13 +1,15 @@
 #include "mapa.h"
 
-void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
+void carrega_texturas(BITMAP *texturas[MAX_TERRENOS],DATAFILE* graficos)
 {
     int i;
     for(i=0;i<MAX_TERRENOS;i++)
     {
         texturas[i] = create_bitmap(32,32);
     }
-    BITMAP *tileset=load_bitmap(link_imagem("imagens_p1/tiles01b.bmp"),NULL);// tileset básico
+
+    BITMAP* tileset = (BITMAP*) graficos[TERRENOS].dat;
+
     blit(tileset,texturas[TERRA], 0*32, 0*32,0,0,32,32); //terra
     blit(tileset,texturas[CHAO], 1*32, 0*32,0,0,32,32); //chão
     blit(tileset,texturas[PEDRA], 0*32, 1*32,0,0,32,32); //pedra
@@ -21,7 +23,6 @@ void carrega_texturas(BITMAP *texturas[MAX_TERRENOS])
     blit(tileset,texturas[ARVORE_7], 6*32,12*32,0,0,32,32); //arvore parte 7
     blit(tileset,texturas[ARVORE_8], 7*32,12*32,0,0,32,32); //arvore parte 8
     blit(tileset,texturas[ARVORE_9], 8*32,12*32,0,0,32,32); //arvore parte 9
-    destroy_bitmap(tileset);
 }
 
 void prepara_mapa(int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],char nome_mapa[10])

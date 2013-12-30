@@ -37,6 +37,21 @@ int main()
     int tocando=0;
     int tocando_game_over=0;
 
+    // abrindo os datafiles
+    DATAFILE* graficos = NULL;
+    DATAFILE* musicas = NULL;
+    DATAFILE* efeitos = NULL;
+    DATAFILE* fontes = NULL;
+
+    packfile_password("kill");
+
+    graficos = load_datafile("imagens.dat");
+    musicas = load_datafile("musicas.dat");
+    efeitos = load_datafile("efeitos.dat");
+    fontes = load_datafile("fontes.dat");
+
+    packfile_password(NULL);
+
     // variáveis de objetos
     Tjanelas janelas;
     Tcriatura guerreiro; // declara objeto guerreiro
@@ -51,43 +66,43 @@ int main()
     BITMAP *background = create_bitmap(960,480);
 
     //BITMAPs do Menu
-    BITMAP *menu_iniciar = load_bitmap(link_imagem("imagens_p1/menu1.bmp"), NULL);//menu iniciar
-    BITMAP *menu_creditos = load_bitmap(link_imagem("imagens_p1/menu3.bmp"),NULL);
-    BITMAP *menu_options = load_bitmap (link_imagem("imagens_p1/menu2.bmp"), NULL);//menu opções
-    BITMAP *menu_exit = load_bitmap (link_imagem("imagens_p1/menu4.bmp"), NULL);//menu saída
+    BITMAP *menu_iniciar = (BITMAP*) graficos[MENU_1].dat;//menu iniciar
+    BITMAP *menu_creditos = (BITMAP*) graficos[MENU_3].dat;
+    BITMAP *menu_options = (BITMAP*) graficos[MENU_2].dat;//menu opções
+    BITMAP *menu_exit = (BITMAP*) graficos[MENU_4].dat;//menu saída
 
-    BITMAP *logo = load_bitmap(link_imagem("imagens_p1/logo.bmp"),NULL);
+    BITMAP *logo = (BITMAP*) graficos[LOGO_1].dat;
 
     // BITMAPS da tela de carregamento
     BITMAP *tela_loading[4];
-    tela_loading[0] = load_bitmap (link_imagem("imagens_p1/carregar1.bmp"), NULL);
-    tela_loading[1] = load_bitmap (link_imagem("imagens_p1/carregar2.bmp"), NULL);
-    tela_loading[2] = load_bitmap (link_imagem("imagens_p1/carregar3.bmp"), NULL);
-    tela_loading[3] = load_bitmap (link_imagem("imagens_p1/carregar4.bmp"), NULL);
+    tela_loading[0] = (BITMAP*) graficos[CARREGAR_1].dat;
+    tela_loading[1] = (BITMAP*) graficos[CARREGAR_2].dat;
+    tela_loading[2] = (BITMAP*) graficos[CARREGAR_3].dat;
+    tela_loading[3] = (BITMAP*) graficos[CARREGAR_4].dat;
 
     // Declara fontes
-    FONT* corpo_texto = load_font("fontes/corpo.pcx",NULL,NULL);
-    FONT* titulo_texto = load_font("fontes/titulos.pcx",NULL,NULL);
+    FONT* corpo_texto = (FONT*) fontes[CORPO_TEXTO].dat;
+    FONT* titulo_texto = (FONT*) fontes[TITULO_TEXTO].dat;
 
     // Declara sons
-    MIDI* musica_floresta = load_midi(link_imagem("imagens_p1/f1.mid"));
-    MIDI* musica_caverna = load_midi(link_imagem("imagens_p1/c1.mid"));
-    MIDI* musica_chefe1 = load_midi(link_imagem("imagens_p1/b1.mid"));
-    MIDI* musica_chefe2 = load_midi(link_imagem("imagens_p1/b2.mid"));
-    MIDI* musica_chefe3 = load_midi(link_imagem("imagens_p1/b3.mid"));
-    MIDI* musica_menu = load_midi(link_imagem("imagens_p1/menu.mid"));
-    MIDI* musica_gameover = load_midi(link_imagem("imagens_p1/gOver.mid"));
+    MIDI* musica_floresta = (MIDI*) musicas[MUSICA_FLORESTA].dat;
+    MIDI* musica_caverna = (MIDI*) musicas[MUSICA_CAVERNA].dat;
+    MIDI* musica_chefe1 = (MIDI*) musicas[MUSICA_CHEFE_1].dat;
+    MIDI* musica_chefe2 = (MIDI*) musicas[MUSICA_CHEFE_2].dat;
+    MIDI* musica_chefe3 = (MIDI*) musicas[MUSICA_CHEFE_3].dat;
+    MIDI* musica_menu = (MIDI*) musicas[MUSICA_MENU].dat;
+    MIDI* musica_gameover = (MIDI*) musicas[MUSICA_GAMEOVER].dat;
 
-    SAMPLE* selecao = load_sample(link_imagem("imagens_p1/selec.wav"));
-    SAMPLE* confirmar = load_sample(link_imagem("imagens_p1/conf.wav"));
-    SAMPLE* espada = load_sample(link_imagem("imagens_p1/sword.wav"));
-    SAMPLE* besta = load_sample(link_imagem("imagens_p1/bow.wav"));
-    SAMPLE* som_pause = load_sample(link_imagem("imagens_p1/pause.wav"));
-    SAMPLE* som_dano_goblin = load_sample(link_imagem("imagens_p1/GobD.wav"));
-    SAMPLE* som_dano_guerreiro = load_sample(link_imagem("imagens_p1/heroD.wav"));
-    SAMPLE* som_cura = load_sample(link_imagem("imagens_p1/cura.wav"));
-    SAMPLE* som_vinhas = load_sample(link_imagem("imagens_p1/vinhas.wav"));
-    SAMPLE* som_recuo = load_sample(link_imagem("imagens_p1/recuo.wav"));
+    SAMPLE* selecao = (SAMPLE*) efeitos[SELECIONAR].dat;
+    SAMPLE* confirmar = (SAMPLE*) efeitos[CONFIRMAR].dat;
+    SAMPLE* espada = (SAMPLE*) efeitos[ESPADA].dat;
+    SAMPLE* besta = (SAMPLE*) efeitos[BESTA].dat;
+    SAMPLE* som_pause = (SAMPLE*) efeitos[PAUSE].dat;
+    SAMPLE* som_dano_goblin = (SAMPLE*) efeitos[DANO_GOBLIN].dat;
+    SAMPLE* som_dano_guerreiro = (SAMPLE*) efeitos[DANO_HEROI].dat;
+    SAMPLE* som_cura = (SAMPLE*) efeitos[CURA].dat;
+    SAMPLE* som_vinhas = (SAMPLE*) efeitos[PARALISIA].dat;
+    SAMPLE* som_recuo = (SAMPLE*) efeitos[RECUO].dat;
 
     volume=255;
     set_volume(volume,volume);
@@ -133,7 +148,7 @@ int main()
                 clear_bitmap(buffer);
                 tela_carregamento(buffer, tela_loading, &loading_time,tela_destino, &tela,logo);
                 carrega_elementos_fase(&carrega_fase,&estagio_loading,matriz_tela,nome_fase,fase,&itens,&guerreiro,&inimigos,
-                                       &janelas,background,texturas,&eventos,mapa);
+                                       &janelas,background,texturas,&eventos,mapa,graficos);
             }
 
             // tela de jogo
@@ -184,14 +199,14 @@ int main()
                 draw_sprite(buffer,background,ajuste_mapa/10,0);
                 draw_sprite(buffer, mapa, ajuste_mapa, 0); // manda mapa para o buffer na posição mov_mapa
                 desenhar_todos_goblins(&inimigos,buffer,ajuste_mapa,tempo_de_jogo);
-                desenhar_guerreiro(buffer,&guerreiro,&inimigos,ajuste_mapa,tempo_de_jogo); // desenha guerreiro e manda para buffer
+                desenhar_guerreiro(buffer,&guerreiro,&inimigos,ajuste_mapa,tempo_de_jogo,graficos); // desenha guerreiro e manda para buffer
                 desenhar_itens(buffer,&itens,ajuste_mapa);
                 desenhos_evento(buffer,fase,&eventos,&janelas,&guerreiro,corpo_texto,titulo_texto,&inimigos);
 
                 pause_menu(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,
                            selecao,confirmar,&tocando);
                 game_over(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,selecao,confirmar,
-                          &tocando,musica_gameover,&guerreiro,&estagio_loading,&tocando_game_over,&carrega_fase);
+                          &tocando,musica_gameover,&guerreiro,&estagio_loading,&tocando_game_over,&carrega_fase,graficos);
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 
@@ -208,22 +223,14 @@ int main()
     // destruição de bitmaps
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
-    destroy_bitmap(menu_iniciar);
-    destroy_bitmap(menu_options);
-    destroy_bitmap(menu_creditos);
-    destroy_bitmap(menu_exit);
-    destroy_bitmap(logo);
     destroy_bitmap(background);
-
-    for (i = 0; i < 4; i++)
-    {
-        destroy_bitmap(tela_loading[i]);
-    }
 
     for(i=0;i<MAX_TERRENOS;i++)
     {
         destroy_bitmap(texturas[i]);
     }
+
+    destroy_bitmap(guerreiro.sprite);
     for(i=0;i<8;i++)
     {
         destroy_bitmap(guerreiro.vetor_sprite[i]);
@@ -232,6 +239,7 @@ int main()
     {
         destroy_bitmap(guerreiro.barraHp[i]);
     }
+
     for(i=0;i<8;i++)
     {
         destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].vetor_sprite[i]);
@@ -242,17 +250,11 @@ int main()
 
         destroy_bitmap(inimigos.chefes.chefe[0].vetor_sprite[i]);
     }
-    destroy_bitmap(guerreiro.sprite);
-    destroy_bitmap(guerreiro.face);
-
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite);
     destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite);
     destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].sprite);
     destroy_bitmap(inimigos.goblins_arqueiros.goblins[1].sprite);
     destroy_bitmap(inimigos.chefes.chefe[0].sprite);
-
-    destroy_font(corpo_texto);
-    destroy_font(titulo_texto);
 
     destroy_bitmap(itens.todosItens[0].imagem);
     destroy_bitmap(itens.todosItens[1].imagem);
@@ -260,25 +262,6 @@ int main()
     destroy_bitmap(itens.todosItens[0].imagem_buffer);
     destroy_bitmap(itens.todosItens[1].imagem_buffer);
     destroy_bitmap(itens.todosItens[2].imagem_buffer);
-
-    destroy_midi(musica_floresta);
-    destroy_midi(musica_caverna);
-    destroy_midi(musica_chefe1);
-    destroy_midi(musica_chefe2);
-    destroy_midi(musica_chefe3);
-    destroy_midi(musica_menu);
-    destroy_midi(musica_gameover);
-
-    destroy_sample(selecao);
-    destroy_sample(confirmar);
-    destroy_sample(espada);
-    destroy_sample(besta);
-    destroy_sample(som_pause);
-    destroy_sample(som_dano_goblin);
-    destroy_sample(som_dano_guerreiro);
-    destroy_sample(som_cura);
-    destroy_sample(som_vinhas);
-    destroy_sample(som_recuo);
 
     return 0 ;
 }
