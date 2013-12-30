@@ -35,6 +35,7 @@ int main()
     int bloqueios[3] = {TERRA, PEDRA, CHAO};
     int pause = 0;
     int tocando=0;
+    int tocando_game_over=0;
 
     // variáveis de objetos
     Tjanelas janelas;
@@ -189,6 +190,8 @@ int main()
 
                 pause_menu(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,
                            selecao,confirmar,&tocando);
+                game_over(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,selecao,confirmar,
+                          &tocando,musica_gameover,&guerreiro,&estagio_loading,&tocando_game_over,&carrega_fase);
 
                 blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
 

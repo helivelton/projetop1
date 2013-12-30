@@ -236,6 +236,9 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
 void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_time,int tela_destino, int *tela,BITMAP *logo);
 void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
                 int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando);
+void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
+                int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica_game_over,Tcriatura *guerreiro,
+                int *estagio_loading,int *tocando_game_over,int *carrega_fase);
 //_______________________________________________________________________________________________________________
 
 #endif // BASICO_H

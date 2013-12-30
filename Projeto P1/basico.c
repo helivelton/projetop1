@@ -408,3 +408,119 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
         }
     }
 }
+
+void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
+                int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica_game_over,Tcriatura *guerreiro,
+                int *estagio_loading,int *tocando_game_over,int *carrega_fase)
+{
+    if(guerreiro->caracteristicas.hp<=0)
+    {
+        // toca a música de game over
+        if(*tocando_game_over==0)
+        {
+            play_midi(musica_game_over,TRUE);
+            *tocando_game_over=1;
+        }
+
+        // configura para um evento improvável, apenas para pausar sem chamar o menu de pause
+        eventos->evento_atual=10;
+        // pausa o jogo
+        *pause = 1;
+
+        // coloca tela cinza por cima da tela atual
+        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+        set_trans_blender(255,0,0,150);
+        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+
+        // desenha tela de opções
+        rectfill(buffer,SCREEN_W/2-80,SCREEN_H/2-50,SCREEN_W/2+80,SCREEN_H/2+70,makecol(255,0,0));
+        rectfill(buffer,SCREEN_W/2-80+5,SCREEN_H/2-50+5,SCREEN_W/2+80-5,SCREEN_H/2+70-5,makecol(0,0,255));
+
+        solid_mode();
+
+        textout_ex(buffer,font,"Game Over",SCREEN_W/2-100+75,SCREEN_H/2-50+10,makecol(255,255,255),-1);
+
+        textout_ex(buffer,font,"Continue",SCREEN_W/2-100+55,SCREEN_H/2-50+30,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Tela inicial",SCREEN_W/2-100+55,SCREEN_H/2-50+50,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Sair do jogo",SCREEN_W/2-100+55,SCREEN_H/2-50+70,makecol(255,255,255),-1);
+
+        if((timer/30)%2==0)
+            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d:%d:%d",
+                          tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
+        else
+            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d %d %d",
+                          tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
+
+        int posicao_y_cursor;
+
+        if(apertou(KEY_DOWN))
+        {
+            *selecionar=(*selecionar+1)%3;
+            play_sample(selecao,255,128,1000,FALSE);
+        }
+
+        else if(apertou(KEY_UP))
+        {
+            if(*selecionar==0)
+                *selecionar=2;
+            else
+                *selecionar=(*selecionar-1)%3;
+            play_sample(selecao,255,128,1000,FALSE);
+        }
+
+        if(*selecionar==0)
+            posicao_y_cursor=SCREEN_H/2-50+30;
+        else if(*selecionar==1)
+            posicao_y_cursor=SCREEN_H/2-50+50;
+        else
+            posicao_y_cursor=SCREEN_H/2-50+70;
+
+        if((timer/16)%2==0)
+        {
+            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(255,0,0));
+            rectfill(buffer,SCREEN_W/2-100+37,posicao_y_cursor-2,SCREEN_W/2-100+47,posicao_y_cursor+10-2,makecol(180,0,0));
+        }
+        else
+            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(180,0,0));
+
+        if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
+        {
+            play_sample(confirmar,255,128,1000,FALSE);
+            if(*selecionar==0)
+            {
+                *pause=FALSE;
+                *tela = 9;
+                *loading_time = timer;
+                *estagio_loading = 0;
+                *tela_destino=1;
+                *carrega_fase=1;
+                posicaoX_logo=10;
+                posicaoY_logo=10;
+                play_sample(confirmar,255,128,1000,FALSE);
+                stop_midi();
+                *tocando=0;
+                set_volume(volume,volume);
+            }
+            else if(*selecionar==1)
+            {
+                *pause=FALSE;
+                *selecionar=0;
+                *tela=9;
+                *tela_destino=0;
+                *loading_time=timer-60;
+                stop_midi();
+                *tocando=0;
+                set_volume(volume,volume);
+            }
+            else
+            {
+                rest(400);
+                fecha_programa();
+            }
+        }
+    }
+    else
+    {
+        *tocando_game_over=0;
+    }
+}
