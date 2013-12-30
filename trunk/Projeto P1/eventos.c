@@ -1,7 +1,8 @@
 #include "eventos.h"
 
 void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro,Tjanelas *janelas,
-                      int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int *ajuste_mapa)
+                      int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int *ajuste_mapa,
+                      MIDI* musica_boss1,MIDI* musica_boss2,MIDI*musica_boss3,SAMPLE *confirmar)
 {
     // eventos da primeira fase
     if(fase==1)
@@ -10,6 +11,9 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         if(!eventos->eventos_executados[0] &&
            (guerreiro->x>=100 || eventos->evento_atual==1))
         {
+            // diminui volume
+            set_volume(volume-100,volume-100);
+
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -41,6 +45,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==1)
                 {
                     janelas->janela_atual=2;
@@ -56,12 +61,15 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                 eventos->evento_atual=0;
                 eventos->eventos_executados[0]=1;
                 *pause=0;
+                set_volume(volume,volume);
             }
         }
         // evento 2, batalha com chefe
         else if(!eventos->eventos_executados[1] &&
            (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
         {
+            // diminui volume
+            set_volume(volume-100,volume-100);
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -94,6 +102,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==3)
                 {
                     janelas->janela_atual=4;
@@ -112,9 +121,11 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
             {
+                set_volume(volume,volume);
                 eventos->evento_atual=0;
                 eventos->eventos_executados[1]=1;
                 *pause=0;
+                play_midi(musica_boss1,TRUE);
             }
         }
     }
@@ -124,6 +135,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         if(!eventos->eventos_executados[0] &&
            (guerreiro->x>=100 || eventos->evento_atual==1))
         {
+            set_volume(volume-100,volume-100);
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -155,6 +167,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==1)
                 {
                     janelas->janela_atual=2;
@@ -167,6 +180,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
             {
+                set_volume(volume,volume);
                 eventos->evento_atual=0;
                 eventos->eventos_executados[0]=1;
                 *pause=0;
@@ -176,6 +190,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         else if(!eventos->eventos_executados[1] &&
            (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
         {
+            set_volume(volume-100,volume-100);
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -208,6 +223,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==3)
                 {
                     janelas->janela_atual=4;
@@ -226,9 +242,11 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
             {
+                set_volume(volume,volume);
                 eventos->evento_atual=0;
                 eventos->eventos_executados[1]=1;
                 *pause=0;
+                play_midi(musica_boss2,TRUE);
             }
         }
     }
@@ -238,6 +256,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         if(!eventos->eventos_executados[0] &&
            (guerreiro->x>=100 || eventos->evento_atual==1))
         {
+            set_volume(volume-100,volume-100);
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -269,6 +288,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==1)
                 {
                     janelas->janela_atual=2;
@@ -281,6 +301,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
             {
+                set_volume(volume,volume);
                 eventos->evento_atual=0;
                 eventos->eventos_executados[0]=1;
                 *pause=0;
@@ -290,6 +311,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
         else if(!eventos->eventos_executados[1] &&
            (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
         {
+            set_volume(volume-100,volume-100);
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
@@ -322,6 +344,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
             {
+                play_sample(confirmar,255,128,1000,FALSE);
                 if(janelas->janela_atual==3)
                 {
                     janelas->janela_atual=4;
@@ -340,9 +363,11 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
             {
+                set_volume(volume,volume);
                 eventos->evento_atual=0;
                 eventos->eventos_executados[1]=1;
                 *pause=0;
+                play_midi(musica_boss3,TRUE);
             }
         }
     }
@@ -370,7 +395,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
                                janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
                                janelas->total[1].conteudo,0);
-                if(timer==janelas->total[1].tempo_fim)
+                if(timer<=janelas->total[1].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -398,7 +423,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
                                janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
                                janelas->total[4].conteudo,0);
-                if(timer==janelas->total[4].tempo_fim)
+                if(timer<=janelas->total[4].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -421,7 +446,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
                                janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
                                janelas->total[1].conteudo,0);
-                if(timer==janelas->total[1].tempo_fim)
+                if(timer<=janelas->total[1].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -449,7 +474,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
                                janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
                                janelas->total[4].conteudo,0);
-                if(timer==janelas->total[4].tempo_fim)
+                if(timer<=janelas->total[4].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -472,7 +497,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
                                janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
                                janelas->total[1].conteudo,0);
-                if(timer==janelas->total[1].tempo_fim)
+                if(timer<=janelas->total[1].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -500,7 +525,7 @@ void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janela
                 janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
                                janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
                                janelas->total[4].conteudo,0);
-                if(timer==janelas->total[4].tempo_fim)
+                if(timer<=janelas->total[4].tempo_fim)
                     janelas->janela_atual=0;
             }
         }
@@ -636,7 +661,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         janelas->janela_atual=0;
         janelas->n_janelas=5;
 
-        fundo = load_bitmap(link_imagem("imagens_p1/Stone2.bmp"),NULL);
+        fundo = load_bitmap(link_imagem("imagens_p1/Forest01.bmp"),NULL);
         clear_bitmap(background);
         draw_sprite(background,fundo,0,0);
     }
@@ -644,21 +669,31 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     destroy_bitmap(fundo);
 }
 
-void pausar(int *pause, int *selecionar)
+void pausar(int *pause, int *selecionar,SAMPLE* som_pause)
 {
     if (apertou(KEY_ESC))
     {
         if (*pause == TRUE)
+        {
             *pause = FALSE;
+            set_volume(volume,volume);
+        }
+
         else
+        {
             *pause = TRUE;
+            set_volume(volume-100,volume-100);
+        }
+
+        play_sample(som_pause,255,128,1000,FALSE);
+
         if(*selecionar!=0 && *pause==TRUE)
             *selecionar=0;
     }
 }
 
 void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
-                        int *tela_destino,Tchefes *chefes_,Teventos *eventos)
+                        int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando)
 {
     if(chefes_->chefe_atual!=0)
     {
@@ -670,6 +705,8 @@ void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int 
             *loading_time = timer;
             *estagio_loading=0;
             *tela_destino=1;
+            stop_midi();
+            *tocando=0;
         }
     }
 }

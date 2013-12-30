@@ -62,7 +62,8 @@ void imagens_guerreiro(Tcriatura *guerreiro)
     destroy_bitmap(tilesHp);
 }
 
-void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
+void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
+                         SAMPLE* som_recuo)
 {
     if(!guerreiro->levando_dano) // se não esta levando dano
     {
@@ -84,7 +85,10 @@ void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][L
 
         // apertou para baixo
         if(apertou(KEY_DOWN) && !guerreiro->paralisado)
+        {
+            play_sample(som_recuo,255,128,1000,FALSE);
             guerreiro->tempo_recuo=timer; // limita tempo de recuo
+        }
         if(segurou(KEY_DOWN) && !guerreiro->paralisado)
             recuo(guerreiro,guerreiro->caracteristicas.habilidade,matriz_tela,bloqueios);
 
@@ -129,7 +133,7 @@ void verificar_status(Tcriatura *ser,Toponentes *inimigos, int tempo_jogo,Titens
     }
 }
 
-void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
+void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos,SAMPLE* som_ataque,SAMPLE *som_dano_goblin)
 {
     int i;
     int confirmacao=0;
@@ -137,27 +141,27 @@ void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos)
     if(apertou(KEY_Z) && !guerreiro->paralisado)
         confirmacao=1;
 
-    ataque_ajustes(guerreiro,tempo_jogo,confirmacao,4,7);
+    ataque_ajustes(guerreiro,tempo_jogo,confirmacao,4,7,som_ataque);
 
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins && guerreiro->atacando;i++)
     {
         if(!inimigos->goblins_guerreiros.goblins[i].levando_dano && inimigos->goblins_guerreiros.goblins[i].caracteristicas.hp>0)
-            ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0);
+            ataque(guerreiro,&inimigos->goblins_guerreiros.goblins[i],tempo_jogo,0,som_dano_goblin);
     }
     for(i=0;i<inimigos->goblins_arqueiros.n_goblins && guerreiro->atacando;i++)
     {
         if(!inimigos->goblins_arqueiros.goblins[i].levando_dano && inimigos->goblins_arqueiros.goblins[i].caracteristicas.hp>0)
-            ataque(guerreiro,&inimigos->goblins_arqueiros.goblins[i],tempo_jogo,0);
+            ataque(guerreiro,&inimigos->goblins_arqueiros.goblins[i],tempo_jogo,0,som_dano_goblin);
     }
     if(inimigos->chefes.chefe_atual!=0 && guerreiro->atacando)
     {
         if(!inimigos->chefes.chefe[inimigos->chefes.chefe_atual -1].levando_dano &&
            inimigos->chefes.chefe[inimigos->chefes.chefe_atual -1].caracteristicas.hp > 0)
-            ataque(guerreiro,&inimigos->chefes.chefe[inimigos->chefes.chefe_atual -1],tempo_jogo,0);
+            ataque(guerreiro,&inimigos->chefes.chefe[inimigos->chefes.chefe_atual -1],tempo_jogo,0,som_dano_goblin);
     }
 }
 
-void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
+void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo,SAMPLE *som_dano)
 {
     int i;
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
@@ -167,6 +171,7 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
             inimigos->goblins_guerreiros.goblins[i].y,inimigos->goblins_guerreiros.goblins[i].altura,
             inimigos->goblins_guerreiros.goblins[i].largura) && !guerreiro->levando_dano)
         {
+            play_sample(som_dano,255,128,1000,FALSE);
             guerreiro->levando_dano=1;
             guerreiro->tempo_dano=tempo_jogo;
             guerreiro->caracteristicas.hp-=1;
@@ -183,6 +188,7 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
             inimigos->goblins_arqueiros.goblins[i].y,inimigos->goblins_arqueiros.goblins[i].altura,
             inimigos->goblins_arqueiros.goblins[i].largura) && !guerreiro->levando_dano)
         {
+            play_sample(som_dano,255,128,1000,FALSE);
             guerreiro->levando_dano=1;
             guerreiro->tempo_dano=tempo_jogo;
             guerreiro->caracteristicas.hp-=1;
@@ -199,6 +205,7 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo)
             inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].y,inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].altura,
             inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1].largura) && !guerreiro->levando_dano)
         {
+            play_sample(som_dano,255,128,1000,FALSE);
             guerreiro->levando_dano=1;
             guerreiro->tempo_dano=tempo_jogo;
             guerreiro->caracteristicas.hp-=1;
@@ -398,7 +405,7 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
     verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo)
+void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,SAMPLE *som_ataque,SAMPLE* som_dano_guerreiro)
 {
     if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
@@ -408,9 +415,9 @@ void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_
         {
             goblin->direcao=goblin->direcao_anterior;
 
-            ataque_ajustes(goblin,tempo_jogo,1,2,4);
+            ataque_ajustes(goblin,tempo_jogo,1,2,4,som_ataque);
             if(!guerreiro->levando_dano && goblin->atacando)
-                ataque(goblin,guerreiro,tempo_jogo,0);
+                ataque(goblin,guerreiro,tempo_jogo,0,som_dano_guerreiro);
 
             goblin->direcao=0;
         }
@@ -567,7 +574,7 @@ void movimento_goblin_arqueiro(Tcriatura *goblin1,Tcriatura *guerreiro, int temp
     verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,Titens *itens)
+void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,Titens *itens,SAMPLE* som_ataque)
 {
     if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
@@ -578,7 +585,7 @@ void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_j
         {
             goblin->direcao=goblin->direcao_anterior;
 
-            ataque_ajustes(goblin,tempo_jogo,1,2,3);
+            ataque_ajustes(goblin,tempo_jogo,1,2,3,som_ataque);
             if(goblin->tempo_ataque+10<=tempo_jogo)
             {
                 itens->todosItens[goblin->id_flecha-1].direcao=goblin->direcao_anterior;
@@ -782,7 +789,8 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
     verificar_queda(goblin1,matriz_tela,bloqueios); // atingiu o limite de pulo? está em queda?
 }
 
-void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo)
+void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,SAMPLE* som_ataque,SAMPLE* som_dano_guerreiro,
+                         SAMPLE* som_paralisia)
 {
     if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
     {
@@ -794,17 +802,18 @@ void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo
             {
                 goblin->direcao=goblin->direcao_anterior;
 
-                ataque_ajustes(goblin,tempo_jogo,1,2,4);
+                ataque_ajustes(goblin,tempo_jogo,1,2,4,som_ataque);
                 if(!guerreiro->levando_dano && goblin->atacando)
-                    ataque(goblin,guerreiro,tempo_jogo,0);
+                    ataque(goblin,guerreiro,tempo_jogo,0,som_dano_guerreiro);
 
                 goblin->direcao=0;
             }
         }
         else if(goblin->estrategia==2)
         {
-            if(tempo_jogo>=goblin->tempo_estrategia+3*60 && !guerreiro->pulando && !guerreiro->caindo)
+            if(tempo_jogo>=goblin->tempo_estrategia+3*60 && !guerreiro->pulando && !guerreiro->caindo && !guerreiro->paralisado)
             {
+                play_sample(som_paralisia,255,128,1000,FALSE);
                 guerreiro->paralisado=1;
                 guerreiro->tempo_paralisado=tempo_jogo;
             }
@@ -851,24 +860,25 @@ void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int te
 }
 
 void acoes_goblins(Toponentes *inimigos, Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
-                   Titens *itens)
+                   Titens *itens,SAMPLE* espada, SAMPLE* besta,SAMPLE* som_dano_guerreiro,SAMPLE* som_paralisia)
 {
     int i;
 
     for(i=0;i<inimigos->goblins_guerreiros.n_goblins;i++)
     {
         movimento_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[i],guerreiro,tempo_jogo,matriz_tela,bloqueios);
-        ataque_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[i],guerreiro,tempo_jogo);
+        ataque_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[i],guerreiro,tempo_jogo,espada,som_dano_guerreiro);
     }
     for(i=0;i<inimigos->goblins_arqueiros.n_goblins;i++)
     {
         movimento_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo,matriz_tela,bloqueios);
-        ataque_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo,itens);
+        ataque_goblin_arqueiro(&inimigos->goblins_arqueiros.goblins[i],guerreiro,tempo_jogo,itens,besta);
     }
     if(inimigos->chefes.chefe_atual!=0)
     {
         movimento_goblin_chefe(&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],guerreiro,tempo_jogo,matriz_tela,bloqueios);
-        ataque_goblin_chefe(&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],guerreiro,tempo_jogo);
+        ataque_goblin_chefe(&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],guerreiro,tempo_jogo,espada,som_dano_guerreiro,
+                            som_paralisia);
     }
 }
 
@@ -1068,12 +1078,13 @@ void verificar_queda(Tcriatura *ser,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA
     }
 }
 
-void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup)
+void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprite_lim_inf,int sprite_lim_sup,SAMPLE* som_ataque)
 {
     if(!atacante->atacando && confirmacao)
     {
         atacante->atacando = 1;
         atacante->tempo_ataque = tempo_jogo;
+        play_sample(som_ataque,255,128,1000,FALSE);
     }
     if(atacante->tempo_ataque + (sprite_lim_sup-sprite_lim_inf+1)*5 <= tempo_jogo)
         atacante->atacando = 0;
@@ -1082,7 +1093,7 @@ void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprit
         mudanca_sprite(sprite_lim_inf,sprite_lim_sup,&atacante->estado_sprite,5,atacante->tempo_ataque,tempo_jogo);
 }
 
-void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at)
+void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,SAMPLE *som_dano)
 {
     if(atacante->atacando && !alvo->levando_dano)
     {
@@ -1091,6 +1102,7 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at)
             if(colisao(atacante->x + atacante->at_ajusteX,atacante->y + atacante->at_ajusteY,atacante->at_altura,atacante->at_largura,
                        alvo->x,alvo->y,alvo->altura,alvo->largura)&& tempo_jogo-atacante->tempo_ataque > (atacante->quadro_at-1)*5)
                {
+                   play_sample(som_dano,255,128,1000,FALSE);
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
                    alvo->direcao = 1;
@@ -1102,6 +1114,7 @@ void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at)
             if(colisao(atacante->x + atacante->largura + ((-1)*(atacante->at_largura+atacante->at_ajusteX)),atacante->y+atacante->at_ajusteY,atacante->at_altura,atacante->at_largura,
                        alvo->x,alvo->y,alvo->altura,alvo->largura )&& tempo_jogo-atacante->tempo_ataque > (atacante->quadro_at-1)*5)
                {
+                   play_sample(som_dano,255,128,1000,FALSE);
                    alvo->levando_dano=1;
                    alvo->tempo_dano=tempo_jogo;
                    alvo->direcao = 2;
@@ -1116,7 +1129,7 @@ void deixa_item(Titens *itens,Tcriatura *goblin)
     int i,chance;
     for(i=0;i<itens->n_itens;i++)
     {
-        if(!itens->todosItens[i].ativo && itens->todosItens[0].tipo==1)
+        if(!itens->todosItens[i].ativo && itens->todosItens[i].tipo==1)
         {
             chance=rand()%100;
             if(chance<=15)

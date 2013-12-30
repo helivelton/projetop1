@@ -33,6 +33,7 @@ void init()
     install_keyboard();
     install_mouse();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
+
 }
 
 void deinit()
@@ -209,10 +210,21 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
 }
 
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,
-                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase, int *tempo_jogo)
+                    int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase, int *tempo_jogo,
+                    SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica)
 {
+    if(*tocando==0)
+    {
+        *tocando=1;
+        play_midi(musica,TRUE);
+    }
+
     if(apertou(KEY_DOWN))
+    {
         *selecionar = (*selecionar+1)%4;
+        play_sample(selecao,255,128,1000,FALSE);
+    }
+
 
     else if(apertou(KEY_UP))
     {
@@ -220,6 +232,7 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
             *selecionar = (*selecionar-1)%4;
         else if (*selecionar == 0)
             *selecionar = 3;
+        play_sample(selecao,255,128,1000,FALSE);
     }
 
     if (*selecionar == 0)
@@ -246,9 +259,17 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
             posicaoX_logo=10;
             posicaoY_logo=10;
             *tempo_jogo=0;
+            play_sample(confirmar,255,128,1000,FALSE);
+            stop_midi();
+            *tocando=0;
         }
         else if(*selecionar==3)
+        {
+            play_sample(confirmar,255,128,1000,FALSE);
+            rest(400);
             fecha_programa();
+        }
+
     }
 }
 
@@ -305,7 +326,7 @@ void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_te
 }
 
 void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
-                int *loading_time)
+                int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando)
 {
     if(*pause && eventos->evento_atual==0)
     {
@@ -334,13 +355,18 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
         int posicao_y_cursor;
 
         if(apertou(KEY_DOWN))
+        {
             *selecionar=(*selecionar+1)%3;
+            play_sample(selecao,255,128,1000,FALSE);
+        }
+
         else if(apertou(KEY_UP))
         {
             if(*selecionar==0)
                 *selecionar=2;
             else
                 *selecionar=(*selecionar-1)%3;
+            play_sample(selecao,255,128,1000,FALSE);
         }
 
         if(*selecionar==0)
@@ -360,6 +386,7 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
+            play_sample(confirmar,255,128,1000,FALSE);
             if(*selecionar==0)
                 *pause=FALSE;
             else if(*selecionar==1)
@@ -369,9 +396,15 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
                 *tela=9;
                 *tela_destino=0;
                 *loading_time=timer-60;
+                stop_midi();
+                *tocando=0;
+                set_volume(volume,volume);
             }
             else
+            {
+                rest(400);
                 fecha_programa();
+            }
         }
     }
 }
