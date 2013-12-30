@@ -36,11 +36,11 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->sprite = create_bitmap(64,64);
 }
 
-void imagens_guerreiro(Tcriatura *guerreiro)
+void imagens_guerreiro(Tcriatura *guerreiro,DATAFILE* graficos)
 {
     int i,j;
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/guerreiro_.bmp"),NULL);
-    BITMAP *tilesHp = load_bitmap(link_imagem("imagens_p1/barraHP.bmp"),NULL);
+    BITMAP *tiles = (BITMAP*) graficos[GUERREIRO].dat;
+    BITMAP *tilesHp = (BITMAP*) graficos[BARRA_HP].dat;
 
     for(i=0;i<2;i++)
     {
@@ -57,9 +57,7 @@ void imagens_guerreiro(Tcriatura *guerreiro)
         blit(tilesHp,guerreiro->barraHp[i],0,i*16,0,0,123,16);
     }
 
-    guerreiro->face = load_bitmap(link_imagem("imagens_p1/hero_face.bmp"),NULL);
-    destroy_bitmap(tiles);
-    destroy_bitmap(tilesHp);
+    guerreiro->face = (BITMAP*) graficos[GUERREIRO_FACE].dat;
 }
 
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
@@ -220,10 +218,10 @@ void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo,SAM
         guerreiro->levando_dano=0;
 }
 
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo)
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo,DATAFILE* graficos)
 {
     rectfill(guerreiro->sprite,0,0,64,64,makecol(255,0,255));
-    BITMAP *mato=load_bitmap(link_imagem("imagens_p1/tiles01b.bmp"),NULL);
+    BITMAP *mato=(BITMAP*) graficos[TERRENOS].dat;
     BITMAP *mato_recortado=create_bitmap(32,32);
     rectfill(mato_recortado,0,0,32,32,makecol(255,0,255));
 
@@ -284,15 +282,14 @@ void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos
     else
         if(hpAtual<0) draw_sprite(buffer, guerreiro->barraHp[0], 10, 10);
 
-    destroy_bitmap(mato);
     destroy_bitmap(mato_recortado);
 
 }
 
-void imagens_goblin_guerreiro(Tcriatura *goblin, int preenchida)
+void imagens_goblin_guerreiro(Tcriatura *goblin, int preenchida,DATAFILE* graficos)
 {
     int i;
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinG.bmp"),NULL);
+    BITMAP *tiles = (BITMAP*) graficos[GOBLIN_GUERREIRO].dat;
 
     if(preenchida)
     {
@@ -307,8 +304,6 @@ void imagens_goblin_guerreiro(Tcriatura *goblin, int preenchida)
 
     for(i=0;i<8;i++)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
-
-    destroy_bitmap(tiles);
 }
 
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
@@ -461,10 +456,10 @@ void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,in
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
-void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida)
+void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida,DATAFILE* graficos)
 {
     int i;
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinA.bmp"),NULL);
+    BITMAP *tiles = (BITMAP*) graficos[GOBLIN_ARQUEIRO].dat;
 
     if(preenchida)
     {
@@ -480,7 +475,6 @@ void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida)
     for(i=0;i<7;i++)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
 
-    destroy_bitmap(tiles);
 }
 
 void movimento_goblin_arqueiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo,
@@ -635,10 +629,10 @@ void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int
                 goblin1->y-(64-goblin1->altura)/2);
 }
 
-void imagens_goblin_chefe(Tcriatura *goblin, int preenchida)
+void imagens_goblin_chefe(Tcriatura *goblin, int preenchida,DATAFILE* graficos)
 {
     int i;
-    BITMAP *tiles = load_bitmap(link_imagem("imagens_p1/goblinL.bmp"),NULL);
+    BITMAP *tiles = (BITMAP*) graficos[GOBLIN_LIDER].dat;
 
     if(preenchida)
     {
@@ -653,9 +647,8 @@ void imagens_goblin_chefe(Tcriatura *goblin, int preenchida)
     for(i=0;i<8;i++)
         blit(tiles,goblin->vetor_sprite[i],i*64,0,0,0,64,64);
 
-    goblin->face = load_bitmap(link_imagem("imagens_p1/Goblin_f.bmp"),NULL);
+    goblin->face = (BITMAP*) graficos[GOBLIN_FACE].dat;
 
-    destroy_bitmap(tiles);
 }
 
 void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])

@@ -26,27 +26,27 @@ void calcular_dano(Tcriatura* atacante, Tcriatura* alvo,int tipo_ataque);
 void deixa_item(Titens *itens,Tcriatura *goblin);
 
 // Funções do guerreiro
-void imagens_guerreiro(Tcriatura *guerreiro);
+void imagens_guerreiro(Tcriatura *guerreiro,DATAFILE* graficos);
 void movimento_guerreiro(Tcriatura *guerreiro, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],
                          SAMPLE* som_recuo);
 void ataque_guerreiro(Tcriatura *guerreiro,int tempo_jogo,Toponentes *inimigos,SAMPLE* som_ataque,SAMPLE *som_dano_goblin);
 void tocou_oponente(Tcriatura *guerreiro,Toponentes *inimigos,int tempo_jogo,SAMPLE *som_dano);
-void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo);
+void desenhar_guerreiro(BITMAP *buffer,Tcriatura *guerreiro,Toponentes *inimigos,int ajuste_x,int tempo_jogo,DATAFILE* graficos);
 
 // Funções do goblin guerreiro
-void imagens_goblin_guerreiro(Tcriatura *goblin1, int preenchida);
+void imagens_goblin_guerreiro(Tcriatura *goblin1, int preenchida,DATAFILE* graficos);
 void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro,int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,SAMPLE *som_ataque,SAMPLE* som_dano_guerreiro);
 void desenhar_goblin_guerreiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo);
 
 // Funções para o goblin arqueiro
-void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida);
+void imagens_goblin_arqueiro(Tcriatura *goblin, int preenchida,DATAFILE* graficos);
 void movimento_goblin_arqueiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,Titens *itens,SAMPLE* som_ataque);
 void desenhar_goblin_arqueiro(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int tempo_jogo);
 
 // Funções para o goblin chefe
-void imagens_goblin_chefe(Tcriatura *goblin, int preenchida);
+void imagens_goblin_chefe(Tcriatura *goblin, int preenchida,DATAFILE* graficos);
 void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_jogo, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3]);
 void ataque_goblin_chefe(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,SAMPLE* som_ataque,SAMPLE* som_dano_guerreiro,
                          SAMPLE* som_paralisia);

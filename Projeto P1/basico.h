@@ -11,14 +11,18 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "imagensFile.h"
+#include "musicasFile.h"
+#include "efeitosFile.h"
+#include "fontesFile.h"
+
 //  #############################################################################
 
 /*  #############################################################################
     Todos os defines usados no projeto
 
 */
-// corrige link das imagens
-#define LINKRELAT "../../Dropbox/"
+
 // Altura e largura dos sprites do jogo
 #define ALTURA_SPRITE 34
 #define LARGURA_SPRITE 18
@@ -49,6 +53,7 @@
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 int volume;
+int transparencia;
 
 //  ##############  ENUMERADORES   #####################
 
@@ -209,16 +214,13 @@ void init();
 // finaliza tudo
 void deinit();
 
-// Use para corrigir os links das imagens
-char *link_imagem(char caminho[256]);
-
 // Funções gerais que afetam diversos tipos de objetos
 int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl);
 
 void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
                             char nome_fase[N_FASES][10],int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,
                             Tjanelas *janelas, BITMAP *background,BITMAP *texturas[MAX_TERRENOS],Teventos *eventos,
-                            BITMAP *mapa);
+                            BITMAP *mapa,DATAFILE* graficos);
 
 // funções de janela ____________________________________________________________________________________________
 void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
@@ -238,7 +240,7 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
                 int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando);
 void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
                 int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica_game_over,Tcriatura *guerreiro,
-                int *estagio_loading,int *tocando_game_over,int *carrega_fase);
+                int *estagio_loading,int *tocando_game_over,int *carrega_fase,DATAFILE* graficos);
 //_______________________________________________________________________________________________________________
 
 #endif // BASICO_H

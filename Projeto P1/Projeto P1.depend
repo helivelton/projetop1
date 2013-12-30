@@ -1,52 +1,56 @@
 # depslib dependency file v1.0
-1388369954 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388441833 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 	"eventos.h"
 
-1388369954 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388441769 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
 	<time.h>
 	<stdlib.h>
+	"imagensFile.h"
+	"musicasFile.h"
+	"efeitosFile.h"
+	"fontesFile.h"
 
-1388119843 c:\users\j.carlos\documents\p1\projeto p1\controle.h
+1388372094 c:\users\j.carlos\documents\p1\projeto p1\controle.h
 	"basico.h"
 
-1388119843 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
+1388372094 source:c:\users\j.carlos\documents\p1\projeto p1\controle.c
 	"controle.h"
 
-1388364131 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
+1388443046 source:c:\users\j.carlos\documents\p1\projeto p1\criaturas.c
 	"criaturas.h"
 
-1388364086 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
+1388442934 c:\users\j.carlos\documents\p1\projeto p1\criaturas.h
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 
-1388192385 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
+1388438871 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388361135 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388443553 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
-1388359897 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1388438923 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 	"controle.h"
 	"item.h"
 	"criaturas.h"
 	"mapa.h"
 
-1388363304 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
+1388443335 source:c:\users\j.carlos\documents\p1\projeto p1\item.c
 	"item.h"
 
-1388363240 c:\users\j.carlos\documents\p1\projeto p1\item.h
+1388443224 c:\users\j.carlos\documents\p1\projeto p1\item.h
 	"basico.h"
 	"criaturas.h"
 
-1388369954 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388442423 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
@@ -54,7 +58,7 @@
 	"item.h"
 	"eventos.h"
 
-1388202246 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
+1388442138 source:c:\users\j.carlos\documents\p1\projeto p1\mapa.c
 	"mapa.h"
 
 1388037018 source:e:\dropbox\projeto p1 jirlean\basico.c
@@ -160,4 +164,12 @@
 
 1388108741 source:c:\users\cliente\projetop1\projeto p1\criaturas.c
 	"criaturas.h"
+
+1388443999 c:\users\j.carlos\documents\p1\projeto p1\imagensfile.h
+
+1388438084 c:\users\j.carlos\documents\p1\projeto p1\musicasfile.h
+
+1388437656 c:\users\j.carlos\documents\p1\projeto p1\efeitosfile.h
+
+1388438284 c:\users\j.carlos\documents\p1\projeto p1\fontesfile.h
 

@@ -7,7 +7,7 @@
 Prepara as texturas individuais.
 Só é chamada uma vez no jogo.
 */
-void carrega_texturas(BITMAP *texturas[MAX_TERRENOS]);
+void carrega_texturas(BITMAP *texturas[MAX_TERRENOS],DATAFILE* graficos);
 
 /*
 Prepara a matriz do mapa

@@ -43,10 +43,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="criaturas.h" />
+		<Unit filename="efeitosFile.h" />
 		<Unit filename="eventos.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="eventos.h" />
+		<Unit filename="fontesFile.h" />
+		<Unit filename="imagensFile.h" />
 		<Unit filename="item.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -58,6 +61,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="mapa.h" />
+		<Unit filename="musicasFile.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

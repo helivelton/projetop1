@@ -34,18 +34,12 @@ void init()
     install_mouse();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
 
+    transparencia=0;
 }
 
 void deinit()
 {
     clear_keybuf(); // libera espaço
-}
-
-char *link_imagem(char caminho[256])
-{
-    char adicao[256]=LINKRELAT;
-    strcat(adicao,caminho);
-    return adicao;
 }
 
 int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh, float bl)
@@ -302,7 +296,7 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
 void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
                             char nome_fase[N_FASES][10],int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *inimigos,
                             Tjanelas *janelas, BITMAP *background,BITMAP *texturas[MAX_TERRENOS],Teventos *eventos,
-                            BITMAP *mapa)
+                            BITMAP *mapa,DATAFILE* graficos)
 {
     if(*carrega_fase)
     {
@@ -313,7 +307,7 @@ void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_te
             *estagio_loading=*estagio_loading+1;
             break;
         case 1:
-            carregar_var_fase(fase,itens,guerreiro,inimigos,janelas,background,texturas,eventos);
+            carregar_var_fase(fase,itens,guerreiro,inimigos,janelas,background,texturas,eventos,graficos);
             *estagio_loading=*estagio_loading+1;
             break;
         case 2:
@@ -330,9 +324,14 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 {
     if(*pause && eventos->evento_atual==0)
     {
+        if(transparencia==0)
+            transparencia=50;
+        if(transparencia<170)
+            transparencia++;
+
         // coloca tela cinza por cima da tela atual
         drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-        set_trans_blender(255,0,0,150);
+        set_trans_blender(255,0,0,transparencia);
         rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
 
         // desenha tela de opções
@@ -386,6 +385,7 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
+            transparencia=0;
             play_sample(confirmar,255,128,1000,FALSE);
             if(*selecionar==0)
                 *pause=FALSE;
@@ -411,14 +411,19 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
 void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
                 int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica_game_over,Tcriatura *guerreiro,
-                int *estagio_loading,int *tocando_game_over,int *carrega_fase)
+                int *estagio_loading,int *tocando_game_over,int *carrega_fase,DATAFILE* graficos)
 {
     if(guerreiro->caracteristicas.hp<=0)
     {
+        if(transparencia==0)
+            transparencia=40;
+        if(transparencia<255)
+            transparencia++;
+
         // toca a música de game over
         if(*tocando_game_over==0)
         {
-            play_midi(musica_game_over,TRUE);
+            play_midi(musica_game_over,FALSE);
             *tocando_game_over=1;
         }
 
@@ -429,26 +434,29 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
 
         // coloca tela cinza por cima da tela atual
         drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-        set_trans_blender(255,0,0,150);
-        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
+        set_trans_blender(255,0,0,transparencia);
+        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+
+        BITMAP* imagem_gameOver = (BITMAP*) graficos[GAME_OVER].dat;
+        draw_sprite_ex(buffer,imagem_gameOver,0,0,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
 
         // desenha tela de opções
-        rectfill(buffer,SCREEN_W/2-80,SCREEN_H/2-50,SCREEN_W/2+80,SCREEN_H/2+70,makecol(255,0,0));
-        rectfill(buffer,SCREEN_W/2-80+5,SCREEN_H/2-50+5,SCREEN_W/2+80-5,SCREEN_H/2+70-5,makecol(0,0,255));
+        rectfill(buffer,SCREEN_W/2-93,SCREEN_H/2-50,SCREEN_W/2+67,SCREEN_H/2+70,makecol(255,0,0));
+        rectfill(buffer,SCREEN_W/2-93+5,SCREEN_H/2-50+5,SCREEN_W/2+67-5,SCREEN_H/2+70-5,makecol(0,0,255));
 
         solid_mode();
 
-        textout_ex(buffer,font,"Game Over",SCREEN_W/2-100+75,SCREEN_H/2-50+10,makecol(255,255,255),-1);
+        //textout_ex(buffer,font,"Game Over",SCREEN_W/2-113+75,SCREEN_H/2-50+10,makecol(255,255,255),-1);
 
-        textout_ex(buffer,font,"Continue",SCREEN_W/2-100+55,SCREEN_H/2-50+30,makecol(255,255,255),-1);
-        textout_ex(buffer,font,"Tela inicial",SCREEN_W/2-100+55,SCREEN_H/2-50+50,makecol(255,255,255),-1);
-        textout_ex(buffer,font,"Sair do jogo",SCREEN_W/2-100+55,SCREEN_H/2-50+70,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Continue",SCREEN_W/2-113+55,SCREEN_H/2-50+30,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Tela inicial",SCREEN_W/2-113+55,SCREEN_H/2-50+50,makecol(255,255,255),-1);
+        textout_ex(buffer,font,"Sair do jogo",SCREEN_W/2-113+55,SCREEN_H/2-50+70,makecol(255,255,255),-1);
 
         if((timer/30)%2==0)
-            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d:%d:%d",
+            textprintf_ex(buffer,font,SCREEN_W/2-113+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d:%d:%d",
                           tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
         else
-            textprintf_ex(buffer,font,SCREEN_W/2-100+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d %d %d",
+            textprintf_ex(buffer,font,SCREEN_W/2-113+80,SCREEN_H/2-50+100,makecol(255,255,255),-1,"%d %d %d",
                           tempo_jogo/(60*60*60),(tempo_jogo/(60*60))%60,(tempo_jogo/60)%60);
 
         int posicao_y_cursor;
@@ -477,14 +485,15 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
 
         if((timer/16)%2==0)
         {
-            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(255,0,0));
-            rectfill(buffer,SCREEN_W/2-100+37,posicao_y_cursor-2,SCREEN_W/2-100+47,posicao_y_cursor+10-2,makecol(180,0,0));
+            rectfill(buffer,SCREEN_W/2-113+35,posicao_y_cursor,SCREEN_W/2-113+45,posicao_y_cursor+10,makecol(255,0,0));
+            rectfill(buffer,SCREEN_W/2-113+37,posicao_y_cursor-2,SCREEN_W/2-113+47,posicao_y_cursor+10-2,makecol(180,0,0));
         }
         else
-            rectfill(buffer,SCREEN_W/2-100+35,posicao_y_cursor,SCREEN_W/2-100+45,posicao_y_cursor+10,makecol(180,0,0));
+            rectfill(buffer,SCREEN_W/2-113+35,posicao_y_cursor,SCREEN_W/2-113+45,posicao_y_cursor+10,makecol(180,0,0));
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
+            transparencia=0;
             play_sample(confirmar,255,128,1000,FALSE);
             if(*selecionar==0)
             {

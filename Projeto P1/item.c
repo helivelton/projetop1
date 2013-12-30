@@ -1,14 +1,14 @@
 #include "item.h"
 
 void preencher_item(Titem *objeto, float x, float y, int altura, int largura,
-                    int ativo, int tipo,int imagem_preenchida,int id_arqueiro)
+                    int ativo, int tipo,int imagem_preenchida,int id_arqueiro,DATAFILE* graficos)
 {
     BITMAP *tiles;
 
     if(tipo==1)
-        tiles = load_bitmap(link_imagem("imagens_p1/Itens1.bmp"),NULL);
+        tiles = (BITMAP*) graficos[ITENS].dat;
     else if(tipo==2)
-        tiles = load_bitmap(link_imagem("imagens_p1/flecha.bmp"),NULL);
+        tiles = (BITMAP*) graficos[FLECHA].dat;
 
     if(!imagem_preenchida)
         objeto->imagem = create_bitmap(32,32);
@@ -32,8 +32,6 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura,
     objeto->id_arqueiro=id_arqueiro;
     objeto->direcao=0;
     objeto->imagem_buffer = create_bitmap(32,32);
-
-    destroy_bitmap(tiles);
 }
 
 void movimento_itens(Titens *itens,Tcriatura *guerreiro,int tempo_jogo)
