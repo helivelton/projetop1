@@ -257,6 +257,16 @@ void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP
             stop_midi();
             *tocando=0;
         }
+        else if(*selecionar==1)
+        {
+            *tela=2;
+            play_sample(confirmar,255,128,1000,FALSE);
+        }
+        else if(*selecionar==2)
+        {
+            *tela=3;
+            play_sample(confirmar,255,128,1000,FALSE);
+        }
         else if(*selecionar==3)
         {
             play_sample(confirmar,255,128,1000,FALSE);
@@ -532,4 +542,45 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
     {
         *tocando_game_over=0;
     }
+}
+
+void menu_opcoes(BITMAP* buffer, DATAFILE* graficos,SAMPLE* selecao,SAMPLE* confirmacao,int *tela)
+{
+
+    if(apertou(KEY_RIGHT) && volume<=225)
+    {
+        volume+=25;
+        play_sample(selecao,volume,128,1000,FALSE);
+        set_volume(volume,volume);
+    }
+    else if(apertou(KEY_LEFT) && volume>=25)
+    {
+        volume-=25;
+        play_sample(selecao,volume,128,1000,FALSE);
+        set_volume(volume,volume);
+    }
+    else if(apertou(KEY_ESC) || apertou(KEY_ENTER) || apertou(KEY_SPACE))
+    {
+        play_sample(confirmacao,volume,128,1000,FALSE);
+        *tela = 0;
+    }
+
+    float largura=volume*1.112;
+
+    rectfill(buffer,228,37,506,68,makecol(15,66,2));
+    rectfill(buffer,228,37,1.0*228+largura,68,makecol(250-volume/2,0,0));
+
+    draw_sprite(buffer,(BITMAP*)graficos[OPCOES].dat,0,0);
+    draw_sprite(screen,buffer,0,0);
+}
+void creditos(BITMAP* buffer,DATAFILE* graficos,SAMPLE *confirmacao,int *tela)
+{
+    if(apertou(KEY_ESC) || apertou(KEY_ENTER)|| apertou(KEY_SPACE))
+    {
+        play_sample(confirmacao,volume,128,1000,FALSE);
+        *tela = 0;
+    }
+
+    draw_sprite(buffer,(BITMAP*)graficos[CREDITOS].dat,0,0);
+    draw_sprite(screen,buffer,0,0);
 }
