@@ -36,6 +36,7 @@ int main()
     int pause = 0;
     int tocando=0;
     int tocando_game_over=0;
+    int tutorial=1;
 
     // abrindo os datafiles
     DATAFILE* graficos = NULL;
@@ -154,14 +155,8 @@ int main()
             // tela de jogo
             else if(tela==1)
             {
-                if(!tocando)
-                {
-                    if(fase==1 || fase==3)
-                        play_midi(musica_floresta,TRUE);
-                    else
-                        play_midi(musica_caverna,TRUE);
-                    tocando=1;
-                }
+                // toca a musica da fase se não estiver tocando
+                tocar(&tocando,fase,musica_floresta,musica_caverna);
 
                 // atualiza estado do teclado
                 keyboard_input();
@@ -209,48 +204,7 @@ int main()
                           &tocando,musica_gameover,&guerreiro,&estagio_loading,&tocando_game_over,&carrega_fase,graficos);
 
                 // se inicio da fase, coloca um efeito de opacidade
-                if(inicio_fase)
-                {
-                    eventos.evento_atual=20;
-                    pause=1;
-                    if(opacidade>=2)opacidade-=2;
-
-                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-                    set_trans_blender(255,0,0,opacidade);
-                    rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
-                    solid_mode();
-
-                    if(opacidade==0 && fase!=1)
-                    {
-                        inicio_fase=0;
-                        pause=0;
-                        eventos.evento_atual=0;
-                    }
-                    // se fase 1, desenha controles
-                    else if(opacidade==0 && fase==1)
-                    {
-                        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-                        set_trans_blender(255,0,0,150);
-                        draw_sprite_ex(buffer,(BITMAP*)graficos[TUTORIAL].dat,30,50,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
-                        solid_mode();
-
-                        if((timer/16)%2==0)
-                        {
-                            rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(255,0,0));
-                            rectfill(buffer,SCREEN_W-37,255-2,SCREEN_W-47,255+10-2,makecol(180,0,0));
-                        }
-                        else
-                            rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(180,0,0));
-
-                        if(apertou(KEY_ENTER)||apertou(KEY_ESC)||apertou(KEY_SPACE))
-                        {
-                            play_sample(confirmar,volume,128,1000,FALSE);
-                            inicio_fase=0;
-                            pause=0;
-                            eventos.evento_atual=0;
-                        }
-                    }
-                }
+                efeito_inicio_fase(&eventos,&pause,buffer,graficos,confirmar,fase,&tutorial);
 
                 // nova fase?
                 verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino,
@@ -281,33 +235,7 @@ int main()
                 clear_bitmap(buffer);
                 keyboard_input();
 
-                if(opacidade>0)
-                {
-                    if(opacidade==244||opacidade==255)
-                        rest(2000);
-
-                    opacidade-=2;
-
-                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-                    set_trans_blender(255,0,0,opacidade);
-
-                    draw_sprite_ex(buffer,(BITMAP*)graficos[CONTINUE].dat,0,0,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
-
-                    solid_mode();
-
-                }
-                else if(opacidade==0)
-                {
-                    draw_sprite_ex(buffer,(BITMAP*)graficos[CREDITOS].dat,0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
-
-                    if(apertou(KEY_ENTER)||apertou(KEY_SPACE)||apertou(KEY_ESC))
-                    {
-                        tela=0;
-                        play_sample(confirmar,volume,128,1000,FALSE);
-                    }
-                }
-                draw_sprite(screen,buffer,0,0);
-
+                final_de_jogo(buffer,graficos,&tela,confirmar);
             }
             ticks++; // incrementa controle de velocidade do jogo
         }
@@ -316,6 +244,7 @@ int main()
     deinit(); // finaliza
 
     // destruição de bitmaps
+
     destroy_bitmap(buffer);
     destroy_bitmap(mapa);
     destroy_bitmap(background);
@@ -324,10 +253,8 @@ int main()
         destroy_bitmap(texturas[i]);
 
     destroy_bitmap(guerreiro.sprite);
-
     for(i=0;i<8;i++)
         destroy_bitmap(guerreiro.vetor_sprite[i]);
-
     for(i=0;i<10;i++)
         destroy_bitmap(guerreiro.barraHp[i]);
 
@@ -335,13 +262,11 @@ int main()
     {
         for(j=0;j<6;j++)
             destroy_bitmap(inimigos.goblins_guerreiros.goblins[j].vetor_sprite[i]);
-
         if(i!=7)
         {
             for(j=0;j<6;j++)
                 destroy_bitmap(inimigos.goblins_arqueiros.goblins[j].vetor_sprite[i]);
         }
-
         destroy_bitmap(inimigos.chefes.chefe[0].vetor_sprite[i]);
     }
 
@@ -350,7 +275,6 @@ int main()
         destroy_bitmap(inimigos.goblins_guerreiros.goblins[i].sprite);
         destroy_bitmap(inimigos.goblins_arqueiros.goblins[i].sprite);
     }
-
     destroy_bitmap(inimigos.chefes.chefe[0].sprite);
 
     for(i=0;i<8;i++)

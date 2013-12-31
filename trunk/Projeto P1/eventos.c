@@ -394,3 +394,91 @@ void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int 
         }
     }
 }
+void tocar(int *tocando,int fase,MIDI* musica_floresta,MIDI* musica_caverna)
+{
+    if(*tocando==0)
+    {
+        if(fase==1 || fase==3)
+            play_midi(musica_floresta,TRUE);
+        else
+            play_midi(musica_caverna,TRUE);
+        *tocando=1;
+    }
+}
+
+void efeito_inicio_fase(Teventos *eventos,int *pause,BITMAP* buffer,DATAFILE* graficos, SAMPLE* confirmar,int fase,int *tutorial)
+{
+    if(inicio_fase)
+    {
+        eventos->evento_atual=20;
+        *pause=1;
+        if(opacidade>=2)opacidade-=2;
+
+        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+        set_trans_blender(255,0,0,opacidade);
+        rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+        solid_mode();
+
+        if(opacidade==0 && (fase!=1 || *tutorial==0))
+        {
+            inicio_fase=0;
+            *pause=0;
+            eventos->evento_atual=0;
+        }
+        // se fase 1, desenha controles
+        else if(opacidade==0 && fase==1)
+        {
+            drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+            set_trans_blender(255,0,0,150);
+            draw_sprite_ex(buffer,(BITMAP*)graficos[TUTORIAL].dat,30,50,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+            solid_mode();
+
+            if((timer/16)%2==0)
+            {
+                rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(255,0,0));
+                rectfill(buffer,SCREEN_W-37,255-2,SCREEN_W-47,255+10-2,makecol(180,0,0));
+            }
+            else
+                rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(180,0,0));
+
+            if(apertou(KEY_ENTER)||apertou(KEY_ESC)||apertou(KEY_SPACE))
+            {
+                play_sample(confirmar,volume,128,1000,FALSE);
+                inicio_fase=0;
+                *pause=0;
+                eventos->evento_atual=0;
+                *tutorial=0;
+            }
+        }
+    }
+}
+
+void final_de_jogo(BITMAP* buffer,DATAFILE* graficos,int *tela,SAMPLE* confirmar)
+{
+    if(opacidade>0)
+    {
+        if(opacidade==244||opacidade==255)
+            rest(2000);
+
+        opacidade-=2;
+
+        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+        set_trans_blender(255,0,0,opacidade);
+
+        draw_sprite_ex(buffer,(BITMAP*)graficos[CONTINUE].dat,0,0,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+
+        solid_mode();
+
+    }
+    else if(opacidade==0 || opacidade==1)
+    {
+        draw_sprite_ex(buffer,(BITMAP*)graficos[CREDITOS].dat,0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+
+        if(apertou(KEY_ENTER)||apertou(KEY_SPACE)||apertou(KEY_ESC))
+        {
+            *tela=0;
+            play_sample(confirmar,volume,128,1000,FALSE);
+        }
+    }
+    draw_sprite(screen,buffer,0,0);
+}
