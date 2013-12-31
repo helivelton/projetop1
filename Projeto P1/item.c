@@ -31,10 +31,12 @@ void preencher_item(Titem *objeto, float x, float y, int altura, int largura,
     objeto->ativo=ativo;
     objeto->id_arqueiro=id_arqueiro;
     objeto->direcao=0;
+    objeto->x_inicial=x;
     objeto->imagem_buffer = create_bitmap(32,32);
 }
 
-void movimento_itens(Titens *itens,Tcriatura *guerreiro,int tempo_jogo)
+void movimento_itens(Titens *itens,Tcriatura *guerreiro,int tempo_jogo,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
+                     int bloqueios[3])
 {
     int i;
     for(i=0;i<itens->n_itens;i++)
@@ -45,11 +47,22 @@ void movimento_itens(Titens *itens,Tcriatura *guerreiro,int tempo_jogo)
             {
             case 2:
                 if(itens->todosItens[i].direcao==1)
+                {
                     itens->todosItens[i].x+=2;
+                    if(itens->todosItens[i].x - itens->todosItens[i].x_inicial > 300 ||
+                       colisao_direita_mapa(itens->todosItens[i].x,itens->todosItens[i].y,itens->todosItens[i].altura,
+                                            itens->todosItens[i].largura,matriz_tela,bloqueios))
+                        itens->todosItens[i].ativo=0;
+                }
+
                 else
+                {
                     itens->todosItens[i].x-=2;
-                if(guerreiro->x - itens->todosItens[i].x > SCREEN_W || guerreiro->x - itens->todosItens[i].x < (-1)*SCREEN_W)
-                    itens->todosItens[i].ativo=0;
+                    if(itens->todosItens[i].x - itens->todosItens[i].x_inicial < -300 ||
+                       colisao_esquerda_mapa(itens->todosItens[i].x,itens->todosItens[i].y,itens->todosItens[i].altura,
+                                            itens->todosItens[i].largura,matriz_tela,bloqueios))
+                        itens->todosItens[i].ativo=0;
+                }
                 break;
             }
         }
