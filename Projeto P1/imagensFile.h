@@ -1,6 +1,6 @@
 /* Allegro datafile object indexes, produced by grabber v4.2.0, MSVC.s */
 /* Datafile: c:\Users\J.Carlos\Documents\Dropbox\imagens_p1\dats\imagens.dat */
-/* Date: Mon Dec 30 19:53:19 2013 */
+/* Date: Tue Dec 31 13:51:30 2013 */
 /* Do not hand edit! */
 
 #define BARRA_HP                         0        /* BMP  */
@@ -30,4 +30,5 @@
 #define CAVERNA                          24       /* BMP  */
 #define TERRENOS                         25       /* BMP  */
 #define TRANSICAO                        26       /* BMP  */
+#define TUTORIAL                         27       /* BMP  */
 

@@ -48,14 +48,14 @@
 // DEBUG
 #define DEBUG 0
 // multiplica a força e armadura do heroi
-#define POWER 10
+#define POWER 1
 
 //  #############################################################################
 
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 int volume;
-int transparencia;
+int opacidade;
 int inicio_fase;
 int fim_fase;
 
@@ -235,11 +235,11 @@ void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_te
                             BITMAP *mapa,DATAFILE* graficos);
 
 // funções de janela ____________________________________________________________________________________________
-void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia);
+void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int opacidade);
 void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
-                  char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
+                  char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int opacidade,
                   int inicio,int fim,int tempo_jogo,int efeito);
-void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia);
+void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int opacidade);
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,int inicio,
                     int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256],int efeito);
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
