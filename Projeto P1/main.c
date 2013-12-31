@@ -20,7 +20,7 @@ int main()
                     declaração das variáveis (e algumas inicializações)
     #######################################################################################
 */
-    int i; // controlador de loops e auxiliares
+    int i,j; // controladores de loops e auxiliares
     int ticks; // controla velocidade do jogo
     int tempo_de_jogo=0; // controla o tempo de jogo
     int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]; // matriz da tela
@@ -296,42 +296,43 @@ int main()
     destroy_bitmap(background);
 
     for(i=0;i<MAX_TERRENOS;i++)
-    {
         destroy_bitmap(texturas[i]);
-    }
 
     destroy_bitmap(guerreiro.sprite);
+
     for(i=0;i<8;i++)
-    {
         destroy_bitmap(guerreiro.vetor_sprite[i]);
-    }
+
     for(i=0;i<10;i++)
-    {
         destroy_bitmap(guerreiro.barraHp[i]);
-    }
 
     for(i=0;i<8;i++)
     {
-        destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].vetor_sprite[i]);
-        destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].vetor_sprite[i]);
+        for(j=0;j<6;j++)
+            destroy_bitmap(inimigos.goblins_guerreiros.goblins[j].vetor_sprite[i]);
 
-        if(i!=7)destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].vetor_sprite[i]);
-        if(i!=7)destroy_bitmap(inimigos.goblins_arqueiros.goblins[1].vetor_sprite[i]);
+        if(i!=7)
+        {
+            for(j=0;j<6;j++)
+                destroy_bitmap(inimigos.goblins_arqueiros.goblins[j].vetor_sprite[i]);
+        }
 
         destroy_bitmap(inimigos.chefes.chefe[0].vetor_sprite[i]);
     }
-    destroy_bitmap(inimigos.goblins_guerreiros.goblins[0].sprite);
-    destroy_bitmap(inimigos.goblins_guerreiros.goblins[1].sprite);
-    destroy_bitmap(inimigos.goblins_arqueiros.goblins[0].sprite);
-    destroy_bitmap(inimigos.goblins_arqueiros.goblins[1].sprite);
+
+    for(i=0;i<6;i++)
+    {
+        destroy_bitmap(inimigos.goblins_guerreiros.goblins[i].sprite);
+        destroy_bitmap(inimigos.goblins_arqueiros.goblins[i].sprite);
+    }
+
     destroy_bitmap(inimigos.chefes.chefe[0].sprite);
 
-    destroy_bitmap(itens.todosItens[0].imagem);
-    destroy_bitmap(itens.todosItens[1].imagem);
-    destroy_bitmap(itens.todosItens[2].imagem);
-    destroy_bitmap(itens.todosItens[0].imagem_buffer);
-    destroy_bitmap(itens.todosItens[1].imagem_buffer);
-    destroy_bitmap(itens.todosItens[2].imagem_buffer);
+    for(i=0;i<8;i++)
+    {
+        destroy_bitmap(itens.todosItens[i].imagem);
+        destroy_bitmap(itens.todosItens[i].imagem_buffer);
+    }
 
     return 0 ;
 }

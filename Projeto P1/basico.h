@@ -47,8 +47,8 @@
 #define TEMPO_LOADING 1*60+30
 // DEBUG
 #define DEBUG 0
-
-#define POWER 1
+// multiplica a força e armadura do heroi
+#define POWER 10
 
 //  #############################################################################
 
@@ -134,19 +134,19 @@ typedef struct criatura
 
 typedef struct goblinsA
 {
-    Tcriatura goblins[10];
+    Tcriatura goblins[7];
     int n_goblins;
 }TgoblinsA;
 
 typedef struct goblinsB
 {
-    Tcriatura goblins[6];
+    Tcriatura goblins[7];
     int n_goblins;
 }TgoblinsB;
 
 typedef struct chefes
 {
-    Tcriatura chefe[3];
+    Tcriatura chefe[1];
     int chefe_atual;// se 0, então nenhum
 }Tchefes;
 
@@ -174,7 +174,7 @@ typedef struct item
 
 typedef struct _itens
 {
-    Titem todosItens[15];
+    Titem todosItens[9];
     int n_itens;
 }Titens;
 
@@ -189,21 +189,27 @@ typedef struct janela
     int tempo_fim;
     char titulo[30];
     char conteudo[256];
+    int ator; // 0 heroi, 1 goblin
 }Tjanela;
 
 typedef struct _janelas
 {
-    Tjanela total[15];
+    Tjanela total[6];
     int n_janelas;
     int janela_atual;
 }Tjanelas;
 
 typedef struct _eventos
 {
-    int eventos_executados[3];
     int n_eventos;
     int evento_atual;
     int tempo_evento_atual;
+    int eventos_executados[2];
+    int tempo_movimento_guerreiro[2];
+    int quadro_min[2];
+    int quadro_max[2];
+    int posicaoX_guerreiro[2];
+    int chefe[2]; // 1 sim, 0 não
 }Teventos;
 
 /*
@@ -237,7 +243,7 @@ void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,i
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,int inicio,
                     int fim, int tempo_jogo, char texto_titulo[50],char texto_corpo[256],int efeito);
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
-                      int tempo_fim, char titulo[30],char conteudo[256]);
+                      int tempo_fim, char titulo[30],char conteudo[256],int ator);
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,
                     int *loading_time, int *tela,int *estagio_loading,int *tela_destino, int *fase, int *carrega_fase, int *tempo_jogo,
                     SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica);
