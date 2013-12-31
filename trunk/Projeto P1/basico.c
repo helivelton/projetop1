@@ -190,7 +190,7 @@ void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FON
 }
 
 void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int largura, int controle, int tempo_inicio,
-                      int tempo_fim, char titulo[30],char conteudo[256])
+                      int tempo_fim, char titulo[30],char conteudo[256],int ator)
 {
     janela_atual->x = x;
     janela_atual->y = y;
@@ -201,6 +201,7 @@ void preencher_janela(Tjanela *janela_atual,float x, float y, int altura, int la
     janela_atual->tempo_fim = tempo_fim;
     strcpy(janela_atual->titulo,titulo);
     strcpy(janela_atual->conteudo,conteudo);
+    janela_atual->ator = ator;
 }
 
 void menu_inicial (BITMAP *buffer, int *selecionar, BITMAP *menu_iniciar, BITMAP *menu_options, BITMAP *menu_exit,BITMAP *menu_creditos,

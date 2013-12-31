@@ -4,20 +4,20 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                       int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3],int *ajuste_mapa,
                       MIDI* musica_boss1,MIDI* musica_boss2,MIDI*musica_boss3,SAMPLE *confirmar)
 {
-    // eventos da primeira fase
-    if(fase==1)
+    int i;
+    for(i=0;i<eventos->n_eventos;i++)
     {
-        // evento 1
-        if(!eventos->eventos_executados[0] &&
-           (guerreiro->x>=100 || eventos->evento_atual==1))
+        if(!eventos->eventos_executados[i] &&
+           (guerreiro->x >= eventos->posicaoX_guerreiro[i] || eventos->evento_atual == i+1))
         {
-            // diminui volume
-            set_volume(volume-100,volume-100);
 
             // trava o evento atual e pausa o jogo
             if(!eventos->evento_atual)
             {
-                eventos->evento_atual=1;
+                // diminui volume
+                set_volume(volume-100,volume-100);
+
+                eventos->evento_atual=i+1;
                 eventos->tempo_evento_atual=timer;
             }
 
@@ -25,63 +25,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                 *pause=1;
 
             // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
-            {
-                guerreiro->pulando=0;
-                guerreiro->caindo=1;
-                guerreiro->permitir_pulo=1;
-                colide_chao(guerreiro,matriz_tela,bloqueios,1);
-                verificar_queda(guerreiro,matriz_tela,bloqueios);
-                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
-            }
-
-            // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                janelas->janela_atual=1;
-                janelas->total[0].tempo_inicio=timer;
-                janelas->total[0].tempo_fim=-1;
-            }
-
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
-            {
-                play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==1)
-                {
-                    janelas->janela_atual=2;
-                    janelas->total[1].tempo_inicio=timer;
-                    janelas->total[1].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==2 && janelas->total[1].tempo_fim==-1)
-                    janelas->total[1].tempo_fim=timer+20;
-            }
-            // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
-            {
-                eventos->evento_atual=0;
-                eventos->eventos_executados[0]=1;
-                *pause=0;
-                set_volume(volume,volume);
-            }
-        }
-        // evento 2, batalha com chefe
-        else if(!eventos->eventos_executados[1] &&
-           (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
-        {
-            // diminui volume
-            set_volume(volume-100,volume-100);
-            // trava o evento atual e pausa o jogo
-            if(!eventos->evento_atual)
-            {
-                eventos->evento_atual=2;
-                eventos->tempo_evento_atual=timer;
-            }
-
-            if(*pause==0)
-                *pause=1;
-
-            // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
+            if(eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i] >= timer)
             {
                 guerreiro->pulando=0;
                 guerreiro->caindo=1;
@@ -93,281 +37,50 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             }
 
             // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[2].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
+            if(janelas->janela_atual==0 && janelas->total[eventos->quadro_min[i]-1].tempo_fim==-1 &&
+               timer >= eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i])
             {
-                janelas->janela_atual=3;
-                janelas->total[2].tempo_inicio=timer;
-                janelas->total[2].tempo_fim=-1;
+                janelas->janela_atual=eventos->quadro_min[i];
+                janelas->total[eventos->quadro_min[i]-1].tempo_inicio=timer;
+                janelas->total[eventos->quadro_min[i]-1].tempo_fim=-1;
             }
 
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
+            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i])
             {
                 play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==3)
+
+                if(janelas->janela_atual==eventos->quadro_min[i])
+                    janelas->total[eventos->quadro_min[i]-1].tempo_fim=timer;
+
+                if(janelas->janela_atual!=eventos->quadro_max[i])
                 {
-                    janelas->janela_atual=4;
-                    janelas->total[3].tempo_inicio=timer;
-                    janelas->total[3].tempo_fim=-1;
+                    janelas->janela_atual+=1;
+                    janelas->total[janelas->janela_atual-1].tempo_inicio=timer;
+                    janelas->total[janelas->janela_atual-1].tempo_fim=-1;
                 }
-                else if(janelas->janela_atual==4)
+                else if(janelas->janela_atual==eventos->quadro_max[i] && janelas->total[eventos->quadro_min[i]-1].tempo_fim!=-1)
                 {
-                    janelas->janela_atual=5;
-                    janelas->total[4].tempo_inicio=timer;
-                    janelas->total[4].tempo_fim=-1;
+                    janelas->total[eventos->quadro_max[i]-1].tempo_fim=timer+20;
                 }
-                else if(janelas->janela_atual==5 && janelas->total[4].tempo_fim==-1)
-                    janelas->total[4].tempo_fim=timer+20;
             }
             // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
+            if(janelas->janela_atual == 0  && timer >= eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i])
             {
-                set_volume(volume,volume);
                 eventos->evento_atual=0;
-                eventos->eventos_executados[1]=1;
+                eventos->eventos_executados[i]=1;
                 *pause=0;
-                play_midi(musica_boss1,TRUE);
-            }
-        }
-    }
-    else if(fase==2)
-    {
-        // evento 1
-        if(!eventos->eventos_executados[0] &&
-           (guerreiro->x>=100 || eventos->evento_atual==1))
-        {
-            set_volume(volume-100,volume-100);
-            // trava o evento atual e pausa o jogo
-            if(!eventos->evento_atual)
-            {
-                eventos->evento_atual=1;
-                eventos->tempo_evento_atual=timer;
-            }
 
-            if(*pause==0)
-                *pause=1;
+                if(eventos->chefe[i])
+                    stop_midi();
 
-            // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
-            {
-                guerreiro->pulando=0;
-                guerreiro->caindo=1;
-                guerreiro->permitir_pulo=1;
-                colide_chao(guerreiro,matriz_tela,bloqueios,1);
-                verificar_queda(guerreiro,matriz_tela,bloqueios);
-                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
-            }
+                if(fase==1 && eventos->chefe[i])
+                    play_midi(musica_boss1,TRUE);
+                else if(fase==2 && eventos->chefe[i])
+                    play_midi(musica_boss2,TRUE);
+                else if(fase==3 && eventos->chefe[i])
+                    play_midi(musica_boss3,TRUE);
 
-            // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                janelas->janela_atual=1;
-                janelas->total[0].tempo_inicio=timer;
-                janelas->total[0].tempo_fim=-1;
-            }
-
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
-            {
-                play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==1)
-                {
-                    janelas->janela_atual=2;
-                    janelas->total[1].tempo_inicio=timer;
-                    janelas->total[1].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==2 && janelas->total[1].tempo_fim==-1)
-                    janelas->total[1].tempo_fim=timer+20;
-            }
-            // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
-            {
                 set_volume(volume,volume);
-                eventos->evento_atual=0;
-                eventos->eventos_executados[0]=1;
-                *pause=0;
-            }
-        }
-        // evento 2, batalha com chefe
-        else if(!eventos->eventos_executados[1] &&
-           (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
-        {
-            set_volume(volume-100,volume-100);
-            // trava o evento atual e pausa o jogo
-            if(!eventos->evento_atual)
-            {
-                eventos->evento_atual=2;
-                eventos->tempo_evento_atual=timer;
-            }
-
-            if(*pause==0)
-                *pause=1;
-
-            // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
-            {
-                guerreiro->pulando=0;
-                guerreiro->caindo=1;
-                guerreiro->permitir_pulo=1;
-                colide_chao(guerreiro,matriz_tela,bloqueios,1);
-                verificar_queda(guerreiro,matriz_tela,bloqueios);
-                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
-                calcular_ajuste_mapa(guerreiro,ajuste_mapa);
-            }
-
-            // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[2].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                janelas->janela_atual=3;
-                janelas->total[2].tempo_inicio=timer;
-                janelas->total[2].tempo_fim=-1;
-            }
-
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
-            {
-                play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==3)
-                {
-                    janelas->janela_atual=4;
-                    janelas->total[3].tempo_inicio=timer;
-                    janelas->total[3].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==4)
-                {
-                    janelas->janela_atual=5;
-                    janelas->total[4].tempo_inicio=timer;
-                    janelas->total[4].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==5 && janelas->total[4].tempo_fim==-1)
-                    janelas->total[4].tempo_fim=timer+20;
-            }
-            // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                set_volume(volume,volume);
-                eventos->evento_atual=0;
-                eventos->eventos_executados[1]=1;
-                *pause=0;
-                play_midi(musica_boss2,TRUE);
-            }
-        }
-    }
-    else if(fase==3)
-    {
-        // evento 1
-        if(!eventos->eventos_executados[0] &&
-           (guerreiro->x>=100 || eventos->evento_atual==1))
-        {
-            set_volume(volume-100,volume-100);
-            // trava o evento atual e pausa o jogo
-            if(!eventos->evento_atual)
-            {
-                eventos->evento_atual=1;
-                eventos->tempo_evento_atual=timer;
-            }
-
-            if(*pause==0)
-                *pause=1;
-
-            // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
-            {
-                guerreiro->pulando=0;
-                guerreiro->caindo=1;
-                guerreiro->permitir_pulo=1;
-                colide_chao(guerreiro,matriz_tela,bloqueios,1);
-                verificar_queda(guerreiro,matriz_tela,bloqueios);
-                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
-            }
-
-            // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[1].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                janelas->janela_atual=1;
-                janelas->total[0].tempo_inicio=timer;
-                janelas->total[0].tempo_fim=-1;
-            }
-
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
-            {
-                play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==1)
-                {
-                    janelas->janela_atual=2;
-                    janelas->total[1].tempo_inicio=timer;
-                    janelas->total[1].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==2 && janelas->total[1].tempo_fim==-1)
-                    janelas->total[1].tempo_fim=timer+20;
-            }
-            // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==0  && timer>=eventos->tempo_evento_atual+60)
-            {
-                set_volume(volume,volume);
-                eventos->evento_atual=0;
-                eventos->eventos_executados[0]=1;
-                *pause=0;
-            }
-        }
-        // evento 2, batalha com chefe
-        else if(!eventos->eventos_executados[1] &&
-           (guerreiro->x>=LARGURA_MAPA-450 || eventos->evento_atual==2))
-        {
-            set_volume(volume-100,volume-100);
-            // trava o evento atual e pausa o jogo
-            if(!eventos->evento_atual)
-            {
-                eventos->evento_atual=2;
-                eventos->tempo_evento_atual=timer;
-            }
-
-            if(*pause==0)
-                *pause=1;
-
-            // faz o guerreiro cair e andar um pouco
-            if(eventos->tempo_evento_atual+60>=timer)
-            {
-                guerreiro->pulando=0;
-                guerreiro->caindo=1;
-                guerreiro->permitir_pulo=1;
-                colide_chao(guerreiro,matriz_tela,bloqueios,1);
-                verificar_queda(guerreiro,matriz_tela,bloqueios);
-                movimento_direita(guerreiro,1,matriz_tela,bloqueios,1,1,0,3);
-                calcular_ajuste_mapa(guerreiro,ajuste_mapa);
-            }
-
-            // agora chama janela com texto
-            if(janelas->janela_atual==0 && janelas->total[2].tempo_fim==-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                janelas->janela_atual=3;
-                janelas->total[2].tempo_inicio=timer;
-                janelas->total[2].tempo_fim=-1;
-            }
-
-            if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual+60)
-            {
-                play_sample(confirmar,255,128,1000,FALSE);
-                if(janelas->janela_atual==3)
-                {
-                    janelas->janela_atual=4;
-                    janelas->total[3].tempo_inicio=timer;
-                    janelas->total[3].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==4)
-                {
-                    janelas->janela_atual=5;
-                    janelas->total[4].tempo_inicio=timer;
-                    janelas->total[4].tempo_fim=-1;
-                }
-                else if(janelas->janela_atual==5 && janelas->total[4].tempo_fim==-1)
-                    janelas->total[4].tempo_fim=timer+20;
-            }
-            // agora a condição de saída é janelas->janela_atual==0
-            if(janelas->janela_atual==3  && janelas->total[4].tempo_fim!=-1 && timer>=eventos->tempo_evento_atual+60)
-            {
-                set_volume(volume,volume);
-                eventos->evento_atual=0;
-                eventos->eventos_executados[1]=1;
-                *pause=0;
-                play_midi(musica_boss3,TRUE);
             }
         }
     }
@@ -376,159 +89,25 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
 void desenhos_evento(BITMAP *buffer, int fase,Teventos *eventos,Tjanelas *janelas,Tcriatura *guerreiro,FONT* corpo_texto,
                      FONT *titulo_texto,Toponentes *inimigos)
 {
-    // eventos da primeira fase
-    if(fase==1)
+    int efeito=0;
+    if(janelas->janela_atual!=0)
     {
-        // primeiro evento
-        if(eventos->evento_atual==1)
-        {
-            if(janelas->janela_atual==1) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
-                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
-                               janelas->total[0].conteudo,1);
-                if(timer==janelas->total[0].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==2)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
-                               janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
-                               janelas->total[1].conteudo,0);
-                if(timer<=janelas->total[1].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
-        // segundo evento
-        if(eventos->evento_atual==2)
-        {
-            if(janelas->janela_atual==3) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[2].x,janelas->total[2].y,titulo_texto,corpo_texto,
-                               janelas->total[2].tempo_inicio,janelas->total[2].tempo_fim,timer,janelas->total[2].titulo,
-                               janelas->total[2].conteudo,1);
-                if(timer==janelas->total[2].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==4)
-            {
-                janela_dialogo(buffer,&inimigos->chefes.chefe[0],janelas->total[3].x,janelas->total[3].y,titulo_texto,corpo_texto,
-                               janelas->total[3].tempo_inicio,janelas->total[3].tempo_fim,timer,janelas->total[3].titulo,
-                               janelas->total[3].conteudo,0);
-                if(timer==janelas->total[3].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==5)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
-                               janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
-                               janelas->total[4].conteudo,0);
-                if(timer<=janelas->total[4].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
-    }
-    else if(fase==2)
-    {
-        // primeiro evento
-        if(eventos->evento_atual==1)
-        {
-            if(janelas->janela_atual==1) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
-                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
-                               janelas->total[0].conteudo,1);
-                if(timer==janelas->total[0].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==2)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
-                               janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
-                               janelas->total[1].conteudo,0);
-                if(timer<=janelas->total[1].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
-        // segundo evento
-        if(eventos->evento_atual==2)
-        {
-            if(janelas->janela_atual==3) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[2].x,janelas->total[2].y,titulo_texto,corpo_texto,
-                               janelas->total[2].tempo_inicio,janelas->total[2].tempo_fim,timer,janelas->total[2].titulo,
-                               janelas->total[2].conteudo,1);
-                if(timer==janelas->total[2].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==4)
-            {
-                janela_dialogo(buffer,&inimigos->chefes.chefe[0],janelas->total[3].x,janelas->total[3].y,titulo_texto,corpo_texto,
-                               janelas->total[3].tempo_inicio,janelas->total[3].tempo_fim,timer,janelas->total[3].titulo,
-                               janelas->total[3].conteudo,0);
-                if(timer==janelas->total[3].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==5)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
-                               janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
-                               janelas->total[4].conteudo,0);
-                if(timer<=janelas->total[4].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
-    }
-    else if(fase==3)
-    {
-        // primeiro evento
-        if(eventos->evento_atual==1)
-        {
-            if(janelas->janela_atual==1) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[0].x,janelas->total[0].y,titulo_texto,corpo_texto,
-                               janelas->total[0].tempo_inicio,janelas->total[0].tempo_fim,timer,janelas->total[0].titulo,
-                               janelas->total[0].conteudo,1);
-                if(timer==janelas->total[0].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==2)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[1].x,janelas->total[1].y,titulo_texto,corpo_texto,
-                               janelas->total[1].tempo_inicio,janelas->total[1].tempo_fim,timer,janelas->total[1].titulo,
-                               janelas->total[1].conteudo,0);
-                if(timer<=janelas->total[1].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
-        // segundo evento
-        if(eventos->evento_atual==2)
-        {
-            if(janelas->janela_atual==3) // teste de janela
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[2].x,janelas->total[2].y,titulo_texto,corpo_texto,
-                               janelas->total[2].tempo_inicio,janelas->total[2].tempo_fim,timer,janelas->total[2].titulo,
-                               janelas->total[2].conteudo,1);
-                if(timer==janelas->total[2].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==4)
-            {
-                janela_dialogo(buffer,&inimigos->chefes.chefe[0],janelas->total[3].x,janelas->total[3].y,titulo_texto,corpo_texto,
-                               janelas->total[3].tempo_inicio,janelas->total[3].tempo_fim,timer,janelas->total[3].titulo,
-                               janelas->total[3].conteudo,0);
-                if(timer==janelas->total[3].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-            else if(janelas->janela_atual==5)
-            {
-                janela_dialogo(buffer,guerreiro,janelas->total[4].x,janelas->total[4].y,titulo_texto,corpo_texto,
-                               janelas->total[4].tempo_inicio,janelas->total[4].tempo_fim,timer,janelas->total[4].titulo,
-                               janelas->total[4].conteudo,0);
-                if(timer<=janelas->total[4].tempo_fim)
-                    janelas->janela_atual=0;
-            }
-        }
+        if(janelas->janela_atual == eventos->quadro_min[eventos->evento_atual-1])
+            efeito=1;
+        if(janelas->total[janelas->janela_atual-1].ator==0)
+            janela_dialogo(buffer,guerreiro,janelas->total[janelas->janela_atual-1].x,janelas->total[janelas->janela_atual-1].y,
+                           titulo_texto,corpo_texto,janelas->total[janelas->janela_atual-1].tempo_inicio,
+                           janelas->total[janelas->janela_atual-1].tempo_fim,timer,janelas->total[janelas->janela_atual-1].titulo,
+                           janelas->total[janelas->janela_atual-1].conteudo,efeito);
+        else
+            janela_dialogo(buffer,&inimigos->chefes.chefe[inimigos->chefes.chefe_atual-1],janelas->total[janelas->janela_atual-1].x,
+                           janelas->total[janelas->janela_atual-1].y,
+                           titulo_texto,corpo_texto,janelas->total[janelas->janela_atual-1].tempo_inicio,
+                           janelas->total[janelas->janela_atual-1].tempo_fim,timer,janelas->total[janelas->janela_atual-1].titulo,
+                           janelas->total[janelas->janela_atual-1].conteudo,efeito);
+
+        if(timer==janelas->total[janelas->janela_atual-1].tempo_fim)
+            janelas->janela_atual=0;
     }
 }
 
@@ -538,13 +117,23 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
     int i;
     BITMAP *fundo;
 
-    for(i=0;i<3;i++)
+    for(i=0;i<2;i++)
         eventos->eventos_executados[i]=0;
 
     eventos->evento_atual=0;
 
     if(fase==1)
     {
+        eventos->tempo_movimento_guerreiro[0]=60;
+        eventos->quadro_min[0]=1;
+        eventos->quadro_max[0]=2;
+        eventos->posicaoX_guerreiro[0]=100;
+        eventos->chefe[0]=0;
+        eventos->tempo_movimento_guerreiro[1]=60;
+        eventos->quadro_min[1]=3;
+        eventos->quadro_max[1]=5;
+        eventos->posicaoX_guerreiro[1]=LARGURA_MAPA-450;
+        eventos->chefe[1]=1;
         eventos->n_eventos=2;
 
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,0,0,graficos);
@@ -581,11 +170,11 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
         carrega_texturas(texturas,graficos); // prepara as texturas
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Droga, me perdi nesta maldita floresta infestada de goblins.");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Agora tenho de sair daqui...");
-        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","Droga, esse goblin parece ser forte. Terei de derrota-lo.");
-        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.");
-        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Acho que ele nao vai com a minha cara...");
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Droga, me perdi nesta maldita floresta infestada de goblins.",0);
+        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Agora tenho de sair daqui...",0);
+        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","Droga, esse goblin parece ser forte. Terei de derrota-lo.",0);
+        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.",1);
+        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Acho que ele nao vai com a minha cara...",0);
         janelas->janela_atual=0;
         janelas->n_janelas=5;
 
@@ -596,6 +185,16 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
     if(fase==2)
     {
+        eventos->tempo_movimento_guerreiro[0]=60;
+        eventos->quadro_min[0]=1;
+        eventos->quadro_max[0]=2;
+        eventos->posicaoX_guerreiro[0]=100;
+        eventos->chefe[0]=0;
+        eventos->tempo_movimento_guerreiro[1]=60;
+        eventos->quadro_min[1]=3;
+        eventos->quadro_max[1]=5;
+        eventos->posicaoX_guerreiro[1]=LARGURA_MAPA-450;
+        eventos->chefe[1]=1;
         eventos->n_eventos=2;
 
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0,graficos);
@@ -634,11 +233,11 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         imagens_goblin_chefe(&inimigos->chefes.chefe[0],1,graficos);
         inimigos->chefes.chefe_atual=1;
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Terei de atravessar essa montanha se quiser sair desta floresta.");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Nao acho que sera facil...");
-        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","O que? Voce de novo?");
-        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.");
-        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Mas que droga!");
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Terei de atravessar essa montanha se quiser sair desta floresta.",0);
+        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Nao acho que sera facil...",0);
+        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","O que? Voce de novo?",0);
+        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.",1);
+        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Mas que droga!",0);
         janelas->janela_atual=0;
         janelas->n_janelas=5;
 
@@ -649,6 +248,16 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
     if(fase==3)
     {
+        eventos->tempo_movimento_guerreiro[0]=60;
+        eventos->quadro_min[0]=1;
+        eventos->quadro_max[0]=2;
+        eventos->posicaoX_guerreiro[0]=100;
+        eventos->chefe[0]=0;
+        eventos->tempo_movimento_guerreiro[1]=60;
+        eventos->quadro_min[1]=3;
+        eventos->quadro_max[1]=5;
+        eventos->posicaoX_guerreiro[1]=LARGURA_MAPA-450;
+        eventos->chefe[1]=1;
         eventos->n_eventos=2;
 
         preencher_item(&itens->todosItens[0],550,NIVEL_CHAO-20,20,15,1,1,1,0,graficos);
@@ -688,11 +297,11 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         imagens_goblin_chefe(&inimigos->chefes.chefe[0],1,graficos);
         inimigos->chefes.chefe_atual=1;
 
-        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Agora estou mais perto de sair daqui!");
-        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Basta continuar andando...");
-        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","Eu nao acredito nisso!");
-        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.");
-        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Cala a boca!");
+        preencher_janela(&janelas->total[0],70,300,0,0,0,0,-1,"Heroi","Agora estou mais perto de sair daqui!",0);
+        preencher_janela(&janelas->total[1],70,300,0,0,0,0,-1,"Heroi","Basta continuar andando...",0);
+        preencher_janela(&janelas->total[2],70,300,0,0,0,0,-1,"Heroi","Eu nao acredito nisso!",0);
+        preencher_janela(&janelas->total[3],70,300,0,0,0,0,-1,"Goblin","Grrr!! FrknknfK k feknkn xinksd.",1);
+        preencher_janela(&janelas->total[4],70,300,0,0,0,0,-1,"Heroi","Cala a boca!",0);
         janelas->janela_atual=0;
         janelas->n_janelas=5;
 
