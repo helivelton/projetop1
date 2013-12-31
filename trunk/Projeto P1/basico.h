@@ -48,12 +48,16 @@
 // DEBUG
 #define DEBUG 0
 
+#define POWER 10
+
 //  #############################################################################
 
 volatile int exit_program; // variável de saída
 volatile int timer; // variável de tempo
 int volume;
 int transparencia;
+int inicio_fase;
+int fim_fase;
 
 //  ##############  ENUMERADORES   #####################
 

@@ -207,12 +207,33 @@ int main()
                            selecao,confirmar,&tocando);
                 game_over(&pause,&eventos,buffer,&selecionar,&tela,tempo_de_jogo,&tela_destino,&loading_time,selecao,confirmar,
                           &tocando,musica_gameover,&guerreiro,&estagio_loading,&tocando_game_over,&carrega_fase,graficos);
+                // se inicio da fase, coloca um efeito de transparencia
+                if(inicio_fase)
+                {
+                    eventos.evento_atual=20;
+                    pause=1;
+                    transparencia-=2;
 
-                blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
+                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+                    set_trans_blender(255,0,0,transparencia);
+                    rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+                    solid_mode();
+
+                    if(transparencia==0)
+                    {
+                        inicio_fase=0;
+                        pause=0;
+                        eventos.evento_atual=0;
+                    }
+                }
 
                 // nova fase?
                 verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino,
-                                   &inimigos.chefes,&eventos,&tocando);
+                                   &inimigos.chefes,&eventos,&tocando,&pause,buffer);
+
+                blit(buffer,screen,0,0,0,0,LARGURA_SCREEN,ALTURA_SCREEN); // Manda o buffer para a tela;
+
+
             }
             // tela de opçções
             else if(tela==2)
@@ -229,6 +250,39 @@ int main()
                 keyboard_input();
 
                 creditos(buffer,graficos,confirmar,&tela);
+            }
+            else if(tela==4)
+            {
+                clear_bitmap(buffer);
+                keyboard_input();
+
+                if(transparencia>0)
+                {
+                    if(transparencia==244||transparencia==255)
+                        rest(2000);
+
+                    transparencia-=2;
+
+                    drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+                    set_trans_blender(255,0,0,transparencia);
+
+                    draw_sprite_ex(buffer,(BITMAP*)graficos[CONTINUE].dat,0,0,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
+
+                    solid_mode();
+
+                }
+                else if(transparencia==0)
+                {
+                    draw_sprite_ex(buffer,(BITMAP*)graficos[CREDITOS].dat,0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
+
+                    if(apertou(KEY_ENTER)||apertou(KEY_SPACE)||apertou(KEY_ESC))
+                    {
+                        tela=0;
+                        play_sample(confirmar,volume,128,1000,FALSE);
+                    }
+                }
+                draw_sprite(screen,buffer,0,0);
+
             }
             ticks++; // incrementa controle de velocidade do jogo
         }

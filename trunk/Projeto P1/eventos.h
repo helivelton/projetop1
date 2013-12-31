@@ -19,6 +19,6 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 
 void pausar(int *pause, int *selecionar,SAMPLE* som_pause);
 void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
-                        int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando);
+                        int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando,int *pause,BITMAP* buffer);
 
 #endif // EVENTOS_H
