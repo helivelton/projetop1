@@ -552,7 +552,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         preencher_item(&itens->todosItens[2],0,0,8,15,0,2,0,2,graficos);
         itens->n_itens=3;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,1,0,-16,-4,20,25,4,0); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2*POWER,3,2,1*POWER,0,-16,-4,20,25,4,0); // preenche status guerreiro
         imagens_guerreiro(guerreiro,graficos); // preenche vetor de imagens do guerreiro
 
         preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
@@ -595,7 +595,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         preencher_item(&itens->todosItens[2],0,0,8,15,0,2,1,2,graficos);
         itens->n_itens=3;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2,3,2,2,0,-16,-4,20,25,4,0); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,2*POWER,3,2,2*POWER,0,-16,-4,20,25,4,0); // preenche status guerreiro
 
         preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[0],1,graficos); // preenche vetor de imagens do goblin tipo 1
@@ -635,7 +635,7 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
         preencher_item(&itens->todosItens[2],0,0,8,15,0,2,1,2,graficos);
         itens->n_itens=3;
 
-        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,3,3,2,2,0,-16,-4,20,25,4,0); // preenche status guerreiro
+        preenche_criatura(guerreiro,0,NIVEL_CHAO-34,20,34,1,3*POWER,3,2,2*POWER,0,-16,-4,20,25,4,0); // preenche status guerreiro
 
         preenche_criatura(&inimigos->goblins_guerreiros.goblins[0],SCREEN_W-50,NIVEL_CHAO-32,28,32,2,1,1,2,0,0,-19,0,19,26,2,0); // preenche status goblin
         imagens_goblin_guerreiro(&inimigos->goblins_guerreiros.goblins[0],1,graficos); // preenche vetor de imagens do goblin tipo 1
@@ -692,20 +692,61 @@ void pausar(int *pause, int *selecionar,SAMPLE* som_pause)
 }
 
 void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
-                        int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando)
+                        int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando,int *pause,BITMAP* buffer)
 {
     if(chefes_->chefe_atual!=0)
     {
-        if(chefes_->chefe[chefes_->chefe_atual-1].caracteristicas.hp<=0  && *fase<N_FASES && eventos->evento_atual==0)
+        if(chefes_->chefe[chefes_->chefe_atual-1].caracteristicas.hp<=0  && *fase<N_FASES)
         {
-            *carrega_fase=1;
-            *fase=*fase+1;
-            *tela=9; // a próxima tela será a de loading game
-            *loading_time = timer;
-            *estagio_loading=0;
-            *tela_destino=1;
-            stop_midi();
-            *tocando=0;
+            if(fim_fase==0)
+            {
+                fim_fase=1;
+                *pause=1;
+                eventos->evento_atual=20;
+            }
+
+            transparencia+=2;
+            drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+            set_trans_blender(255,0,0,transparencia);
+            rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+            solid_mode();
+
+            if(transparencia==254 || transparencia==255)
+            {
+                eventos->evento_atual=0;
+                *pause=0;
+                *carrega_fase=1;
+                *fase=*fase+1;
+                *tela=9; // a próxima tela será a de loading game
+                *loading_time = timer;
+                *estagio_loading=0;
+                *tela_destino=1;
+                stop_midi();
+                *tocando=0;
+            }
+        }
+        else if(chefes_->chefe[chefes_->chefe_atual-1].caracteristicas.hp<=0  && *fase==N_FASES)
+        {
+            if(fim_fase==0)
+            {
+                fim_fase=1;
+                *pause=1;
+                eventos->evento_atual=20;
+            }
+
+            transparencia+=2;
+            drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+            set_trans_blender(255,0,0,transparencia);
+            rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
+            solid_mode();
+            if(transparencia==254 || transparencia==255)
+            {
+                eventos->evento_atual=0;
+                *pause=0;
+                *tela=4;
+                stop_midi();
+                *tocando=0;
+            }
         }
     }
 }

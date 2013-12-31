@@ -301,6 +301,13 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
     draw_sprite (screen, buffer,0, 0);
     if(*loading_time+TEMPO_LOADING <= timer)
         *tela = tela_destino;
+    if(tela_destino==1)
+    {
+        transparencia=254;
+        inicio_fase=1;
+        fim_fase=0;
+    }
+
 }
 
 void carrega_elementos_fase(int *carrega_fase,int *estagio_loading,int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32],
