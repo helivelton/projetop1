@@ -34,7 +34,7 @@ void init()
     install_mouse();
     install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
 
-    transparencia=0;
+    opacidade=0;
 }
 
 void deinit()
@@ -51,17 +51,17 @@ int colisao(float ax,float ay, float ah, float al, float bx, float by, float bh,
     return 1;
 }
 
-void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int transparencia)
+void desenhar_retangulo(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int opacidade)
 {
     drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-    set_trans_blender(255,0,0,transparencia);
+    set_trans_blender(255,0,0,opacidade);
     rectfill(buffer,pos_x,pos_y,pos_x+largura,pos_y+altura,makecol(0,0,160));
     rectfill(buffer,pos_x+5,pos_y+5,pos_x+largura-5,pos_y+altura-5,makecol(45,145,255));
     solid_mode();
 }
 
 void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
-                  char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int transparencia,
+                  char texto_titulo[256],char texto_corpo[256], FONT* titulo,FONT* corpo,int opacidade,
                   int inicio,int fim,int tempo_jogo,int efeito)
 {
     char texto1[31],texto2[31],texto3[31];
@@ -130,12 +130,12 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
     if(tempo_jogo>=inicio)
     {
         if (tempo_jogo<inicio+20 && efeito)
-            desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(tempo_jogo-inicio),(altura/20)*(tempo_jogo-inicio),transparencia);
+            desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(tempo_jogo-inicio),(altura/20)*(tempo_jogo-inicio),opacidade);
         else if((tempo_jogo > (fim-60)+40)&&(fim!=-1))
-            desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(fim-tempo_jogo),(altura/20)*(fim-tempo_jogo),transparencia);
+            desenhar_retangulo(buffer,pos_x,pos_y,(largura/20)*(fim-tempo_jogo),(altura/20)*(fim-tempo_jogo),opacidade);
         else
         {
-            desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,transparencia);
+            desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,opacidade);
             textprintf_ex(buffer,titulo,pos_x+10,pos_y+10,makecol(0,0,150),-1,"%s",texto_titulo);
             textprintf_ex(buffer,corpo,pos_x+10,pos_y+30,makecol(250,250,250),-1,"%s",texto1);
             textprintf_ex(buffer,corpo,pos_x+10,pos_y+50,makecol(250,250,250),-1,"%s",texto2);
@@ -144,9 +144,9 @@ void janela_texto(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,
     }
 }
 
-void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int transparencia)
+void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,int variavel, FONT* fonte,int opacidade)
 {
-    desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,transparencia);
+    desenhar_retangulo(buffer,pos_x,pos_y,largura,altura,opacidade);
     textprintf_ex(buffer,fonte,pos_x+15,pos_y+10,makecol(0,0,150),-1,"%d",variavel);
 }
 
@@ -304,7 +304,7 @@ void tela_carregamento (BITMAP *buffer, BITMAP *tela_loading[4], int *loading_ti
         *tela = tela_destino;
     if(tela_destino==1)
     {
-        transparencia=254;
+        opacidade=254;
         inicio_fase=1;
         fim_fase=0;
     }
@@ -342,14 +342,14 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 {
     if(*pause && eventos->evento_atual==0)
     {
-        if(transparencia==0)
-            transparencia=50;
-        if(transparencia<170)
-            transparencia++;
+        if(opacidade==0)
+            opacidade=50;
+        if(opacidade<170)
+            opacidade++;
 
         // coloca tela cinza por cima da tela atual
         drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-        set_trans_blender(255,0,0,transparencia);
+        set_trans_blender(255,0,0,opacidade);
         rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(160,160,160));
 
         // desenha tela de opções
@@ -403,7 +403,7 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
-            transparencia=0;
+            opacidade=0;
             play_sample(confirmar,255,128,1000,FALSE);
             if(*selecionar==0)
                 *pause=FALSE;
@@ -433,10 +433,10 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
 {
     if(guerreiro->caracteristicas.hp<=0)
     {
-        if(transparencia==0)
-            transparencia=40;
-        if(transparencia<255)
-            transparencia++;
+        if(opacidade==0)
+            opacidade=40;
+        if(opacidade<255)
+            opacidade++;
 
         // toca a música de game over
         if(*tocando_game_over==0)
@@ -452,7 +452,7 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
 
         // coloca tela cinza por cima da tela atual
         drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-        set_trans_blender(255,0,0,transparencia);
+        set_trans_blender(255,0,0,opacidade);
         rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
 
         BITMAP* imagem_gameOver = (BITMAP*) graficos[GAME_OVER].dat;
@@ -511,7 +511,7 @@ void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int
 
         if(apertou(KEY_ENTER)|| apertou(KEY_SPACE))
         {
-            transparencia=0;
+            opacidade=0;
             play_sample(confirmar,255,128,1000,FALSE);
             if(*selecionar==0)
             {

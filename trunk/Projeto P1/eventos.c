@@ -315,7 +315,7 @@ void pausar(int *pause, int *selecionar,SAMPLE* som_pause)
 {
     if (apertou(KEY_ESC) && !inicio_fase && !fim_fase)
     {
-        transparencia=0;
+        opacidade=0;
         if (*pause == TRUE)
         {
             *pause = FALSE;
@@ -349,13 +349,13 @@ void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int 
                 eventos->evento_atual=20;
             }
 
-            transparencia+=2;
+            opacidade+=2;
             drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-            set_trans_blender(255,0,0,transparencia);
+            set_trans_blender(255,0,0,opacidade);
             rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
             solid_mode();
 
-            if(transparencia==254 || transparencia==255)
+            if(opacidade==254 || opacidade==255)
             {
                 eventos->evento_atual=0;
                 *pause=0;
@@ -378,12 +378,12 @@ void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int 
                 eventos->evento_atual=20;
             }
 
-            transparencia+=2;
+            opacidade+=2;
             drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
-            set_trans_blender(255,0,0,transparencia);
+            set_trans_blender(255,0,0,opacidade);
             rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
             solid_mode();
-            if(transparencia==254 || transparencia==255)
+            if(opacidade==254 || opacidade==255)
             {
                 eventos->evento_atual=0;
                 *pause=0;
