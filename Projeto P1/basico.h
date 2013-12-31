@@ -31,7 +31,7 @@
 // controla velocidade padrão de mudança dos estados dos sprites
 #define ATUALIZAR_ESTADO 10
 // Altura e largura da tela da screen
-#define MODO_SCREEN GFX_AUTODETECT_FULLSCREEN// GFX_AUTODETECT_WINDOWED ou GFX_AUTODETECT_FULLSCREEN
+#define MODO_SCREEN GFX_AUTODETECT_WINDOWED// GFX_AUTODETECT_WINDOWED ou GFX_AUTODETECT_FULLSCREEN
 #define ALTURA_SCREEN 480
 #define LARGURA_SCREEN 640
 // Altura e largura das fases
