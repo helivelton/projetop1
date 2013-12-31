@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1388441833 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
+1388450707 source:c:\users\j.carlos\documents\p1\projeto p1\basico.c
 	"basico.h"
 	"controle.h"
 	"mapa.h"
 	"eventos.h"
 
-1388441769 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388450596 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -50,7 +50,7 @@
 	"basico.h"
 	"criaturas.h"
 
-1388442423 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388450707 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"

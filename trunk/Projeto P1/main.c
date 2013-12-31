@@ -104,7 +104,7 @@ int main()
     SAMPLE* som_vinhas = (SAMPLE*) efeitos[PARALISIA].dat;
     SAMPLE* som_recuo = (SAMPLE*) efeitos[RECUO].dat;
 
-    volume=255;
+    volume=250;
     set_volume(volume,volume);
 
 /*  #######################################################################################
@@ -213,6 +213,22 @@ int main()
                 // nova fase?
                 verifica_nova_fase(&guerreiro,&fase,&carrega_fase,&tela,&loading_time,&estagio_loading,&tela_destino,
                                    &inimigos.chefes,&eventos,&tocando);
+            }
+            // tela de opçções
+            else if(tela==2)
+            {
+                clear_bitmap(buffer);
+                keyboard_input();
+
+                menu_opcoes(buffer,graficos,selecao,confirmar,&tela);
+            }
+            // tela de créditos
+            else if(tela==3)
+            {
+                clear_bitmap(buffer);
+                keyboard_input();
+
+                creditos(buffer,graficos,confirmar,&tela);
             }
             ticks++; // incrementa controle de velocidade do jogo
         }

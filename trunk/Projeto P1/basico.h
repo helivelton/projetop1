@@ -241,6 +241,8 @@ void pause_menu(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,in
 void game_over(int *pause, Teventos *eventos, BITMAP *buffer,int *selecionar,int *tela,int tempo_jogo,int *tela_destino,
                 int *loading_time,SAMPLE* selecao,SAMPLE* confirmar,int *tocando,MIDI* musica_game_over,Tcriatura *guerreiro,
                 int *estagio_loading,int *tocando_game_over,int *carrega_fase,DATAFILE* graficos);
+void menu_opcoes(BITMAP* buffer, DATAFILE* graficos,SAMPLE* selecao,SAMPLE* confirmacao,int *tela);
+void creditos(BITMAP* buffer,DATAFILE* graficos,SAMPLE *confirmacao,int *tela);
 //_______________________________________________________________________________________________________________
 
 #endif // BASICO_H
