@@ -20,5 +20,8 @@ void carregar_var_fase(int fase,Titens *itens, Tcriatura *guerreiro,Toponentes *
 void pausar(int *pause, int *selecionar,SAMPLE* som_pause);
 void verifica_nova_fase(Tcriatura *guerreiro, int *fase, int *carrega_fase, int *tela, int *loading_time, int *estagio_loading,
                         int *tela_destino,Tchefes *chefes_,Teventos *eventos,int *tocando,int *pause,BITMAP* buffer);
+void tocar(int *tocando,int fase,MIDI* musica_floresta,MIDI* musica_caverna);
+void efeito_inicio_fase(Teventos *eventos,int *pause,BITMAP* buffer,DATAFILE* graficos, SAMPLE* confirmar,int fase,int *tutorial);
+void final_de_jogo(BITMAP* buffer,DATAFILE* graficos,int *tela,SAMPLE* confirmar);
 
 #endif // EVENTOS_H

@@ -5,7 +5,7 @@
 	"mapa.h"
 	"eventos.h"
 
-1388510620 c:\users\j.carlos\documents\p1\projeto p1\basico.h
+1388513377 c:\users\j.carlos\documents\p1\projeto p1\basico.h
 	<stdio.h>
 	<allegro.h>
 	<string.h>
@@ -33,10 +33,10 @@
 1388461355 c:\users\j.carlos\documents\p1\projeto p1\mapa.h
 	"basico.h"
 
-1388509185 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
+1388512264 source:c:\users\j.carlos\documents\p1\projeto p1\eventos.c
 	"eventos.h"
 
-1388456335 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
+1388513776 c:\users\j.carlos\documents\p1\projeto p1\eventos.h
 	"basico.h"
 	"controle.h"
 	"item.h"
@@ -51,7 +51,7 @@
 	"criaturas.h"
 	"mapa.h"
 
-1388510446 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
+1388512375 source:c:\users\j.carlos\documents\p1\projeto p1\main.c
 	"basico.h"
 	"mapa.h"
 	"criaturas.h"
