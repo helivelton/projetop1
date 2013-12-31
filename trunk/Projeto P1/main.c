@@ -189,7 +189,7 @@ int main()
                     acoes_goblins(&inimigos,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios,&itens,espada,besta,som_dano_guerreiro,
                                   som_vinhas);
                     verifique_efeito_item(&itens,&guerreiro,&inimigos,tempo_de_jogo,som_dano_guerreiro,som_cura);
-                    movimento_itens(&itens,&guerreiro,tempo_de_jogo);
+                    movimento_itens(&itens,&guerreiro,tempo_de_jogo,matriz_tela,bloqueios);
                 }
 
                 verificar_evento(&pause,fase,&eventos,&guerreiro,&janelas,matriz_tela,bloqueios,&ajuste_mapa,musica_chefe1,

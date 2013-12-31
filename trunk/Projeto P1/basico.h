@@ -48,7 +48,7 @@
 // DEBUG
 #define DEBUG 0
 
-#define POWER 10
+#define POWER 1
 
 //  #############################################################################
 
@@ -124,6 +124,7 @@ typedef struct criatura
     int tempo_estrategia;
     int paralisado;
     int tempo_paralisado;
+    int invencivel;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
@@ -166,6 +167,7 @@ typedef struct item
     int ativo;
     int id_arqueiro; // indique qual arqueiro, a partir de 1, pertence a flecha
     int direcao;
+    int x_inicial;
     BITMAP *imagem;
     BITMAP *imagem_buffer;
 }Titem;

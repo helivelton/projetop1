@@ -34,6 +34,7 @@ void preenche_criatura(Tcriatura *ser,float x,float y,float largura, float altur
     ser->estrategia=1;
     ser->paralisado=0;
     ser->sprite = create_bitmap(64,64);
+    ser->invencivel=0;
 }
 
 void imagens_guerreiro(Tcriatura *guerreiro,DATAFILE* graficos)
@@ -584,6 +585,7 @@ void ataque_goblin_arqueiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_j
             {
                 itens->todosItens[goblin->id_flecha-1].direcao=goblin->direcao_anterior;
                 itens->todosItens[goblin->id_flecha-1].ativo=1;
+                itens->todosItens[goblin->id_flecha-1].x_inicial=goblin->x;
                 itens->todosItens[goblin->id_flecha-1].x=goblin->x;
                 itens->todosItens[goblin->id_flecha-1].y=goblin->y;
             }
@@ -661,6 +663,9 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
         {
             if(goblin1->estrategia==1)
             {
+                if(goblin1->invencivel)
+                    goblin1->invencivel=0;
+
                 if (goblin1->x-3 > guerreiro->x+guerreiro->largura || goblin1->x-4 > guerreiro->x+guerreiro->largura || goblin1->x-5 > guerreiro->x+guerreiro->largura
                     || goblin1->x-6 > guerreiro->x+guerreiro->largura)
                 {
@@ -692,6 +697,8 @@ void movimento_goblin_chefe(Tcriatura *goblin1,Tcriatura *guerreiro, int tempo_j
             }
             else if(goblin1->estrategia==2)
             {
+                if(!goblin1->invencivel)
+                    goblin1->invencivel=1;
                 if (goblin1->x-3 > LARGURA_MAPA-100 || goblin1->x-4 > LARGURA_MAPA-100 || goblin1->x-5 > LARGURA_MAPA-100)
                 {
                     if(!colisao_abaixo_mapa(goblin1->x-goblin1->caracteristicas.habilidade,goblin1->y,goblin1->altura,goblin1->largura,matriz_tela,bloqueios)
@@ -837,7 +844,7 @@ void desenhar_goblin_chefe(BITMAP *buffer,Tcriatura *goblin1,int ajuste_x,int te
             draw_sprite_ex(goblin1->sprite,goblin1->vetor_sprite[goblin1->estado_sprite],0,0,DRAW_SPRITE_NORMAL,DRAW_SPRITE_NO_FLIP);
         }
     }
-    if(goblin1->levando_dano)
+    if(goblin1->levando_dano || goblin1->invencivel)
     {
         set_trans_blender(255,255,255,50);
         if((tempo_jogo/10)%2==0)
@@ -1088,7 +1095,7 @@ void ataque_ajustes(Tcriatura *atacante,int tempo_jogo,int confirmacao,int sprit
 
 void ataque(Tcriatura *atacante,Tcriatura *alvo,int tempo_jogo,int tipo_at,SAMPLE *som_dano)
 {
-    if(atacante->atacando && !alvo->levando_dano)
+    if(atacante->atacando && !alvo->levando_dano && !alvo->invencivel)
     {
         if(atacante->direcao==2)//esquerda
         {
