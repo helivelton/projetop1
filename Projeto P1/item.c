@@ -93,25 +93,31 @@ void verifique_efeito_item(Titens *itens,Tcriatura *guerreiro,Toponentes *inimig
 {
     int i;
 
+    //percorre todos os itens da fase
     for(i=0;i<itens->n_itens;i++)
     {
+        // se o item estiver ativo...
         if (itens->todosItens[i].ativo)
         {
+            // e se o herói colidiu com ele...
             if (colisao(guerreiro->x,guerreiro->y,guerreiro->altura,guerreiro->largura,itens->todosItens[i].x,
                         itens->todosItens[i].y,itens->todosItens[i].altura,itens->todosItens[i].largura))
             {
+                // verifica o tipo do item e seu efeito correspondente
                 switch(itens->todosItens[i].tipo)
                 {
                 case 1: // poção
-                    play_sample(som_cura,255,128,1000,FALSE);
+                    play_sample(som_cura,255,128,1000,FALSE); // toca som de cura
+                    // cura o herói, desativa o item e deixa o herói com status curando por algum tempo
                     guerreiro->caracteristicas.hp+=5;
                     itens->todosItens[i].ativo=0;
                     guerreiro->curando=tempo_jogo;
                     break;
                 case 2: // flecha
-                    play_sample(som_dano,255,128,1000,FALSE);
-                    guerreiro->levando_dano=1;
-                    guerreiro->tempo_dano=tempo_jogo;
+                    play_sample(som_dano,255,128,1000,FALSE); // toca som de dano
+                    guerreiro->levando_dano=1; // status levando dano do guerreiro é verdadeiro
+                    guerreiro->tempo_dano=tempo_jogo; // controla o tempo que ele leva dano
+                    // causa dano e desativa o item
                     calcular_dano(&inimigos->goblins_arqueiros.goblins[itens->todosItens[i].id_arqueiro-1],guerreiro,1);
                     itens->todosItens[i].ativo=0;
                     break;

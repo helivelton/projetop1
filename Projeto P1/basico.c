@@ -153,25 +153,26 @@ void janela_variavel(BITMAP *buffer,int pos_x,int pos_y,int largura,int altura,i
 void janela_dialogo(BITMAP *buffer,Tcriatura *personagem,int pos_x,int pos_y,FONT* titulo,FONT* corpo,
                     int inicio, int fim, int tempo_jogo,char texto_titulo[50],char texto_corpo[256],int efeito)
 {
-
+    // gera duas janela de texto, uma sem texto e outra com texto
+    // se efeito==1, haverá um efeito de abertura da janela
     janela_texto(buffer,pos_x,pos_y,106,106,"","",titulo,corpo,150,inicio,fim, tempo_jogo,efeito);
     janela_texto(buffer,pos_x+107,pos_y,300,106,texto_titulo,texto_corpo,titulo,corpo,150,inicio,fim, tempo_jogo,efeito);
+    // se houver efeito, então espera o efeito de abertura para desenha foto do personagem e botão no canto
+    // o tempo final da janela deve estar indefinido (-1)
     if(efeito)
     {
         if(fim==-1 && tempo_jogo>inicio+20)
         {
+            // desenha rosto do personagem
             draw_sprite(buffer,personagem->face,pos_x+5,pos_y+5);
+            // desenha botão animado no canto
             if((tempo_jogo/16)%2==0)
-            {
                 rectfill(buffer,pos_x+380,pos_y+80,pos_x+380+10,pos_y+80+10,makecol(200,0,0));
-            }
             else
-            {
                 rectfill(buffer,pos_x+380,pos_y+70,pos_x+380+10,pos_y+70+10,makecol(200,0,0));
-            }
         }
     }
-    else
+    else // se não houver efeito, desenha imediatamente
     {
         if(fim==-1)
         {
