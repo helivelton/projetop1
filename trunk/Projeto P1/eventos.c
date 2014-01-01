@@ -5,8 +5,10 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                       MIDI* musica_boss1,MIDI* musica_boss2,MIDI*musica_boss3,SAMPLE *confirmar)
 {
     int i;
+    // percorre eventos da fase
     for(i=0;i<eventos->n_eventos;i++)
     {
+        // se este evento não foi executado e (o heroi esta em uma posição ou evento atual a i+1)
         if(!eventos->eventos_executados[i] &&
            (guerreiro->x >= eventos->posicaoX_guerreiro[i] || eventos->evento_atual == i+1))
         {
@@ -44,10 +46,10 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                 janelas->total[eventos->quadro_min[i]-1].tempo_inicio=timer;
                 janelas->total[eventos->quadro_min[i]-1].tempo_fim=-1;
             }
-
+            // se apertou enter ou espaço, chama a próxima janela ou fecha a atual
             if((apertou(KEY_ENTER)||apertou(KEY_SPACE)) && timer>=eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i])
             {
-                play_sample(confirmar,255,128,1000,FALSE);
+                play_sample(confirmar,255,128,1000,FALSE); // som de confirmação
 
                 if(janelas->janela_atual==eventos->quadro_min[i])
                     janelas->total[eventos->quadro_min[i]-1].tempo_fim=timer;
@@ -58,6 +60,7 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
                     janelas->total[janelas->janela_atual-1].tempo_inicio=timer;
                     janelas->total[janelas->janela_atual-1].tempo_fim=-1;
                 }
+                // se a janela atual é a última, configura o tempo fim dela
                 else if(janelas->janela_atual==eventos->quadro_max[i] && janelas->total[eventos->quadro_min[i]-1].tempo_fim!=-1)
                 {
                     janelas->total[eventos->quadro_max[i]-1].tempo_fim=timer+20;
@@ -66,10 +69,10 @@ void verificar_evento(int *pause,int fase,Teventos *eventos,Tcriatura *guerreiro
             // agora a condição de saída é janelas->janela_atual==0
             if(janelas->janela_atual == 0  && timer >= eventos->tempo_evento_atual + eventos->tempo_movimento_guerreiro[i])
             {
-                eventos->evento_atual=0;
-                eventos->eventos_executados[i]=1;
-                *pause=0;
-
+                eventos->evento_atual=0; // configura para nenhum evento atual
+                eventos->eventos_executados[i]=1; // configura para o evento não executar de novo
+                *pause=0; // tira o pause
+                // se o evento for de chefe de fase
                 if(eventos->chefe[i])
                     stop_midi();
 
@@ -408,31 +411,32 @@ void tocar(int *tocando,int fase,MIDI* musica_floresta,MIDI* musica_caverna)
 
 void efeito_inicio_fase(Teventos *eventos,int *pause,BITMAP* buffer,DATAFILE* graficos, SAMPLE* confirmar,int fase,int *tutorial)
 {
-    if(inicio_fase)
+    if(inicio_fase) // se for o início da fase
     {
+        // informa um evento que não existe, apenas para pausar sem o menu de pause
         eventos->evento_atual=20;
         *pause=1;
-        if(opacidade>=2)opacidade-=2;
-
-        drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
+        if(opacidade>=2)opacidade-=2; // diminui a opacidade nesse loop
+        drawing_mode(DRAW_MODE_TRANS,NULL,0,0); // modo de desenho transparente
         set_trans_blender(255,0,0,opacidade);
+        // desenha um retangulo preto que vai ficando cada vez mais transparente
         rectfill(buffer,0,0,SCREEN_W,SCREEN_H,makecol(0,0,0));
-        solid_mode();
+        solid_mode(); // modo de desenho sólido
 
-        if(opacidade==0 && (fase!=1 || *tutorial==0))
+        if(opacidade==0 && (fase!=1 || *tutorial==0)) // outras fases que não 1 ou já apresentou o tutorial
         {
-            inicio_fase=0;
-            *pause=0;
-            eventos->evento_atual=0;
+            inicio_fase=0; // não mais é o inicio fase
+            *pause=0; // tira o pause
+            eventos->evento_atual=0; // retira o evento atual
         }
-        // se fase 1, desenha controles
+        // se fase 1 e tutorial == 1, desenha tutorial
         else if(opacidade==0 && fase==1)
         {
             drawing_mode(DRAW_MODE_TRANS,NULL,0,0);
             set_trans_blender(255,0,0,150);
             draw_sprite_ex(buffer,(BITMAP*)graficos[TUTORIAL].dat,30,50,DRAW_SPRITE_TRANS,DRAW_SPRITE_NO_FLIP);
             solid_mode();
-
+            // desenha botão animado no canto do tutorial
             if((timer/16)%2==0)
             {
                 rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(255,0,0));
@@ -440,7 +444,7 @@ void efeito_inicio_fase(Teventos *eventos,int *pause,BITMAP* buffer,DATAFILE* gr
             }
             else
                 rectfill(buffer,SCREEN_W-35,255,SCREEN_W-45,255+10,makecol(180,0,0));
-
+            // se apertar enter, esc ou espaço, sai do tutorial
             if(apertou(KEY_ENTER)||apertou(KEY_ESC)||apertou(KEY_SPACE))
             {
                 play_sample(confirmar,volume,128,1000,FALSE);

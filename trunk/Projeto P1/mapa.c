@@ -112,30 +112,32 @@ void carrega_mapa(BITMAP *mapa,BITMAP *texturas[MAX_TERRENOS],int matriz_tela[AL
 
 int colisao_direita_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])
 {
+    // Ajusta valores x, y e altura para evitar pontos que estão em duas células ao mesmo tempo
     y=y+2;
     altura=altura-4;
     x= x + largura + 1;
+    // calcula em que célula da matriz o ponto (x,y) pertence
     int xMatrix = x/32;
     int yMatrix = y/32;
-    int i, ehBloqueio=0;
+    int i, ehBloqueio=0; // ehBloqueio informa se o ponto se encontra numa célula bloqueada
+
+    // Verifica se o ponto (x,y) pertence a célula bloqueada, que são basicamente três tipos
     for(i=0;i<3;i++)
     {
         if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
-        {
             ehBloqueio=1;
-        }
     }
+    // se (x,y) não está numa célula de bloqueio, então verifica-se (x,y+altura)
     if(!ehBloqueio)
     {
         yMatrix = (y+altura)/32;
         for(i=0;i<3;i++)
         {
             if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
-            {
                 ehBloqueio=1;
-            }
         }
     }
+    // se ainda não foi bloqueado, verifica-se (x, y+(altura/2))
     if(!ehBloqueio)
     {
         int intermediario = altura/2;
@@ -143,12 +145,10 @@ int colisao_direita_mapa(float x,float y, int altura, int largura, int matriz_te
         for(i=0;i<3;i++)
         {
             if(matriz_tela[yMatrix][xMatrix]==bloqueios[i])
-            {
                 ehBloqueio=1;
-            }
         }
     }
-    return ehBloqueio;
+    return ehBloqueio; // retorna se foi bloqueado ou não
 }
 
 int colisao_esquerda_mapa(float x,float y, int altura, int largura, int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32], int bloqueios[3])

@@ -24,7 +24,7 @@ int main()
     int ticks; // controla velocidade do jogo
     int tempo_de_jogo=0; // controla o tempo de jogo
     int matriz_tela[ALTURA_MAPA/32][LARGURA_MAPA/32]; // matriz da tela
-    int ajuste_mapa = 0; // vetor que cuida do movimento do mapa e dos objetos nele
+    int ajuste_mapa = 0; // variavel que cuida do movimento do mapa e dos objetos nele
     int tela = 0, selecionar = 0; //controla o carregamento de cada tela
     int tela_destino=1; // determina qual tela será carregada após a tela de carregamento
     int fase=1;

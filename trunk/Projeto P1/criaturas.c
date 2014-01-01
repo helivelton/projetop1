@@ -404,19 +404,24 @@ void movimento_goblin_guerreiro(Tcriatura *goblin1,Tcriatura *guerreiro, int tem
 
 void ataque_goblin_guerreiro(Tcriatura *goblin, Tcriatura *guerreiro, int tempo_jogo,SAMPLE *som_ataque,SAMPLE* som_dano_guerreiro)
 {
-    if(goblin->direcao==0 && goblin->caracteristicas.hp > 0)
+    if(goblin->direcao==0 && goblin->caracteristicas.hp > 0) // se goblin não se movimenta e tem hp>0
     {
+        // cai se estiver pulando
         goblin->caindo=1;
         goblin->pulando=0;
+        // se guerreiro estiver na mesma altura do goblin
         if(guerreiro->y <= goblin->y + goblin->altura && guerreiro->y+guerreiro->altura >= goblin->y)
         {
+            // pega a direção anterior do goblin para ajustar o ataque
             goblin->direcao=goblin->direcao_anterior;
 
+            // realiza o ajuste do ataque e o sprite que aparecerá
             ataque_ajustes(goblin,tempo_jogo,1,2,4,som_ataque);
+            // se guerreiro não está levando dano e goblin estiver atacando, ataca e causa dano
             if(!guerreiro->levando_dano && goblin->atacando)
                 ataque(goblin,guerreiro,tempo_jogo,0,som_dano_guerreiro);
 
-            goblin->direcao=0;
+            goblin->direcao=0; // retorna ao estado de não movimentação do goblin
         }
     }
 }
