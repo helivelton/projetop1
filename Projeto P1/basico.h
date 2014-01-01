@@ -125,6 +125,7 @@ typedef struct criatura
     int paralisado;
     int tempo_paralisado;
     int invencivel;
+    int destino_chefe;
     BITMAP *sprite;
     BITMAP *vetor_sprite[8];
     BITMAP *face;
